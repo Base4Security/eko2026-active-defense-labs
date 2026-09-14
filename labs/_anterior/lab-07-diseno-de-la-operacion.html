@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAB 07 · Diseño de la operación — Active Cyber Defense · Ekoparty 2026</title>
+<meta name="description" content="El laboratorio central de la segunda parte. Traducís cada brecha en actividades concretas de MITRE Engage, las priorizás por factibilidad y riesgo, y las ensamblás en una operación con objetivo, narrativa, reglas de compromiso y criterios de cierre.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Boldonse&family=Lato:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="../assets/base4-labs.css" rel="stylesheet">
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { base: { bg:'#282828', surfaceAlt:'#1e1e1e', orange:'#DC780F', orangeAlt:'#F1912D', textMain:'#ffffff', textDim:'#d1d5db' } },
+  fontFamily: { sans:['Lato','sans-serif'], display:['Boldonse','sans-serif'], mono:['JetBrains Mono','ui-monospace','monospace'] }
+} } }
+</script>
+</head>
+<body class="antialiased min-h-screen flex flex-col bg-base-bg text-gray-200" data-lab="lab07">
+
+<div class="lab-progress no-print"><i></i></div>
+
+<nav class="top-nav sticky top-0 z-50 bg-base-bg/95 backdrop-blur border-b border-white/10 no-print">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+    <a href="../index.html" class="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 hover:text-base-orangeAlt transition-colors">
+      <i class="fas fa-arrow-left mr-2"></i>Active Cyber Defense · Labs 2026
+    </a>
+    <div class="flex items-center gap-2 flex-wrap">
+      <span class="timer-badge is-neutral"><i class="fas fa-list-check"></i><span data-progress-readout>0 / 0</span></span>
+      <span class="timer-badge" data-timer data-minutes="90">
+        <i class="fas fa-hourglass-half"></i><span data-timer-out>90:00</span>
+        <button data-timer-btn class="ml-1 hover:text-white transition-colors" title="Iniciar / pausar" aria-label="Iniciar o pausar el temporizador"><i class="fas fa-play"></i></button>
+      </span>
+      <button class="back-link" data-reset title="Borrar mis tildes y anotaciones"><i class="fas fa-rotate-left"></i>Reset</button>
+    </div>
+  </div>
+</nav>
+
+<header class="relative py-14 bg-[radial-gradient(circle_at_50%_-30%,_#3a2600_0%,_#282828_60%)] border-b border-white/10">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center gap-3 mb-5 flex-wrap">
+      <span class="timer-badge">Segunda parte</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-clock"></i>90 minutos</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-users"></i>Grupos de 2-3</span>
+    </div>
+    <p class="text-base-orange font-bold tracking-[0.3em] uppercase mb-3 text-xs">Laboratorio 07</p>
+    <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-white mb-4 data-wb-title">Diseño de la operación</h1>
+    <p class="max-w-3xl text-base text-gray-300 leading-relaxed">El laboratorio central de la segunda parte. Traducís cada brecha en actividades concretas de MITRE Engage, las priorizás por factibilidad y riesgo, y las ensamblás en una operación con objetivo, narrativa, reglas de compromiso y criterios de cierre.</p>
+  </div>
+</header>
+
+<main class="flex-grow max-w-6xl mx-auto px-6 py-12 w-full space-y-10" data-wb-scope>
+  <!-- ═══ BARRA DE HERRAMIENTAS ═══ -->
+  <div class="wb-toolbar no-print">
+    <button class="wb-btn is-primary" type="button" data-wb-act="md" title="Ver y copiar el trabajo listo para entregar"><i class="fas fa-file-export"></i>Exportar</button>
+    <button class="wb-btn" type="button" data-wb-act="importFile" title="Cargar un respaldo .json"><i class="fas fa-file-import"></i>Importar</button>
+    <button class="wb-btn is-danger" type="button" data-wb-act="clear" title="Borrar todo lo cargado"><i class="fas fa-rotate-left"></i>Limpiar</button>
+    <span class="wb-status is-saved" data-wb-status><span class="dot"></span><span data-wb-status-label>Guardado</span></span>
+  </div>
+
+  <section id="grupo">
+    <div class="unified-card is-static p-6">
+      <div class="wb-ident">
+        <div>
+          <label for="wb-grupo">Grupo</label>
+          <input class="wb-input" id="wb-grupo" data-wb="meta.grupo" placeholder="Ej. Grupo 3" autocomplete="off">
+        </div>
+        <div>
+          <label for="wb-integrantes">Integrantes</label>
+          <input class="wb-input" id="wb-integrantes" data-wb="meta.integrantes" placeholder="Nombres separados por coma" autocomplete="off">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="objetivo">
+    <div class="callout is-objetivo">
+      <div class="callout-title"><i class="fas fa-bullseye"></i>Objetivo</div>
+      <p class="text-sm leading-relaxed text-gray-300">
+        Producir una <strong class="text-white">estrategia defensiva completa y priorizada</strong>: no una lista de herramientas
+        deseables, sino un conjunto de actividades de engagement que cierran brechas identificadas, ordenadas por lo que se puede hacer
+        realmente, con reglas de qué está permitido y una definición explícita de cuándo la operación termina.
+      </p>
+    </div>
+  </section>
+
+  <section id="engage">
+    <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5">Parte 1 · Orientación en Engage</h2>
+    <p class="text-sm text-gray-400 mb-6 ml-5">MITRE Engage es a la defensa activa lo que ATT&amp;CK es al ataque: un vocabulario común para discutir operaciones de compromiso con el adversario. <span class="timer-badge is-neutral ml-1">15 min</span></p>
+
+    <div class="unified-card is-static p-7 mb-6">
+      <h3 class="text-lg text-white mb-4 border-l-4 border-base-orange pl-3">La estructura en tres niveles</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="unified-card is-static p-5 border-t-2 border-base-orange">
+          <span class="text-[10px] text-base-orangeAlt font-black tracking-widest">NIVEL 1</span>
+          <h4 class="text-sm text-white mt-1 mb-2">Objetivos (Goals)</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">Qué querés lograr con el adversario. Cinco: <strong class="text-white">Prepare</strong>, <strong class="text-white">Expose</strong>, <strong class="text-white">Affect</strong>, <strong class="text-white">Elicit</strong>, <strong class="text-white">Understand</strong>.</p>
+        </div>
+        <div class="unified-card is-static p-5 border-t-2 border-base-orange">
+          <span class="text-[10px] text-base-orangeAlt font-black tracking-widest">NIVEL 2</span>
+          <h4 class="text-sm text-white mt-1 mb-2">Enfoques (Approaches)</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">Cómo se persigue cada objetivo. Bajo Expose: <em>Collect, Detect, Reveal</em>. Bajo Affect: <em>Prevent, Direct, Disrupt</em>. Bajo Elicit: <em>Reassure, Motivate</em>.</p>
+        </div>
+        <div class="unified-card is-static p-5 border-t-2 border-base-orange">
+          <span class="text-[10px] text-base-orangeAlt font-black tracking-widest">NIVEL 3</span>
+          <h4 class="text-sm text-white mt-1 mb-2">Actividades (Activities)</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">Lo que se hace en concreto, con su ID. Es el único nivel que se despliega: los dos anteriores son para pensar y para justificar.</p>
+        </div>
+      </div>
+
+      <div class="callout is-atencion mb-5">
+        <div class="callout-title"><i class="fas fa-hand-point-right"></i>Los IDs los completás vos</div>
+        <p class="text-sm leading-relaxed text-gray-300">
+          La guía nombra las actividades pero no trae sus IDs, a propósito: cambian entre versiones del framework. Abrí
+          <a href="https://engage.mitre.org/matrix/" target="_blank" rel="noopener" class="text-base-orangeAlt hover:underline">engage.mitre.org/matrix</a>
+          y completalos. De paso vas a encontrar las quince actividades que no se te habían ocurrido.
+        </p>
+      </div>
+
+      <h4 class="text-sm text-white mb-3">Actividades que van a servir para este caso</h4>
+      <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr><th>Objetivo</th><th>Enfoque</th><th>Actividad (nombre)</th><th>ID</th><th>Para qué sirve acá</th></tr></thead>
+        <tbody>
+          <tr><td class="col-accent">Expose</td><td class="col-label">Detect</td><td>Decoy Credentials</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id01" data-ph="EAC…"></div></td><td>El eslabón crítico de la cadena. Credencial que no existe legítimamente</td></tr>
+          <tr><td class="col-accent">Expose</td><td class="col-label">Detect</td><td>Decoy Account</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id02" data-ph="EAC…"></div></td><td>Cuenta en AD con SPN cuya solicitud de ticket tiene línea base cero</td></tr>
+          <tr><td class="col-accent">Expose</td><td class="col-label">Detect</td><td>Decoy Content</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id03" data-ph="EAC…"></div></td><td>Documentos con token embebido en shares que el adversario enumeraría</td></tr>
+          <tr><td class="col-accent">Expose</td><td class="col-label">Collect</td><td>Decoy System</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id04" data-ph="EAC…"></div></td><td>Host señuelo alcanzable, para observar técnicas de explotación</td></tr>
+          <tr><td class="col-accent">Expose</td><td class="col-label">Collect</td><td>Network Monitoring</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id05" data-ph="EAC…"></div></td><td>Instrumentación del segmento donde vive el engaño</td></tr>
+          <tr><td class="col-accent">Expose</td><td class="col-label">Collect</td><td>System Activity Monitoring</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id06" data-ph="EAC…"></div></td><td>Cierra las brechas Tipo 1 de ImageLoad y suscripciones WMI</td></tr>
+          <tr><td class="col-accent">Expose</td><td class="col-label">Collect</td><td>PCAP Collection</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id07" data-ph="EAC…"></div></td><td>Captura completa del tráfico del entorno de compromiso</td></tr>
+          <tr><td class="col-accent">Affect</td><td class="col-label">Direct</td><td>Lures</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id08" data-ph="EAC…"></div></td><td>Migas de pan que conducen al adversario al ambiente instrumentado</td></tr>
+          <tr><td class="col-accent">Affect</td><td class="col-label">Direct</td><td>Network Manipulation</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id09" data-ph="EAC…"></div></td><td>Rutas y visibilidad de red que hacen atractivo el camino que elegimos</td></tr>
+          <tr><td class="col-accent">Affect</td><td class="col-label">Disrupt</td><td>Software Manipulation</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id10" data-ph="EAC…"></div></td><td>Respuestas alteradas que degradan la confianza del adversario en lo que ve</td></tr>
+          <tr><td class="col-accent">Affect</td><td class="col-label">Prevent</td><td>Security Controls</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id11" data-ph="EAC…"></div></td><td>Endurecimiento del camino que <em>no</em> queremos que se recorra</td></tr>
+          <tr><td class="col-accent">Elicit</td><td class="col-label">Motivate</td><td>Introduced Vulnerabilities</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id12" data-ph="EAC…"></div></td><td>Debilidad controlada que provoca una técnica que queremos observar</td></tr>
+          <tr><td class="col-accent">Elicit</td><td class="col-label">Reassure</td><td>Pocket Litter</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id13" data-ph="EAC…"></div></td><td>El relleno que hace creíble todo lo anterior</td></tr>
+          <tr><td class="col-accent">Elicit</td><td class="col-label">Reassure</td><td>Decoy Persona</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id14" data-ph="EAC…"></div></td><td>La identidad ficticia dueña de los artefactos</td></tr>
+          <tr><td class="col-accent">Prepare</td><td class="col-label">Plan</td><td>Operational Objective</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id15" data-ph="EAC…"></div></td><td>Actividad estratégica: declarar qué se busca antes de desplegar</td></tr>
+          <tr><td class="col-accent">Prepare</td><td class="col-label">Plan</td><td>Gated Conditions</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id16" data-ph="EAC…"></div></td><td>Condiciones que disparan escalamiento o cierre de la operación</td></tr>
+          <tr><td class="col-accent">Prepare</td><td class="col-label">Plan</td><td>Storyboarding</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id17" data-ph="EAC…"></div></td><td>La narrativa del LAB 02, formalizada</td></tr>
+          <tr><td class="col-accent">Understand</td><td class="col-label">Analyze</td><td>Threat Model</td><td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb="engage.id18" data-ph="EAC…"></div></td><td>Actualizar el modelo con lo aprendido: cierra el ciclo</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="text-xs text-gray-500 italic mt-3">
+        No es la matriz completa: es un extracto para no perder tiempo. Entrá a la matriz igual.
+        Manual de referencia en español: <code class="inline">resources/05-engage/</code>
+      </p>
+    </div>
+
+    <div class="callout is-pista">
+      <div class="callout-title"><i class="fas fa-right-left"></i>La relación con ATT&amp;CK</div>
+      <p class="text-sm leading-relaxed text-gray-300">
+        Cada actividad está mapeada a las técnicas de ATT&amp;CK sobre las que actúa. Entrás por la técnica que el adversario usó
+        <em>en tu caso</em> y salís con la lista de actividades que la afectan: se navega desde tu cadena, no desde el catálogo.
+      </p>
+    </div>
+  </section>
+
+  <section id="seleccion" class="print-break">
+    <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5">Parte 2 · De brecha a actividad</h2>
+    <p class="text-sm text-gray-400 mb-6 ml-5">
+      El botón trae tus brechas del LAB 05 con el objetivo de Engage que sugiere su tipo ya propuesto. Lo que falta &mdash; y es el
+      trabajo real &mdash; es la actividad concreta, su ID y qué se despliega. <span class="timer-badge is-neutral ml-1">25 min</span>
+    </p>
+
+        <div class="unified-card is-static p-5" data-wb-table="actividades" data-wb-min="0">
+          <div class="wb-tablefoot no-print" style="margin-top:0;margin-bottom:14px">
+            <button class="wb-btn is-primary" type="button" data-wb-derive-btn="actividades"><i class="fas fa-wand-magic-sparkles"></i>Traer mis brechas del LAB 05</button>
+          </div>
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead><tr><th>Brecha</th><th>Tipo</th><th>Técnica que habilitó</th><th>Actividad Engage</th><th>ID</th><th>Qué se despliega en concreto</th></tr></thead>
+              <tbody data-wb-body></tbody>
+            </table>
+          </div>
+          <p class="wb-empty" data-wb-empty hidden>Sin filas. Apretá «Traer» para partir de tus brechas del LAB 05, o agregá una a mano.</p>
+          <template data-wb-row>
+            <tr>
+              <td class="col-accent" data-wb-col="ref" data-wb-fixed style="white-space:nowrap"></td>
+              <td class="is-editable" style="min-width:80px"><div class="wb-cell" contenteditable="true" data-wb-col="tipo"></div></td>
+              <td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb-col="tecnica" data-ph="T…"></div></td>
+              <td class="is-editable" style="min-width:170px"><div class="wb-cell" contenteditable="true" data-wb-col="actividad" data-ph="nombre de la actividad"></div></td>
+              <td class="is-editable" style="min-width:85px"><div class="wb-cell" contenteditable="true" data-wb-col="id" data-ph="EAC…"></div></td>
+              <td class="is-editable" style="min-width:260px"><div class="wb-cell" contenteditable="true" data-wb-col="despliegue" data-ph="hostnames, cuentas, rutas, event IDs, umbrales"></div></td>
+              <td class="wb-rowtools"><button class="wb-del" type="button" title="Eliminar fila" aria-label="Eliminar fila"><i class="fas fa-xmark"></i></button></td>
+            </tr>
+          </template>
+          <div class="wb-tablefoot no-print">
+            <button class="wb-btn wb-add" type="button" data-wb-add><i class="fas fa-plus"></i>Agregar actividad</button>
+            <span class="wb-count"></span>
+          </div>
+        </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+      <div class="callout is-pista">
+        <div class="callout-title"><i class="fas fa-diagram-project"></i>El tipo de brecha sugiere el objetivo</div>
+        <ul class="text-sm text-gray-300 leading-relaxed space-y-2">
+          <li><strong class="text-white">Tipo 1 · punto ciego</strong> &rarr; Expose/Collect. El artefacto trae su propia telemetría.</li>
+          <li><strong class="text-white">Tipo 2 · ahogado en ruido</strong> &rarr; Expose/Detect. El problema es señal/ruido, no ausencia de datos.</li>
+          <li><strong class="text-white">Tipo 3 · señal sin dueño</strong> &rarr; Prepare/Plan. No se arregla con artefactos: se arregla con reglas de compromiso y dueños.</li>
+          <li><strong class="text-white">Tipo 4 · desconocido</strong> &rarr; Elicit. Es el único objetivo que produce conocimiento nuevo sobre el adversario.</li>
+        </ul>
+      </div>
+      <div class="callout is-atencion">
+        <div class="callout-title"><i class="fas fa-triangle-exclamation"></i>Dos trampas de esta parte</div>
+        <ul class="text-sm text-gray-300 leading-relaxed space-y-2">
+          <li><strong class="text-white">Una brecha, muchas actividades.</strong> Si a una brecha le asignás seis actividades, no priorizaste. Máximo dos por brecha.</li>
+          <li><strong class="text-white">Actividades sin concreción.</strong> &laquo;Decoy Account&raquo; no es un plan. &laquo;Cuenta <code class="inline">svc_conc_prod</code> en la OU de Servicios, con SPN HTTP, deshabilitada, alerta sobre 4768 para ese principal&raquo; sí lo es. La última columna es la que cuenta.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="priorizacion">
+    <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5">Parte 3 · Priorización por factibilidad y riesgo</h2>
+    <p class="text-sm text-gray-400 mb-6 ml-5">Todo lo de la Parte 2 es deseable. Muy poco es ejecutable este trimestre. <span class="timer-badge is-neutral ml-1">20 min</span></p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+      <div class="unified-card is-static p-6">
+        <h4 class="text-sm text-white mb-4"><i class="fas fa-wrench text-base-orange mr-2"></i>Factibilidad · puntuá 1 a 5</h4>
+        <ul class="text-sm text-gray-300 leading-relaxed space-y-2">
+          <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>¿Requiere presupuesto nuevo o se hace con lo que hay?</span></li>
+          <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>¿Cuántas áreas tienen que aprobarlo?</span></li>
+          <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>¿Existe la habilidad en el equipo, o hay que contratarla?</span></li>
+          <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>¿Cuánto cuesta <strong class="text-white">mantenerlo</strong>? Un artefacto sin mantenimiento se degrada y se quema.</span></li>
+          <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>¿Toca producción? Si toca, la factibilidad baja fuerte.</span></li>
+        </ul>
+      </div>
+      <div class="unified-card is-static p-6">
+        <h4 class="text-sm text-white mb-4"><i class="fas fa-triangle-exclamation text-base-orange mr-2"></i>Riesgo · puntuá 1 a 5</h4>
+        <ul class="text-sm text-gray-300 leading-relaxed space-y-2">
+          <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span><strong class="text-white">Riesgo operativo:</strong> ¿puede romper un servicio real o confundir a un empleado?</span></li>
+          <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span><strong class="text-white">Riesgo de OPSEC:</strong> ¿si se quema, qué le enseña al adversario sobre nuestra capacidad?</span></li>
+          <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span><strong class="text-white">Riesgo de escalada:</strong> ¿puede provocar una reacción peor que la actividad que estamos observando?</span></li>
+          <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span><strong class="text-white">Riesgo de custodia:</strong> ¿el artefacto puede ser usado <em>por</em> el adversario contra nosotros o contra un tercero?</span></li>
+          <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span><strong class="text-white">Riesgo legal:</strong> ¿hay datos personales en el señuelo? ¿hay registro de actividad de un tercero?</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="unified-card is-static p-6 mb-5">
+      <h4 class="text-sm text-white mb-4"><i class="fas fa-table-cells text-base-orange mr-2"></i>Ubicá cada actividad en el cuadrante</h4>
+      <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr><th>&nbsp;</th><th>Riesgo bajo</th><th>Riesgo alto</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="col-label">Factible</td>
+            <td><strong class="text-white">Hacelo ya.</strong> Es la ola 1 de la operación. Si este cuadrante está vacío, revisá los puntajes: casi siempre hay algo acá y no se ve por buscar lo sofisticado.</td>
+            <td><strong class="text-white">Requiere reglas de compromiso.</strong> Se puede hacer, pero con aprobación explícita, condiciones de corte y dueño designado.</td>
+          </tr>
+          <tr>
+            <td class="col-label">No factible</td>
+            <td><strong class="text-white">Hoja de ruta.</strong> Va al plan del trimestre siguiente con lo que hace falta para habilitarlo.</td>
+            <td><strong class="text-white">Descartalo y decilo.</strong> Un descarte argumentado es un entregable: evita que se vuelva a proponer cada seis meses.</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <textarea class="fill-in" data-wb="campo1" data-wb-label="Ubicá cada actividad en el cuadrante" rows="4" placeholder="Ola 1 (factible / riesgo bajo):&#10;Con RoE (factible / riesgo alto):&#10;Hoja de ruta:&#10;Descartado y por qué:"></textarea>
+  </section>
+
+  <section id="ensamblaje" class="print-break">
+    <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5">Parte 4 · Ensamblar la operación</h2>
+    <p class="text-sm text-gray-400 mb-6 ml-5">Un conjunto de actividades no es una operación hasta que tiene objetivo, historia, límites y final. <span class="timer-badge is-neutral ml-1">20 min</span></p>
+
+    <div class="space-y-2">
+      <div class="step" data-n="1">
+        <h4 class="text-base text-white">Objetivo operacional</h4>
+        <p class="text-sm text-gray-300 leading-relaxed mb-3">Uno solo, para toda la operación. Y hay que elegir de verdad, porque los objetivos compiten: <strong class="text-white">expulsar</strong> al adversario y <strong class="text-white">aprender</strong> de él son incompatibles en la misma ventana de tiempo. Declaralo.</p>
+        <textarea class="fill-in" data-wb="campo2" data-wb-label="Objetivo operacional" rows="2" placeholder="Objetivo operacional único, con verbo de resultado y ventana temporal"></textarea>
+      </div>
+      <div class="step" data-n="2">
+        <h4 class="text-base text-white">Narrativa unificada</h4>
+        <p class="text-sm text-gray-300 leading-relaxed mb-3">Una sola historia que explique todos los artefactos de la ola 1 a la vez &mdash; como el ejemplo de las cuatro ramas del LAB 02. Si necesitás dos historias, tenés dos operaciones y hay que separarlas.</p>
+        <textarea class="fill-in" data-wb="campo3" data-wb-label="Narrativa unificada" rows="3" placeholder="Narrativa que cubre todos los artefactos de la ola 1"></textarea>
+      </div>
+      <div class="step" data-n="3">
+        <h4 class="text-base text-white">Reglas de compromiso (RoE)</h4>
+        <p class="text-sm text-gray-300 leading-relaxed mb-3">Qué está permitido, qué no, y quién decide en el momento. Sin esto, la brecha Tipo 3 del LAB 05 sigue abierta por más artefactos que despliegues.</p>
+        <ul class="text-sm text-gray-300 leading-relaxed space-y-2 ml-2 mb-3">
+          <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>¿Se puede dejar al adversario operar? ¿Cuánto tiempo, con qué límite?</span></li>
+          <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>¿Qué activos son intocables, incluso a costa de perder la observación?</span></li>
+          <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>¿Quién puede ordenar el corte a las 3 de la mañana, sin consultar?</span></li>
+          <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>¿Qué se notifica, a quién, y en qué plazo? (legal, comunicación, regulador)</span></li>
+        </ul>
+        <textarea class="fill-in" data-wb="campo4" data-wb-label="Reglas de compromiso (RoE)" rows="4" placeholder="Permitido / prohibido / autoridad de corte / notificaciones"></textarea>
+      </div>
+      <div class="step" data-n="4">
+        <h4 class="text-base text-white">Criterios de cierre</h4>
+        <p class="text-sm text-gray-300 leading-relaxed mb-3">
+          Las tres condiciones que terminan la operación: <strong class="text-white">éxito</strong> (conseguimos lo que buscábamos),
+          <strong class="text-white">fracaso</strong> (el adversario se fue o quemó los artefactos) y <strong class="text-white">corte
+          forzado</strong> (el riesgo superó el umbral). Una operación sin criterio de cierre no termina: se abandona, y eso deja
+          artefactos huérfanos que después nadie sabe si son señuelos o activos reales.
+        </p>
+        <textarea class="fill-in" data-wb="campo5" data-wb-label="Criterios de cierre" rows="3" placeholder="Éxito: / Fracaso: / Corte forzado:"></textarea>
+      </div>
+      <div class="step" data-n="5">
+        <h4 class="text-base text-white">Roles con nombre</h4>
+        <p class="text-sm text-gray-300 leading-relaxed mb-3">
+          Cinco funciones mínimas. Pueden recaer en la misma persona, pero cada una tiene que estar asignada: si no, se repite la falla
+          A5 del LAB 06 &mdash; la señal llega a una casilla sin dueño.
+        </p>
+        <script type="application/json" data-wb-seed-for="roles">
+        [{"rol": "Líder de operación", "resp": "Decide el corte. Es quien responde por el riesgo asumido"}, {"rol": "Coordinador", "resp": "Sostiene el cronograma y las dependencias entre artefactos"}, {"rol": "Analista de amenazas", "resp": "Convierte lo observado en inteligencia accionable"}, {"rol": "Administrador", "resp": "Despliega y mantiene los artefactos y su telemetría"}, {"rol": "Dueño de la alerta", "resp": "Recibe la notificación y la acciona. <strong class=\"text-white\">Una persona, no una casilla</strong>"}]
+        </script>
+        <div class="unified-card is-static p-5" data-wb-table="roles" data-wb-key="rol" data-wb-min="0">
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead><tr><th>Rol</th><th>Responsabilidad</th><th>Asignado a</th></tr></thead>
+              <tbody data-wb-body></tbody>
+            </table>
+          </div>
+          <template data-wb-row>
+            <tr>
+              <td class="col-label" data-wb-col="rol" data-wb-fixed style="min-width:150px"></td>
+              <td data-wb-col="resp" data-wb-fixed style="min-width:260px"></td>
+              <td class="is-editable" style="min-width:150px"><div class="wb-cell" contenteditable="true" data-wb-col="asignado" data-ph="nombre, no un área"></div></td>
+              <td class="wb-rowtools"><button class="wb-del" type="button" title="Eliminar fila" aria-label="Eliminar fila"><i class="fas fa-xmark"></i></button></td>
+            </tr>
+          </template>
+          <div class="wb-tablefoot no-print">
+            <button class="wb-btn wb-add" type="button" data-wb-add><i class="fas fa-plus"></i>Agregar rol</button>
+            <span class="wb-count"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="limites">
+    <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5">Parte 5 · La lista de lo que no vamos a hacer</h2>
+    <p class="text-sm text-gray-400 mb-6 ml-5">Diez minutos, y es la parte que distingue una propuesta profesional de una fantasía. <span class="timer-badge is-neutral ml-1">10 min</span></p>
+
+    <div class="unified-card is-static p-7 mb-5">
+      <p class="text-sm text-gray-300 leading-relaxed mb-4">
+        Todo lo que diseñaste hoy ocurre <strong class="text-white">sobre activos propios de EkoFinance</strong>. Ese es el límite, y va
+        escrito en el reporte para que nadie lo cruce interpretando de más.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="callout is-entregable">
+          <div class="callout-title"><i class="fas fa-check"></i>Dentro del alcance</div>
+          <ul class="text-sm text-gray-300 leading-relaxed space-y-1">
+            <li>Artefactos sobre infraestructura propia</li>
+            <li>Observación y registro de actividad en sistemas propios</li>
+            <li>Manipulación de lo que nuestros sistemas responden</li>
+            <li>Sinkholing de dominios maliciosos en nuestro DNS interno</li>
+            <li>Compartir indicadores con la comunidad, según TLP</li>
+          </ul>
+        </div>
+        <div class="callout is-atencion">
+          <div class="callout-title"><i class="fas fa-ban"></i>Fuera del alcance, siempre</div>
+          <ul class="text-sm text-gray-300 leading-relaxed space-y-1">
+            <li>Cualquier acceso a sistemas de terceros, incluida la infraestructura del adversario</li>
+            <li>Borrado o recuperación de datos alojados fuera</li>
+            <li>Payloads que ejecuten código en la máquina del adversario</li>
+            <li>Interferencia con infraestructura comprometida de otra víctima</li>
+            <li>Recolección de datos personales del adversario más allá de lo necesario</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout is-pista">
+      <div class="callout-title"><i class="fas fa-scale-balanced"></i>Por qué el hackback no está sobre la mesa</div>
+      <p class="text-sm leading-relaxed text-gray-300 mb-3">
+        No es una cuestión de prudencia: en Argentina el acceso no autorizado a sistemas informáticos es delito
+        (Ley 26.388, que incorporó los delitos informáticos al Código Penal), y la ley no distingue por el motivo de quien accede.
+        Que hayas sido víctima primero no habilita el acceso a un sistema ajeno.
+      </p>
+      <p class="text-sm leading-relaxed text-gray-300 mb-3">
+        A eso se suma el problema técnico: la infraestructura del adversario es casi siempre <strong class="text-white">infraestructura
+        comprometida de otra víctima</strong>. El &laquo;contraataque&raquo; le pega a un tercero inocente, con su propia
+        responsabilidad legal para vos.
+      </p>
+      <p class="text-sm leading-relaxed text-gray-300">
+        Verificá el marco aplicable a tu jurisdicción y a tu sector: si EkoFinance está regulada, hay obligaciones de notificación con
+        plazos que cambian el diseño de la operación &mdash; una operación de observación de tres semanas puede ser incompatible con un
+        deber de reporte de 72 horas. Eso va en las RoE, no en una nota al pie.
+      </p>
+    </div>
+  </section>
+
+  <section id="checklist">
+    <div class="unified-card is-static p-7">
+      <h3 class="text-lg text-white mb-1 border-l-4 border-base-orange pl-3">Control de avance</h3>
+      <p class="text-xs text-gray-500 mb-5 ml-4">Se guarda en tu navegador.</p>
+      <ul class="checklist">
+        <li><label><input type="checkbox"><span>Entramos a la matriz de Engage y completamos los IDs de las actividades que usamos</span></label></li>
+        <li><label><input type="checkbox"><span>Cada brecha priorizada tiene una o dos actividades, no seis</span></label></li>
+        <li><label><input type="checkbox"><span>Cada actividad tiene una columna «qué se despliega» con nombres y configuración concretos</span></label></li>
+        <li><label><input type="checkbox"><span>Las actividades están puntuadas en factibilidad y en las cinco dimensiones de riesgo</span></label></li>
+        <li><label><input type="checkbox"><span>El cuadrante «factible / riesgo bajo» no está vacío</span></label></li>
+        <li><label><input type="checkbox"><span>Hay al menos un descarte argumentado</span></label></li>
+        <li><label><input type="checkbox"><span>El objetivo operacional es único y resuelve la tensión expulsar vs aprender</span></label></li>
+        <li><label><input type="checkbox"><span>Una sola narrativa cubre todos los artefactos de la ola 1</span></label></li>
+        <li><label><input type="checkbox"><span>Las RoE dicen quién corta a las 3 de la mañana</span></label></li>
+        <li><label><input type="checkbox"><span>Hay criterios de éxito, de fracaso y de corte forzado</span></label></li>
+        <li><label><input type="checkbox"><span>El «dueño de la alerta» es una persona, no una casilla</span></label></li>
+        <li><label><input type="checkbox"><span>La lista de lo que no vamos a hacer está escrita en el reporte</span></label></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="entregable">
+    <div class="callout is-entregable">
+      <div class="callout-title"><i class="fas fa-box-open"></i>Entregable · <span class="text-white">Lista de priorización estratégica</span></div>
+      <p class="text-sm leading-relaxed text-gray-300 mb-3">Segundo de los tres productos del reporte final. Contiene:</p>
+      <ul class="text-sm text-gray-300 leading-relaxed space-y-2">
+        <li class="flex gap-2"><i class="fas fa-check text-base-orange mt-1 text-xs"></i><span>Tabla brecha &rarr; actividad Engage (con ID) &rarr; despliegue concreto</span></li>
+        <li class="flex gap-2"><i class="fas fa-check text-base-orange mt-1 text-xs"></i><span>Puntuación de factibilidad y riesgo, y ubicación en el cuadrante</span></li>
+        <li class="flex gap-2"><i class="fas fa-check text-base-orange mt-1 text-xs"></i><span>Ficha de operación: objetivo, narrativa, RoE, criterios de cierre, roles</span></li>
+        <li class="flex gap-2"><i class="fas fa-check text-base-orange mt-1 text-xs"></i><span>Lista de exclusiones con su fundamento</span></li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-white/10 mt-12 py-8">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center justify-between gap-4 flex-wrap mb-6 no-print">
+      <a href="lab-06-auditoria-del-engano-vigente.html" class="back-link"><i class="fas fa-arrow-left"></i>LAB 06 · Auditoría del engaño vigente</a>
+      <a href="lab-08-kpis-y-criterios-de-exito.html" class="back-link">LAB 08 · KPIs y criterios de éxito<i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="flex flex-col md:flex-row items-center justify-between gap-3 pt-6 border-t border-white/5">
+      <span class="text-xs text-gray-500">Active Cyber Defense: Hunt the Fox on His Land · Ekoparty 2026</span>
+      <p class="text-xs text-gray-500">&copy; 2026 BASE4 Security</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/base4-labs.js"></script>
+<script src="../assets/base4-workbook.js"></script>
+</body>
+</html>

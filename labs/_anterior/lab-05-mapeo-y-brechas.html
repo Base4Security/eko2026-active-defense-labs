@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAB 05 · Mapeo y brechas — Active Cyber Defense · Ekoparty 2026</title>
+<meta name="description" content="Convertís la cronología en una cadena de técnicas de ATT&amp;CK, la confrontás con los controles que EkoFinance tenía, y clasificás cada falla según el tipo de brecha que la produjo. El diagnóstico de este lab es lo que el LAB 07 va a intentar cerrar.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Boldonse&family=Lato:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="../assets/base4-labs.css" rel="stylesheet">
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { base: { bg:'#282828', surfaceAlt:'#1e1e1e', orange:'#DC780F', orangeAlt:'#F1912D', textMain:'#ffffff', textDim:'#d1d5db' } },
+  fontFamily: { sans:['Lato','sans-serif'], display:['Boldonse','sans-serif'], mono:['JetBrains Mono','ui-monospace','monospace'] }
+} } }
+</script>
+</head>
+<body class="antialiased min-h-screen flex flex-col bg-base-bg text-gray-200" data-lab="lab05">
+
+<div class="lab-progress no-print"><i></i></div>
+
+<nav class="top-nav sticky top-0 z-50 bg-base-bg/95 backdrop-blur border-b border-white/10 no-print">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+    <a href="../index.html" class="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 hover:text-base-orangeAlt transition-colors">
+      <i class="fas fa-arrow-left mr-2"></i>Active Cyber Defense · Labs 2026
+    </a>
+    <div class="flex items-center gap-2 flex-wrap">
+      <span class="timer-badge is-neutral"><i class="fas fa-list-check"></i><span data-progress-readout>0 / 0</span></span>
+      <span class="timer-badge" data-timer data-minutes="75">
+        <i class="fas fa-hourglass-half"></i><span data-timer-out>75:00</span>
+        <button data-timer-btn class="ml-1 hover:text-white transition-colors" title="Iniciar / pausar" aria-label="Iniciar o pausar el temporizador"><i class="fas fa-play"></i></button>
+      </span>
+      <button class="back-link" data-reset title="Borrar mis tildes y anotaciones"><i class="fas fa-rotate-left"></i>Reset</button>
+    </div>
+  </div>
+</nav>
+
+<header class="relative py-14 bg-[radial-gradient(circle_at_50%_-30%,_#3a2600_0%,_#282828_60%)] border-b border-white/10">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center gap-3 mb-5 flex-wrap">
+      <span class="timer-badge">Segunda parte</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-clock"></i>75 minutos</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-users"></i>Grupos de 2-3</span>
+    </div>
+    <p class="text-base-orange font-bold tracking-[0.3em] uppercase mb-3 text-xs">Laboratorio 05</p>
+    <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-white mb-4 data-wb-title">Mapeo y brechas</h1>
+    <p class="max-w-3xl text-base text-gray-300 leading-relaxed">Convertís la cronología en una cadena de técnicas de ATT&amp;CK, la confrontás con los controles que EkoFinance tenía, y clasificás cada falla según el tipo de brecha que la produjo. El diagnóstico de este lab es lo que el LAB 07 va a intentar cerrar.</p>
+  </div>
+</header>
+
+<main class="flex-grow max-w-6xl mx-auto px-6 py-12 w-full space-y-10" data-wb-scope>
+  <!-- ═══ BARRA DE HERRAMIENTAS ═══ -->
+  <div class="wb-toolbar no-print">
+    <button class="wb-btn is-primary" type="button" data-wb-act="md" title="Ver y copiar el trabajo listo para entregar"><i class="fas fa-file-export"></i>Exportar</button>
+    <button class="wb-btn" type="button" data-wb-act="importFile" title="Cargar un respaldo .json"><i class="fas fa-file-import"></i>Importar</button>
+    <button class="wb-btn is-danger" type="button" data-wb-act="clear" title="Borrar todo lo cargado"><i class="fas fa-rotate-left"></i>Limpiar</button>
+    <span class="wb-status is-saved" data-wb-status><span class="dot"></span><span data-wb-status-label>Guardado</span></span>
+  </div>
+
+  <section id="grupo">
+    <div class="unified-card is-static p-6">
+      <div class="wb-ident">
+        <div>
+          <label for="wb-grupo">Grupo</label>
+          <input class="wb-input" id="wb-grupo" data-wb="meta.grupo" placeholder="Ej. Grupo 3" autocomplete="off">
+        </div>
+        <div>
+          <label for="wb-integrantes">Integrantes</label>
+          <input class="wb-input" id="wb-integrantes" data-wb="meta.integrantes" placeholder="Nombres separados por coma" autocomplete="off">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="objetivo">
+    <div class="callout is-objetivo">
+      <div class="callout-title"><i class="fas fa-bullseye"></i>Objetivo</div>
+      <p class="text-sm leading-relaxed text-gray-300">
+        Producir un <strong class="text-white">mapa de capacidades del adversario contra brechas del defensor</strong>. Para cada
+        técnica de la cadena: qué control debería haberla frenado, qué pasó realmente, y de qué <em>tipo</em> es la falla. Esa
+        clasificación no es burocracia: cada tipo de brecha se cierra con una herramienta distinta, y confundirlos es la razón por la
+        que las organizaciones compran productos que no resuelven su problema.
+      </p>
+    </div>
+  </section>
+
+  <section id="mapeo">
+    <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5">Parte 1 · La cadena en ATT&amp;CK</h2>
+    <p class="text-sm text-gray-400 mb-6 ml-5">Trabajás sobre tu tabla de observables y tu cronología del LAB 04. <span class="timer-badge is-neutral ml-1">25 min</span></p>
+
+    <div class="space-y-2 mb-6">
+      <div class="step" data-n="1">
+        <h4 class="text-base text-white">Asignale técnica a cada eslabón</h4>
+        <p class="text-sm text-gray-300 leading-relaxed mb-3">
+          Recorré la cronología y asignale a cada evento su táctica y su técnica. Usá la matriz viva, no la memoria:
+          <a href="https://attack.mitre.org/matrices/enterprise/" target="_blank" rel="noopener" class="text-base-orangeAlt hover:underline">attack.mitre.org/matrices/enterprise</a>.
+        </p>
+        <div class="callout is-pista mb-3">
+          <div class="callout-title"><i class="fas fa-lightbulb"></i>Dos reglas de higiene</div>
+          <ul class="text-sm text-gray-300 leading-relaxed space-y-2">
+            <li><strong class="text-white">Sub-técnica siempre que se pueda.</strong> <span class="tag">T1003</span> no dice nada operativo; <span class="tag">T1003.001</span> (LSASS) y <span class="tag">T1003.003</span> (NTDS) se detectan y se engañan de formas completamente distintas.</li>
+            <li><strong class="text-white">Un evento puede tener más de una técnica, y una técnica puede aparecer más de una vez.</strong> Si la misma técnica aparece en dos fases distintas de la cadena, eso es información: es una capacidad que el adversario reutiliza, y por lo tanto un punto de apalancamiento.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step" data-n="2">
+        <h4 class="text-base text-white">Dibujá la cadena, no la lista</h4>
+        <p class="text-sm text-gray-300 leading-relaxed mb-3">
+          Una lista de 12 técnicas no muestra dependencias. Una cadena sí, y las dependencias son donde se interviene: si el eslabón 6
+          no ocurre, los eslabones 7 a 12 no existen.
+        </p>
+        <div class="code-wrap relative mb-3">
+          <div class="code-caption"><i class="fas fa-diagram-project"></i>Formato de cadena con dependencias</div>
+          <pre class="code">[<span class="k">T____</span>] acceso inicial
+    │  <span class="c">requiere: servicio expuesto + sin parche</span>
+    ▼
+[<span class="k">T____</span>] ejecución  ──┐
+    │              │ <span class="c">rama de evasión</span>
+    ▼              ▼
+[<span class="k">T____</span>] persist.  [<span class="k">T____</span>] evasión
+    │
+    ▼
+[<span class="k">T____</span>] credenciales   ◀── <span class="s">ESLABÓN CRÍTICO</span>
+    │                       <span class="c">todo lo que sigue depende de esto</span>
+    ▼
+[<span class="k">T____</span>] mov. lateral → [<span class="k">T____</span>] recolección → [<span class="k">T____</span>] exfiltración</pre>
+        </div>
+        <textarea class="fill-in" data-wb="campo1" data-wb-label="Dibujá la cadena, no la lista" rows="3" placeholder="Dependencias que encontramos: qué eslabón habilita a qué otros"></textarea>
+      </div>
+
+      <div class="step" data-n="3">
+        <h4 class="text-base text-white">Identificá el eslabón crítico</h4>
+        <p class="text-sm text-gray-300 leading-relaxed mb-3">
+          De toda la cadena, ¿cuál es el eslabón que si se rompe se lleva puesta la mayor cantidad de eslabones posteriores? Ese es
+          donde vale la pena concentrar todo: detección, engaño y respuesta.
+        </p>
+        <textarea class="fill-in" data-wb="campo2" data-wb-label="Identificá el eslabón crítico" rows="2" placeholder="Eslabón crítico: ___ · cuántos eslabones posteriores dependen de él: ___ · por qué"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <section id="controles" class="print-break">
+    <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5">Parte 2 · Contra los controles</h2>
+    <p class="text-sm text-gray-400 mb-6 ml-5">Para cada técnica de la cadena, la pregunta incómoda. <span class="timer-badge is-neutral ml-1">20 min</span></p>
+
+        <div class="unified-card is-static p-5" data-wb-table="controles" data-wb-min="6">
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead><tr><th>Técnica</th><th>Control que debía frenarla</th><th>¿Existía?</th><th>¿Generó telemetría?</th><th>¿Alguien la miró?</th><th>¿Se actuó?</th></tr></thead>
+              <tbody data-wb-body></tbody>
+            </table>
+          </div>
+          <p class="wb-empty" data-wb-empty hidden>Sin filas. Una por técnica de la cadena.</p>
+          <template data-wb-row>
+            <tr>
+              <td class="is-editable" style="min-width:95px"><div class="wb-cell" contenteditable="true" data-wb-col="tecnica" data-ph="T…"></div></td>
+              <td class="is-editable" style="min-width:200px"><div class="wb-cell" contenteditable="true" data-wb-col="control" data-ph="qué control"></div></td>
+              <td style="min-width:100px">
+                <select class="wb-select" data-wb-col="existia" aria-label="¿Existía?">
+                  <option value="">—</option>
+                  <option value="si">Sí</option>
+                  <option value="no">No</option>
+                  <option value="parcial">Parcial</option>
+                </select>
+              </td>
+              <td style="min-width:100px">
+                <select class="wb-select" data-wb-col="telemetria" aria-label="¿Generó telemetría?">
+                  <option value="">—</option>
+                  <option value="si">Sí</option>
+                  <option value="no">No</option>
+                  <option value="parcial">Parcial</option>
+                </select>
+              </td>
+              <td style="min-width:100px">
+                <select class="wb-select" data-wb-col="miro" aria-label="¿Alguien la miró?">
+                  <option value="">—</option>
+                  <option value="si">Sí</option>
+                  <option value="no">No</option>
+                  <option value="parcial">Parcial</option>
+                </select>
+              </td>
+              <td style="min-width:100px">
+                <select class="wb-select" data-wb-col="actuo" aria-label="¿Se actuó?">
+                  <option value="">—</option>
+                  <option value="si">Sí</option>
+                  <option value="no">No</option>
+                  <option value="parcial">Parcial</option>
+                </select>
+              </td>
+              <td class="wb-rowtools"><button class="wb-del" type="button" title="Eliminar fila" aria-label="Eliminar fila"><i class="fas fa-xmark"></i></button></td>
+            </tr>
+          </template>
+          <div class="wb-tablefoot no-print">
+            <button class="wb-btn wb-add" type="button" data-wb-add><i class="fas fa-plus"></i>Agregar técnica</button>
+            <span class="wb-count"></span>
+          </div>
+        </div>
+
+    <div class="callout is-pista">
+      <div class="callout-title"><i class="fas fa-arrow-down-short-wide"></i>Las cuatro columnas son una escalera</div>
+      <p class="text-sm leading-relaxed text-gray-300">
+        Existía &rarr; generó telemetría &rarr; alguien la miró &rarr; se actuó. Cada peldaño se puede fallar por separado, y el
+        peldaño donde se rompió determina qué hay que arreglar. Una organización que compra un EDR para resolver un problema del
+        tercer peldaño gasta mucho dinero en no cambiar nada: ya tenía la telemetría, lo que no tenía era quién la mirara.
+      </p>
+    </div>
+  </section>
+
+  <section id="brechas">
+    <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5">Parte 3 · Taxonomía de brechas</h2>
+    <p class="text-sm text-gray-400 mb-6 ml-5">Cada falla de la tabla anterior se clasifica en uno de cuatro tipos. <span class="timer-badge is-neutral ml-1">20 min</span></p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+      <div class="unified-card is-static p-6 border-t-4" style="border-top-color:#f87171">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center text-lg" style="background:rgba(248,113,113,0.12);color:#f87171"><i class="fas fa-eye-slash"></i></div>
+          <div><span class="tag is-gap">Tipo 1</span><h4 class="text-base text-white mt-1">Punto ciego</h4></div>
+        </div>
+        <p class="text-sm text-gray-300 leading-relaxed mb-3">No hay telemetría. El evento ocurrió y no dejó rastro recuperable en ninguna parte.</p>
+        <p class="text-xs text-gray-400 leading-relaxed"><strong class="text-white">Se cierra con:</strong> instrumentación (habilitar el log) o con <strong class="text-white">engaño</strong> &mdash; un artefacto trae su propia telemetría, y a veces sale más barato que instrumentar toda una flota.</p>
+      </div>
+      <div class="unified-card is-static p-6 border-t-4" style="border-top-color:#F1912D">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center text-lg" style="background:rgba(241,145,45,0.12);color:#F1912D"><i class="fas fa-bell-slash"></i></div>
+          <div><span class="tag is-gap">Tipo 2</span><h4 class="text-base text-white mt-1">Ahogado en ruido</h4></div>
+        </div>
+        <p class="text-sm text-gray-300 leading-relaxed mb-3">La telemetría existía pero no había regla, o la regla estaba silenciada, o el volumen la hacía inútil.</p>
+        <p class="text-xs text-gray-400 leading-relaxed"><strong class="text-white">Se cierra con:</strong> una caza estructurada que se convierte en detector (LAB 03), o con engaño si el problema es la relación señal/ruido.</p>
+      </div>
+      <div class="unified-card is-static p-6 border-t-4" style="border-top-color:#60a5fa">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center text-lg" style="background:rgba(96,165,250,0.12);color:#60a5fa"><i class="fas fa-hand"></i></div>
+          <div><span class="tag is-gap">Tipo 3</span><h4 class="text-base text-white mt-1">Señal sin dueño</h4></div>
+        </div>
+        <p class="text-sm text-gray-300 leading-relaxed mb-3">Se detectó y no se pudo actuar: sin autoridad, sin procedimiento, sin acceso, o el reloj de aprobación era más lento que el adversario.</p>
+        <p class="text-xs text-gray-400 leading-relaxed"><strong class="text-white">Se cierra con:</strong> reglas de compromiso pre-aprobadas y playbooks. Ninguna herramienta la resuelve.</p>
+      </div>
+      <div class="unified-card is-static p-6 border-t-4" style="border-top-color:#a78bfa">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center text-lg" style="background:rgba(167,139,250,0.12);color:#a78bfa"><i class="fas fa-question"></i></div>
+          <div><span class="tag is-gap">Tipo 4</span><h4 class="text-base text-white mt-1">Desconocido</h4></div>
+        </div>
+        <p class="text-sm text-gray-300 leading-relaxed mb-3">No sabíamos que el adversario podía hacer eso. La técnica no estaba en ningún modelo de amenaza de la organización.</p>
+        <p class="text-xs text-gray-400 leading-relaxed"><strong class="text-white">Se cierra con:</strong> requisitos de inteligencia nuevos &mdash; y con engaño, que es el único mecanismo que produce inteligencia sobre lo que <em>todavía no sabés que no sabés</em>.</p>
+      </div>
+    </div>
+
+    <div class="space-y-2 mb-6">
+      <div class="step" data-n="1">
+        <h4 class="text-base text-white">Clasificá y priorizá</h4>
+        <p class="text-sm text-gray-300 leading-relaxed mb-3">Volcá cada falla a la tabla. La columna de prioridad se calcula, no se opina: cuántos eslabones de la cadena habría cortado cerrar esa brecha.</p>
+        <div class="unified-card is-static p-5" data-wb-table="brechas" data-wb-min="0">
+          <div class="wb-tablefoot no-print" style="margin-top:0;margin-bottom:14px">
+            <button class="wb-btn is-primary" type="button" data-wb-derive-btn="brechas"><i class="fas fa-wand-magic-sparkles"></i>Traer mis brechas del LAB 01</button>
+          </div>
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead><tr><th>ID</th><th>Brecha</th><th>Tipo</th><th>Técnica(s) que habilitó</th><th>Eslabones que habría cortado</th><th>Prioridad</th></tr></thead>
+              <tbody data-wb-body></tbody>
+            </table>
+          </div>
+          <p class="wb-empty" data-wb-empty hidden>Sin filas. Apretá «Traer» para partir de tus brechas del LAB 01, o agregá una a mano.</p>
+          <template data-wb-row>
+            <tr>
+              <td class="col-accent" data-wb-col="ref" data-wb-fixed style="white-space:nowrap"></td>
+              <td class="is-editable" style="min-width:220px"><div class="wb-cell" contenteditable="true" data-wb-col="brecha" data-ph="qué faltó"></div></td>
+              <td style="min-width:150px">
+                <select class="wb-select" data-wb-col="tipo" aria-label="Tipo de brecha">
+                  <option value="">—</option>
+                  <option value="1">Tipo 1 · punto ciego</option>
+                  <option value="2">Tipo 2 · ahogado en ruido</option>
+                  <option value="3">Tipo 3 · señal sin dueño</option>
+                  <option value="4">Tipo 4 · desconocido</option>
+                </select>
+              </td>
+              <td class="is-editable" style="min-width:110px"><div class="wb-cell" contenteditable="true" data-wb-col="tecnicas" data-ph="T…"></div></td>
+              <td class="is-editable" style="min-width:150px"><div class="wb-cell" contenteditable="true" data-wb-col="eslabones" data-ph="cuántos y cuáles"></div></td>
+              <td class="is-editable" style="min-width:90px"><div class="wb-cell" contenteditable="true" data-wb-col="prioridad"></div></td>
+              <td class="wb-rowtools"><button class="wb-del" type="button" title="Eliminar fila" aria-label="Eliminar fila"><i class="fas fa-xmark"></i></button></td>
+            </tr>
+          </template>
+          <div class="wb-tablefoot no-print">
+            <button class="wb-btn wb-add" type="button" data-wb-add><i class="fas fa-plus"></i>Agregar brecha</button>
+            <span class="wb-count"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step" data-n="2">
+        <h4 class="text-base text-white">Confrontá con las lagunas que el CTI declara</h4>
+        <p class="text-sm text-gray-300 leading-relaxed mb-3">
+          El insumo 02 trae su propia <strong class="text-white">tabla de lagunas de conocimiento</strong> &mdash; así la llama el
+          equipo de CTI, y es su agenda de investigación: cosas que no sabe del adversario. Tu tabla de brechas es otra cosa: dice
+          dónde <em>no ves</em>. Compará una contra otra y contestá tres preguntas:
+        </p>
+        <ul class="text-sm text-gray-300 leading-relaxed space-y-2 ml-2 mb-3">
+          <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>¿Qué lagunas declara el CTI que se traducen en una brecha tuya que no habías visto?</span></li>
+          <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>¿Qué brechas encontraste vos que el CTI no declara? <em class="text-gray-400">(las más valiosas: el equipo de inteligencia no sabe que no sabe)</em></span></li>
+          <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>¿Hay alguna laguna que el CTI plantea como «no sabemos qué hace el adversario» y que en realidad es un <strong class="text-white">punto ciego</strong> tuyo? No es lo mismo: la primera se cierra investigando, la segunda poniendo un sensor o un señuelo. Confundirlas cambia quién es el dueño del problema.</span></li>
+        </ul>
+        <textarea class="fill-in" data-wb="campo3" data-wb-label="Confrontá con las brechas que el CTI declara" rows="4" placeholder="Solo el CTI las vio:&#10;Solo nosotros las vimos:&#10;Mal clasificadas por el CTI:"></textarea>
+      </div>
+
+      <div class="step" data-n="3">
+        <h4 class="text-base text-white">Y con tus propias brechas de la primera parte</h4>
+        <p class="text-sm text-gray-300 leading-relaxed">
+          El botón <strong class="text-white">Traer mis brechas del LAB 01</strong> de la tabla de arriba las agrega marcadas como
+          <code class="inline">D1-</code>, sin borrar las que salieron del incidente. Las escribiste como preguntas verificables antes
+          de que hubiera incidente: ¿cuántas terminaron siendo exactamente el hueco por el que pasó el adversario? Ese número es la
+          mejor medida de si el ejercicio de la primera parte sirvió.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="casos-reales" class="print-break">
+    <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5">Parte 4 · A qué se parece esto</h2>
+    <p class="text-sm text-gray-400 mb-6 ml-5">Diez minutos. Ninguna cadena de ataque es original: casi siempre existe un caso público muy parecido y una lección ya pagada por otra organización. <span class="timer-badge is-neutral ml-1">10 min</span></p>
+
+    <div class="unified-card is-static p-7 mb-5">
+      <p class="text-sm text-gray-300 leading-relaxed mb-4">
+        El acceso inicial de este caso &mdash; explotación de Log4Shell contra un VMware Horizon expuesto a internet &mdash; fue uno de
+        los patrones de intrusión más documentados públicamente entre finales de 2021 y 2022, con advisories de agencias
+        gubernamentales y múltiples informes de respuesta a incidentes. Buscá uno.
+      </p>
+      <p class="text-sm text-gray-300 leading-relaxed mb-4">Las preguntas a responder con el caso público en la mano:</p>
+      <ul class="text-sm text-gray-300 leading-relaxed space-y-2 ml-2">
+        <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>¿Qué hizo el adversario en el caso público <strong class="text-white">después</strong> del acceso inicial que no aparece en nuestros insumos? Eso es una hipótesis de actividad no detectada, no una diferencia de caso.</span></li>
+        <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>¿Qué recomendaron las organizaciones que lo vivieron, y cuál de esas recomendaciones es aplicable a EkoFinance hoy?</span></li>
+        <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>¿Cuánto tiempo pasó entre la publicación del advisory y la fecha T0 de nuestro incidente? Si es mucho, la brecha principal no es técnica: es de gestión de vulnerabilidades y de consumo de inteligencia.</span></li>
+      </ul>
+    </div>
+
+    <div class="callout is-atencion">
+      <div class="callout-title"><i class="fas fa-triangle-exclamation"></i>Verificá antes de citar</div>
+      <p class="text-sm leading-relaxed text-gray-300">
+        Si usás un LLM para encontrar el caso público, tratá cada dato que te devuelva como no verificado hasta que lo confirmes en la
+        fuente primaria. Los modelos producen números de CVE, fechas y nombres de campaña plausibles y falsos con total fluidez.
+        Un reporte de CTI con un identificador inventado es peor que un reporte sin caso comparable.
+      </p>
+    </div>
+  </section>
+
+  <section id="checklist">
+    <div class="unified-card is-static p-7">
+      <h3 class="text-lg text-white mb-1 border-l-4 border-base-orange pl-3">Control de avance</h3>
+      <p class="text-xs text-gray-500 mb-5 ml-4">Se guarda en tu navegador.</p>
+      <ul class="checklist">
+        <li><label><input type="checkbox"><span>Cada eslabón de la cronología tiene técnica asignada, con sub-técnica donde corresponde</span></label></li>
+        <li><label><input type="checkbox"><span>La cadena está dibujada con dependencias, no como lista</span></label></li>
+        <li><label><input type="checkbox"><span>El eslabón crítico está identificado y justificado por cantidad de dependencias</span></label></li>
+        <li><label><input type="checkbox"><span>La tabla de controles está completa con las cuatro columnas de la escalera</span></label></li>
+        <li><label><input type="checkbox"><span>Tenemos entre 5 y 8 brechas, cada una con tipo asignado</span></label></li>
+        <li><label><input type="checkbox"><span>La prioridad de cada brecha se calculó por eslabones cortados, no por intuición</span></label></li>
+        <li><label><input type="checkbox"><span>Contrastamos nuestras brechas con las lagunas que declara el CTI, en las dos direcciones</span></label></li>
+        <li><label><input type="checkbox"><span>Encontramos un caso público comparable y verificamos sus datos en la fuente primaria</span></label></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="entregable">
+    <div class="callout is-entregable">
+      <div class="callout-title"><i class="fas fa-box-open"></i>Entregable · <span class="text-white">Mapa de capacidades vs brechas</span></div>
+      <p class="text-sm leading-relaxed text-gray-300 mb-3">
+        Es el primero de los tres productos del reporte final. Contiene:
+      </p>
+      <ul class="text-sm text-gray-300 leading-relaxed space-y-2">
+        <li class="flex gap-2"><i class="fas fa-check text-base-orange mt-1 text-xs"></i><span>Cadena de ataque en ATT&amp;CK con dependencias y eslabón crítico señalado</span></li>
+        <li class="flex gap-2"><i class="fas fa-check text-base-orange mt-1 text-xs"></i><span>Tabla de controles con la escalera de cuatro peldaños</span></li>
+        <li class="flex gap-2"><i class="fas fa-check text-base-orange mt-1 text-xs"></i><span>Tabla de 5 a 8 brechas tipificadas y priorizadas</span></li>
+        <li class="flex gap-2"><i class="fas fa-check text-base-orange mt-1 text-xs"></i><span>Diferencial contra las lagunas declaradas por el CTI</span></li>
+      </ul>
+      <p class="text-xs text-gray-400 mt-3 italic">Planilla de apoyo: <code class="inline">resources/plantillas/killchain-diamante-coa-gaps.xlsx</code></p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-white/10 mt-12 py-8">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center justify-between gap-4 flex-wrap mb-6 no-print">
+      <a href="lab-04-lectura-de-insumos.html" class="back-link"><i class="fas fa-arrow-left"></i>LAB 04 · Lectura de insumos</a>
+      <a href="lab-06-auditoria-del-engano-vigente.html" class="back-link">LAB 06 · Auditoría del engaño vigente<i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="flex flex-col md:flex-row items-center justify-between gap-3 pt-6 border-t border-white/5">
+      <span class="text-xs text-gray-500">Active Cyber Defense: Hunt the Fox on His Land · Ekoparty 2026</span>
+      <p class="text-xs text-gray-500">&copy; 2026 BASE4 Security</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/base4-labs.js"></script>
+<script src="../assets/base4-workbook.js"></script>
+</body>
+</html>

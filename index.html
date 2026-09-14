@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de laboratorios — Active Cyber Defense · Ekoparty 2026</title>
+<meta name="description" content="Diecisiete ejercicios, ocho horas de práctica. Programa del training Active Cyber Defense: Hunt the Fox on His Land.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Boldonse&family=Lato:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="assets/base4-labs.css" rel="stylesheet">
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { base: { bg:'#282828', surfaceAlt:'#1e1e1e', orange:'#DC780F', orangeAlt:'#F1912D', textMain:'#ffffff', textDim:'#d1d5db' } },
+  fontFamily: { sans:['Lato','sans-serif'], display:['Boldonse','sans-serif'], mono:['JetBrains Mono','ui-monospace','monospace'] }
+} } }
+</script>
+</head>
+<body class="antialiased min-h-screen flex flex-col bg-base-bg text-gray-200" data-lab="index">
+
+<nav class="top-nav sticky top-0 z-50 bg-base-bg/95 backdrop-blur border-b border-white/10 no-print">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+    <span class="text-xs font-bold tracking-[0.2em] uppercase text-gray-400">Laboratorios · Ekoparty 2026</span>
+    <div class="flex gap-2 flex-wrap items-center">
+      <a class="nav-pill" href="#preparacion"><i class="fas fa-box-open text-[10px]"></i> Preparación</a>
+      <a class="nav-pill" href="#carriles"><i class="fas fa-code-compare text-[10px]"></i> Los dos carriles</a>
+      <a class="nav-pill" href="#dia1"><span class="num">1</span> Día 1</a>
+      <a class="nav-pill" href="#dia2"><span class="num">2</span> Día 2</a>
+      <a class="nav-pill" href="#cadena"><i class="fas fa-link text-[10px]"></i> Encadenamiento</a>
+    </div>
+  </div>
+</nav>
+
+<header class="relative py-20 bg-[radial-gradient(circle_at_50%_-20%,_#3a2600_0%,_#282828_55%)] border-b border-white/10">
+  <div class="max-w-6xl mx-auto px-6 text-center flex flex-col items-center">
+    <div class="mb-8 inline-flex items-center justify-center">
+      <img src="https://base4sec.com/wp-content/uploads/2024/10/logo.png"
+           onerror="this.onerror=null; this.outerHTML='<span class=\'text-3xl font-black text-white tracking-tight\'>BASE4<span class=\'text-[#F1912D]\'>SEC</span></span>';"
+           alt="BASE4 Security" class="h-14 md:h-20 object-contain drop-shadow-2xl">
+    </div>
+    <p class="text-base-orange font-bold tracking-[0.3em] uppercase mb-4 text-xs">Active Cyber Defense · Hunt the Fox on His Land</p>
+    <h1 class="text-4xl md:text-6xl font-black tracking-tighter text-white mb-6">Guía de laboratorios</h1>
+    <p class="max-w-3xl text-base md:text-lg text-gray-300 leading-relaxed">
+      Diecisiete ejercicios sobre las ocho horas prácticas del curso. Catorce de teclado y tres de escribir.
+      Levantás honeypots, plantás tokens, cazás sobre telemetría real y al final intentás quemar el diseño de otro grupo.
+    </p>
+    <div class="flex flex-wrap items-center justify-center gap-3 mt-8">
+      <span class="timer-badge is-neutral"><i class="fas fa-flask"></i>17 ejercicios</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-clock"></i>480 minutos</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-keyboard"></i>410 min de teclado</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-users"></i>Grupos de 2-3</span>
+    </div>
+  </div>
+</header>
+
+<main class="flex-grow max-w-6xl mx-auto px-6 py-14 w-full space-y-16">
+
+  <!-- ═══════════════ PREPARACIÓN ═══════════════ -->
+  <section id="preparacion" class="space-y-6">
+    <h2 class="text-3xl font-black text-white border-l-4 border-base-orange pl-4">Preparación · una sola vez</h2>
+    <p class="text-base text-gray-300 leading-relaxed max-w-3xl">
+      Todo el Día 1 corre en tu máquina y no depende de la red del venue. Necesitás <strong class="text-white">Docker</strong>
+      instalado y corriendo. Hacelo antes de empezar: la primera construcción tarda dos o tres minutos.
+    </p>
+
+    <div class="unified-card is-static overflow-hidden">
+      <div class="code-caption"><i class="fas fa-terminal"></i>Terminal<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div>
+      <pre class="code">docker version
+
+<span class="c"># El laboratorio viene adentro de este mismo repositorio, en mi-lab/</span>
+git clone https://github.com/Base4Security/eko2026-active-defense-labs
+cd eko2026-active-defense-labs/mi-lab
+
+docker compose up -d --build
+docker compose ps        <span class="c"># portal, cowrie y opencanary en "running"</span>
+
+<span class="c"># el portal responde</span>
+open http://localhost:8080      <span class="c"># usuario: mcastro / demo1234</span>
+
+<span class="c"># el honeypot también (cualquier contraseña entra)</span>
+ssh root@localhost -p 2222</pre>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-5">
+      <div class="unified-card is-static p-5">
+        <h3 class="text-sm font-bold text-white mb-3"><i class="fas fa-plug text-base-orange mr-2"></i>Puertos</h3>
+        <ul class="text-sm text-gray-300 space-y-1.5">
+          <li><code>8080</code> · Portal de Conciliación</li>
+          <li><code>2222</code> · SSH del honeypot</li>
+          <li><code>8081</code> · portal falso de OpenCanary</li>
+          <li><code>1445 · 1433</code> · SMB y MSSQL falsos</li>
+        </ul>
+      </div>
+      <div class="unified-card is-static p-5">
+        <h3 class="text-sm font-bold text-white mb-3"><i class="fas fa-triangle-exclamation text-base-orange mr-2"></i>Si algo falla</h3>
+        <ul class="text-sm text-gray-300 space-y-1.5">
+          <li>Todos los comandos del curso salen desde <code>mi-lab/</code>.</li>
+          <li>Puerto ocupado: cambiá el mapeo en <code>docker-compose.yml</code>.</li>
+          <li>Cowrie tarda en el primer arranque: genera claves.</li>
+          <li>Sin internet: bajá <code>b4-lab-kit.tar</code> desde <a class="eko-link-label" href="https://github.com/Base4Security/eko2026-active-defense-labs/releases" target="_blank" rel="noopener">Releases</a> y usá <code>docker load -i</code>.</li>
+          <li>Sin Docker: trabajá con un compañero. El Día 2 funciona igual.</li>
+        </ul>
+      </div>
+      <div class="unified-card is-static p-5">
+        <h3 class="text-sm font-bold text-white mb-3"><i class="fas fa-wifi text-base-orange mr-2"></i>Lo que sí usa internet</h3>
+        <ul class="text-sm text-gray-300 space-y-1.5">
+          <li><strong class="text-white">canarytokens.org</strong> — E2, E3, E6, E13.</li>
+          <li><strong class="text-white">Kibana</strong> — E8 a E12, en el servidor del curso.</li>
+          <li>Una <strong class="text-white">casilla de correo por grupo</strong> para recibir los tokens.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ LOS DOS CARRILES ═══════════════ -->
+  <section id="carriles" class="space-y-6">
+    <h2 class="text-3xl font-black text-white border-l-4 border-base-orange pl-4">Los dos carriles</h2>
+    <p class="text-base text-gray-300 leading-relaxed max-w-3xl">
+      Todo el curso se apoya en una distinción, y conviene tenerla clara antes del primer ejercicio:
+      <strong class="text-white">no es lo mismo un sistema falso que un sistema real con algo falso adentro</strong>.
+    </p>
+
+    <div class="grid md:grid-cols-2 gap-5">
+      <div class="unified-card is-static p-6" style="border-left:3px solid #DC780F">
+        <p class="text-xs uppercase tracking-[0.2em] text-gray-500 mb-2">Carril A · sistema real</p>
+        <h3 class="text-xl font-black text-white mb-3">Portal de Conciliación</h3>
+        <p class="text-sm text-gray-300 leading-relaxed mb-3">
+          Una aplicación que funciona, con datos, usuarios y documentos. <strong class="text-white">Nada de esto es falso.</strong>
+          El engaño es solo lo que vos le agregás encima, en seis superficies posibles.
+        </p>
+        <p class="text-sm text-gray-300 leading-relaxed mb-4">Detecta a quien <strong class="text-white">use</strong> lo que plantaste.</p>
+        <p class="font-mono text-xs text-base-orangeAlt">E3 · E6 · E7 · E14</p>
+      </div>
+      <div class="unified-card is-static p-6" style="border-left:3px solid #60a5fa">
+        <p class="text-xs uppercase tracking-[0.2em] text-gray-500 mb-2">Carril B · sistema falso</p>
+        <h3 class="text-xl font-black text-white mb-3">Cowrie y OpenCanary</h3>
+        <p class="text-sm text-gray-300 leading-relaxed mb-3">
+          Servicios enteros que no deberían existir. No hay nada real adentro y ningún usuario de EkoFinance
+          tiene motivo para llegar.
+        </p>
+        <p class="text-sm text-gray-300 leading-relaxed mb-4">Detecta a cualquiera que los <strong class="text-white">toque</strong>.</p>
+        <p class="font-mono text-xs" style="color:#93c5fd">E1 · E4 · E5 · E7</p>
+      </div>
+    </div>
+
+    <div class="callout is-atencion">
+      <div class="callout-title"><i class="fas fa-code-compare"></i>Por qué no se mezclan</div>
+      <p class="text-sm leading-relaxed text-gray-300">
+        La prueba que ordena todo el diseño de deception es una pregunta: <em>¿un empleado legítimo lo tocaría?</em>
+        En el carril B se contesta sola —nadie legítimo llega nunca— y por eso no enseña nada. En el carril A hay gente
+        de verdad haciendo su trabajo, así que hay que pensarla pieza por pieza, y ahí la pregunta duele.
+        El <strong class="text-white">E7</strong> corre la misma consulta sobre los dos y mide la diferencia:
+        es el argumento económico del engaño, demostrado en vez de afirmado.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════ DÍA 1 ═══════════════ -->
+  <section id="dia1" class="space-y-6">
+    <div class="flex items-baseline gap-4 flex-wrap border-l-4 border-base-orange pl-4">
+      <h2 class="text-3xl font-black text-white">Día 1 · El banco de trabajo</h2>
+      <span class="font-mono text-sm text-gray-500">105 min · intercalados con la teoría</span>
+    </div>
+    <p class="text-base text-gray-300 leading-relaxed max-w-3xl">
+      Cuatro ejercicios cortos, cada uno después del módulo teórico que le corresponde. Todo local, cero dependencia
+      de la red. Al terminar el día cada grupo tiene un laboratorio corriendo, cinco tokens disparados y tres piezas
+      de engaño desplegadas en su portal.
+    </p>
+
+    <div class="grid md:grid-cols-2 gap-5">
+
+      <a href="labs/e01-laboratorio-y-delatores.html" class="unified-card p-6 block group">
+        <div class="flex items-start justify-between gap-3 mb-3">
+          <span class="font-mono text-2xl font-bold text-base-orangeAlt">E1</span>
+          <span class="timer-badge is-neutral"><i class="fas fa-clock"></i>25 min</span>
+        </div>
+        <h3 class="text-lg font-black text-white mb-2 group-hover:text-base-orangeAlt transition-colors">Armá tu laboratorio y rompelo</h3>
+        <p class="text-sm text-gray-400 leading-relaxed mb-4">Levantás el stack, entrás al honeypot como un adversario y buscás qué lo delata. Lo que encuentres es el backlog del E5.</p>
+        <div class="flex gap-2 flex-wrap"><span class="tag">Docker</span><span class="tag">Cowrie</span><span class="tag">Carril B</span></div>
+      </a>
+
+      <a href="labs/e02-cinco-tokens.html" class="unified-card p-6 block group">
+        <div class="flex items-start justify-between gap-3 mb-3">
+          <span class="font-mono text-2xl font-bold text-base-orangeAlt">E2</span>
+          <span class="timer-badge is-neutral"><i class="fas fa-clock"></i>25 min</span>
+        </div>
+        <h3 class="text-lg font-black text-white mb-2 group-hover:text-base-orangeAlt transition-colors">Cinco tokens, cinco disparos</h3>
+        <p class="text-sm text-gray-400 leading-relaxed mb-4">DNS, web bug, documento Word, credenciales AWS y QR. Los disparás todos y comparás qué metadata trajo cada uno — y qué no.</p>
+        <div class="flex gap-2 flex-wrap"><span class="tag">Canarytokens</span><span class="tag">Metadata</span></div>
+      </a>
+
+      <a href="labs/e03-plantar-en-el-portal.html" class="unified-card p-6 block group" style="border-left:3px solid #DC780F">
+        <div class="flex items-start justify-between gap-3 mb-3">
+          <span class="font-mono text-2xl font-bold text-base-orangeAlt">E3</span>
+          <span class="timer-badge is-neutral"><i class="fas fa-clock"></i>30 min</span>
+        </div>
+        <h3 class="text-lg font-black text-white mb-2 group-hover:text-base-orangeAlt transition-colors">Plantá el engaño en tu portal</h3>
+        <p class="text-sm text-gray-400 leading-relaxed mb-4">Seis superficies plantables en una app real con usuarios reales. Elegís tres, y por cada una contestás quién podría tocarla legítimamente.</p>
+        <div class="flex gap-2 flex-wrap"><span class="tag">Carril A</span><span class="tag">Deception</span><span class="tag">Núcleo</span></div>
+      </a>
+
+      <a href="labs/e04-honeypot-no-ssh.html" class="unified-card p-6 block group">
+        <div class="flex items-start justify-between gap-3 mb-3">
+          <span class="font-mono text-2xl font-bold text-base-orangeAlt">E4</span>
+          <span class="timer-badge is-neutral"><i class="fas fa-clock"></i>25 min</span>
+        </div>
+        <h3 class="text-lg font-black text-white mb-2 group-hover:text-base-orangeAlt transition-colors">El honeypot que no es SSH</h3>
+        <p class="text-sm text-gray-400 leading-relaxed mb-4">SMB, un portal HTTP de login y un MSSQL falsos. Qué captura cada uno y qué se le escapa: un honeypot no es un detector genérico.</p>
+        <div class="flex gap-2 flex-wrap"><span class="tag">OpenCanary</span><span class="tag">Carril B</span></div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════ DÍA 2 ═══════════════ -->
+  <section id="dia2" class="space-y-6">
+    <div class="flex items-baseline gap-4 flex-wrap border-l-4 border-base-orange pl-4">
+      <h2 class="text-3xl font-black text-white">Día 2 · El día de los datos</h2>
+      <span class="font-mono text-sm text-gray-500">375 min · 09:00 – 17:30</span>
+    </div>
+    <p class="text-base text-gray-300 leading-relaxed max-w-3xl">
+      EkoFinance no existe como red: existe como <strong class="text-white">dataset</strong>. Se reconstruye desde la
+      telemetría, que es como se lo encuentra un equipo real. La mañana endurece lo del Día 1 y entra a los datos;
+      la tarde caza, decide, mide y se pone a prueba.
+    </p>
+
+    <div class="space-y-4">
+
+      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">09:15 – 10:30 · Deception que aguanta una inspección</div>
+      <div class="grid md:grid-cols-2 gap-5">
+        <a href="labs/e05-endurecer-y-medir.html" class="unified-card p-5 block group">
+          <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E5</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>40 min</span></div>
+          <h3 class="text-base font-black text-white mb-1.5 group-hover:text-base-orangeAlt transition-colors">Endurecé el honeypot y medí el delta</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">Fingerprint antes, arreglás los delatores del E1, fingerprint después. Con los mismos comandos, para que el resultado sea un número.</p>
+        </a>
+        <a href="labs/e06-cadena-completa.html" class="unified-card p-5 block group">
+          <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E6</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>35 min</span></div>
+          <h3 class="text-base font-black text-white mb-1.5 group-hover:text-base-orangeAlt transition-colors">La cadena completa</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">Recon → descubrimiento → descarga → apertura. Dos señales: la que registra el portal y la que llega del token, desde otra IP.</p>
+        </a>
+      </div>
+
+      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">10:45 – 12:00 · De tus datos a los del incidente</div>
+      <div class="grid md:grid-cols-2 gap-5">
+        <a href="labs/e07-cazar-propios-logs.html" class="unified-card p-5 block group" style="border-left:3px solid #a78bfa">
+          <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E7</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>35 min</span></div>
+          <h3 class="text-base font-black text-white mb-1.5 group-hover:text-base-orangeAlt transition-colors">Cazá sobre tus propios logs</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">La misma consulta sobre los dos carriles. En el honeypot los falsos positivos son cero; en el portal no. Ahí está el argumento entero.</p>
+        </a>
+        <a href="labs/e08-reconstruir-ekofinance.html" class="unified-card p-5 block group">
+          <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E8</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>40 min</span></div>
+          <h3 class="text-base font-black text-white mb-1.5 group-hover:text-base-orangeAlt transition-colors">Reconstruí EkoFinance desde la telemetría</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">Dos millones de eventos y ninguna ayuda. El diagrama se abre recién al final, y las diferencias van en las dos direcciones.</p>
+        </a>
+      </div>
+
+      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">12:00 – 12:45 · Primeras dos cazas</div>
+      <div class="grid md:grid-cols-2 gap-5">
+        <a href="labs/e09-caza-side-loading.html" class="unified-card p-5 block group">
+          <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E9</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>20 min</span></div>
+          <h3 class="text-base font-black text-white mb-1.5 group-hover:text-base-orangeAlt transition-colors">Caza 1 · Side-loading</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">T1574.002 por Sysmon EID 7, con la cadena de traducción a la vista. Y la regla: predecir el resultado antes de correr la consulta.</p>
+        </a>
+        <a href="labs/e10-caza-lsass.html" class="unified-card p-5 block group">
+          <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E10</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>25 min</span></div>
+          <h3 class="text-base font-black text-white mb-1.5 group-hover:text-base-orangeAlt transition-colors">Caza 2 · LSASS</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">Una técnica, dos fuentes. EID 10 y EID 1 no dan lo mismo, y elegir fuente es elegir en qué lado de un intercambio parás.</p>
+        </a>
+      </div>
+
+      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">13:45 – 15:15 · Cierre de cazas y las dos fichas escritas</div>
+      <div class="grid md:grid-cols-2 gap-5">
+        <a href="labs/e11-caza-lateral-y-salida.html" class="unified-card p-5 block group">
+          <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E11</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>30 min</span></div>
+          <h3 class="text-base font-black text-white mb-1.5 group-hover:text-base-orangeAlt transition-colors">Caza 3 · Lateral y salida</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">WMI y spooler, Kerberos, <code>ntdsutil</code> y el volumen de salida. Al final, el <strong class="text-white">dwell time</strong>, que no está escrito en ninguna parte.</p>
+        </a>
+        <a href="labs/e12-caza-imposible.html" class="unified-card p-5 block group">
+          <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E12</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>20 min</span></div>
+          <h3 class="text-base font-black text-white mb-1.5 group-hover:text-base-orangeAlt transition-colors">Caza 4 · La que no se puede hacer</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">La consulta no devuelve nada. Cuatro causas posibles y solo una significa que el adversario no lo hizo. El ejercicio más corto del curso.</p>
+        </a>
+        <a href="labs/w1-brecha-decision.html" class="unified-card p-5 block group" style="border-left:3px solid #a78bfa">
+          <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold" style="color:#c4b5fd">W1</span><span class="timer-badge is-neutral"><i class="fas fa-pen"></i>15 min · escritura</span></div>
+          <h3 class="text-base font-black text-white mb-1.5 group-hover:text-base-orangeAlt transition-colors">Brecha → decisión</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">Cinco filas: cazar, engañar o instrumentar. Con una columna de «qué se despliega» que un administrador podría ejecutar sin preguntar nada.</p>
+        </a>
+        <a href="labs/w2-ficha-de-operacion.html" class="unified-card p-5 block group" style="border-left:3px solid #a78bfa">
+          <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold" style="color:#c4b5fd">W2</span><span class="timer-badge is-neutral"><i class="fas fa-pen"></i>25 min · escritura</span></div>
+          <h3 class="text-base font-black text-white mb-1.5 group-hover:text-base-orangeAlt transition-colors">Ficha de operación</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">Objetivo único, narrativa, reglas de compromiso, criterios de cierre y el dueño de la alerta con nombre. Lo único que no se tipea en una terminal.</p>
+        </a>
+      </div>
+
+      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">15:30 – 16:00 · Medición</div>
+      <div class="grid md:grid-cols-2 gap-5">
+        <a href="labs/e13-prueba-de-disparo.html" class="unified-card p-5 block group">
+          <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E13</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>30 min</span></div>
+          <h3 class="text-base font-black text-white mb-1.5 group-hover:text-base-orangeAlt transition-colors">Prueba de disparo cronometrada</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">Tocás todos tus artefactos con cronómetro. Dos o tres no van a disparar, y los construiste vos hace horas.</p>
+        </a>
+        <div class="unified-card is-static p-5 flex flex-col justify-center">
+          <p class="text-sm text-gray-400 leading-relaxed">
+            <i class="fas fa-volume-xmark text-base-orange mr-2"></i>
+            <strong class="text-white">«Sin actividad» no es «sin incidentes».</strong> Un artefacto que nunca reportó nada
+            puede estar bien ubicado o puede estar roto. Sin prueba periódica, el silencio no es información.
+          </p>
+        </div>
+      </div>
+
+      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">16:00 – 17:00 · Cacería cruzada y defensa</div>
+      <div class="grid md:grid-cols-2 gap-5">
+        <a href="labs/e14-caceria-cruzada.html" class="unified-card p-5 block group">
+          <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E14</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>30 min</span></div>
+          <h3 class="text-base font-black text-white mb-1.5 group-hover:text-base-orangeAlt transition-colors">Cacería cruzada</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">Recibís el portal y el honeypot de otro grupo. <span class="font-mono" style="color:#4ade80">+2</span> si la identificás sin dispararla, <span class="font-mono" style="color:#f87171">−1</span> si te detecta, <span class="font-mono text-gray-500">0</span> si no la encontrás.</p>
+        </a>
+        <a href="labs/w3-defensa.html" class="unified-card p-5 block group" style="border-left:3px solid #a78bfa">
+          <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold" style="color:#c4b5fd">W3</span><span class="timer-badge is-neutral"><i class="fas fa-pen"></i>30 min · plenario</span></div>
+          <h3 class="text-base font-black text-white mb-1.5 group-hover:text-base-orangeAlt transition-colors">Defensa de cinco minutos</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">Con la terminal proyectada, no con slides. Tres números obligatorios, una demo en vivo y un descarte argumentado.</p>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════ ENCADENAMIENTO ═══════════════ -->
+  <section id="cadena" class="space-y-6">
+    <h2 class="text-3xl font-black text-white border-l-4 border-base-orange pl-4">Qué alimenta a qué</h2>
+    <p class="text-base text-gray-300 leading-relaxed max-w-3xl">
+      Ningún ejercicio es autocontenido. Si un grupo no produce el entregable de uno, el siguiente se rompe:
+      conviene tenerlo presente al decidir qué recortar cuando el reloj apremia.
+    </p>
+
+    <div class="unified-card is-static overflow-hidden">
+      <div class="code-caption"><i class="fas fa-link"></i>Cadena de entregables</div>
+      <pre class="code">E1  lista de delatores ──────────────────────────► E5  los arreglás y medís el delta
+E2  cinco tokens disparados ────────────────────► E3  tres de ellos se plantan
+E3  tres piezas en el portal ───────┬───────────► E6  las ves disparar en cadena
+                                    ├───────────► E13 medís su latencia real
+                                    └───────────► E14 otro grupo intenta quemarlas
+E5  honeypot endurecido ────────────────────────► E14 se pone a prueba
+E7  falsos positivos contados ──────────────────► W1  el argumento de la decisión
+E8  inventario reconstruido ────────────────────► E9  E10  E11  E12
+E11 dwell time calculado ───────────┬───────────► E13 la línea base
+                                    └───────────► W3  el primer número
+E10 volumen del EID 10 ─────────────┐
+E12 el punto ciego ─────────────────┴───────────► W1  cinco decisiones
+W1  cinco decisiones ───────────────────────────► W2  la ficha de operación
+E13 latencias medidas ──────────────┐
+E14 marcador de la cacería ─────────┴───────────► W3  la defensa</pre>
+    </div>
+
+    <div class="callout is-entregable">
+      <div class="callout-title"><i class="fas fa-box-archive"></i>Qué entregás</div>
+      <ul class="text-sm leading-relaxed text-gray-300 list-disc pl-5 space-y-1">
+        <li><strong class="text-white">Cinco decisiones</strong> con su despliegue concreto y un descarte argumentado — W1</li>
+        <li><strong class="text-white">Ficha de operación</strong>: objetivo, narrativa, RoE, cierre, roles y exclusiones — W2</li>
+        <li><strong class="text-white">Tabla de latencias medidas</strong> y calendario de prueba — E13</li>
+        <li><strong class="text-white">Corrección final</strong> después de escuchar a los otros grupos — W3</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══════════════ CÓMO FUNCIONAN LAS GUÍAS ═══════════════ -->
+  <section id="guias" class="space-y-6">
+    <h2 class="text-3xl font-black text-white border-l-4 border-base-orange pl-4">Cómo funcionan las guías</h2>
+    <div class="grid md:grid-cols-2 gap-5">
+      <div class="unified-card is-static p-6">
+        <p class="text-sm text-gray-300 leading-relaxed mb-4">
+          <strong class="text-white">Son cuadernos, no PDFs.</strong> Las tablas se completan en la página, se guardan
+          solas en tu navegador y se exportan en texto para el reporte del grupo.
+        </p>
+        <ul class="text-sm text-gray-300 space-y-2">
+          <li><i class="fas fa-file-export text-base-orange w-5"></i><strong class="text-white">Exportar</strong> — devuelve todo tu trabajo en Markdown</li>
+          <li><i class="fas fa-file-import text-base-orange w-5"></i><strong class="text-white">Importar</strong> — recupera un respaldo <code>.json</code></li>
+          <li><i class="fas fa-rotate-left text-base-orange w-5"></i><strong class="text-white">Limpiar</strong> — borra lo cargado en esta guía</li>
+        </ul>
+      </div>
+      <div class="callout is-atencion">
+        <div class="callout-title"><i class="fas fa-triangle-exclamation"></i>Al cerrar cada ejercicio, exportá</div>
+        <p class="text-sm leading-relaxed text-gray-300">
+          El trabajo se guarda en el navegador de <em>esa</em> máquina. Apretá <strong class="text-white">Exportar</strong> y
+          mandate el texto al chat del grupo: así lo tienen todos para el ejercicio siguiente, y no se pierde si alguien
+          cierra la pestaña o cambia de laptop.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ AVISO ═══════════════ -->
+  <section id="aviso">
+    <div class="callout is-atencion">
+      <div class="callout-title"><i class="fas fa-gavel"></i>Aviso</div>
+      <p class="text-sm leading-relaxed text-gray-300 mb-2">
+        Todo el escenario es <strong class="text-white">ficticio</strong>. EkoFinance, sus activos, el incidente y los
+        documentos del caso fueron construidos para este curso. Cualquier dominio, IP o identificador que aparezca está
+        en rangos reservados para documentación (RFC 5737, RFC 2606) o es inventado.
+      </p>
+      <p class="text-sm leading-relaxed text-gray-300">
+        Las técnicas se enseñan para <strong class="text-white">defender infraestructura propia</strong>. El
+        <a href="labs/w2-ficha-de-operacion.html" class="eko-link-label">W2</a> incluye el límite legal y ético explícito
+        de lo que se puede y no se puede hacer.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-white/10 mt-12 py-10">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-3">
+      <span class="text-xs text-gray-500">Diego Staino · Mariano Quintana — Active Cyber Defense: Hunt the Fox on His Land · Ekoparty 2026</span>
+      <p class="text-xs text-gray-500">&copy; 2026 BASE4 Security</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/base4-labs.js"></script>
+</body>
+</html>

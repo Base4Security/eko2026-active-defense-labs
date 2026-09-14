@@ -1,0 +1,28 @@
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Imágenes de Docker: van como asset de Release, no en el árbol
+*.tar
+*.tar.gz
+
+# Estado de Cowrie al correr el entorno
+resources/docker/cowrie/var/
+resources/docker/cowrie/etc/
+
+# Python
+__pycache__/
+*.pyc
+
+# Trabajo local de los alumnos
+*.local.json
+export-*.md
+
+# ════════════════════════════════════════════════════════════════════════
+# MATERIAL DE INSTRUCTOR — no se publica.
+# Vive dentro del repo para que las rutas relativas de la guía funcionen
+# (../labs/, ../assets/), pero git no lo ve. Hay un hook de pre-commit que
+# aborta el commit si algo de acá llega al índice.
+# ════════════════════════════════════════════════════════════════════════
+instructor/

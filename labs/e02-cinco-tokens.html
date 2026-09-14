@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E2 · Cinco tokens, cinco disparos — Active Cyber Defense · Ekoparty 2026</title>
+<meta name="description" content="Generás cinco tokens de tipos distintos, los disparás a propósito y comparás qué metadata trajo cada uno. Los tokens no son intercambiables y acá se ve por qué.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Boldonse&family=Lato:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="../assets/base4-labs.css" rel="stylesheet">
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { base: { bg:'#282828', surfaceAlt:'#1e1e1e', orange:'#DC780F', orangeAlt:'#F1912D', textMain:'#ffffff', textDim:'#d1d5db' } },
+  fontFamily: { sans:['Lato','sans-serif'], display:['Boldonse','sans-serif'], mono:['JetBrains Mono','ui-monospace','monospace'] }
+} } }
+</script>
+</head>
+<body class="antialiased min-h-screen flex flex-col bg-base-bg text-gray-200" data-lab="e02">
+
+<div class="lab-progress no-print"><i></i></div>
+
+<nav class="top-nav sticky top-0 z-50 bg-base-bg/95 backdrop-blur border-b border-white/10 no-print">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+    <a href="../index.html" class="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 hover:text-base-orangeAlt transition-colors">
+      <i class="fas fa-arrow-left mr-2"></i>Active Cyber Defense · Labs 2026
+    </a>
+    <div class="flex items-center gap-2 flex-wrap">
+      <span class="timer-badge is-neutral"><i class="fas fa-list-check"></i><span data-progress-readout>0 / 0</span></span>
+      <span class="timer-badge" data-timer data-minutes="25">
+        <i class="fas fa-hourglass-half"></i><span data-timer-out>25:00</span>
+        <button data-timer-btn class="ml-1 hover:text-white transition-colors" title="Iniciar / pausar" aria-label="Iniciar o pausar el temporizador"><i class="fas fa-play"></i></button>
+      </span>
+      <button class="back-link" data-reset title="Borrar mis tildes y anotaciones"><i class="fas fa-rotate-left"></i>Reset</button>
+    </div>
+  </div>
+</nav>
+
+<header class="relative py-14 bg-[radial-gradient(circle_at_50%_-30%,_#3a2600_0%,_#282828_60%)] border-b border-white/10">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center gap-3 mb-5 flex-wrap">
+      <span class="timer-badge">Día 1 · banco de trabajo</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-clock"></i>25 minutos</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-users"></i>Grupos de 2-3</span>
+      
+    </div>
+    <p class="text-base-orange font-bold tracking-[0.3em] uppercase mb-3 text-xs">Ejercicio E2</p>
+    <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-white mb-4" data-wb-title>Cinco tokens, cinco disparos</h1>
+    <p class="max-w-3xl text-base text-gray-300 leading-relaxed">Generás cinco tokens de tipos distintos, los disparás a propósito y comparás qué metadata trajo cada uno. Los tokens no son intercambiables y acá se ve por qué.</p>
+  </div>
+</header>
+
+<main class="flex-grow max-w-6xl mx-auto px-6 py-12 w-full space-y-10" data-wb-scope>
+
+  <div class="wb-toolbar no-print">
+    <button class="wb-btn is-primary" type="button" data-wb-act="md" title="Ver y copiar el trabajo listo para entregar"><i class="fas fa-file-export"></i>Exportar</button>
+    <button class="wb-btn" type="button" data-wb-act="importFile" title="Cargar un respaldo .json"><i class="fas fa-file-import"></i>Importar</button>
+    <button class="wb-btn is-danger" type="button" data-wb-act="clear" title="Borrar todo lo cargado"><i class="fas fa-rotate-left"></i>Limpiar</button>
+    <span class="wb-status is-saved" data-wb-status><span class="dot"></span><span data-wb-status-label>Guardado</span></span>
+  </div>
+
+  <section id="grupo">
+    <div class="unified-card is-static p-6">
+      <div class="wb-ident">
+        <div>
+          <label for="wb-grupo">Grupo</label>
+          <input class="wb-input" id="wb-grupo" data-wb="meta.grupo" placeholder="Ej. Grupo 3" autocomplete="off">
+        </div>
+        <div>
+          <label for="wb-integrantes">Integrantes</label>
+          <input class="wb-input" id="wb-integrantes" data-wb="meta.integrantes" placeholder="Nombres separados por coma" autocomplete="off">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="objetivo">
+    <div class="callout is-objetivo">
+      <div class="callout-title"><i class="fas fa-bullseye"></i>Objetivo</div>
+      <p class="text-sm leading-relaxed text-gray-300">Entender, con los callbacks en la mano, <strong class="text-white">qué te dice cada tipo de token y qué no</strong>. La elección del tipo es una decisión de diseño que condiciona todo el E3: dónde lo plantás depende de qué información necesitás que te devuelva. Los tokens se generan en <a class="eko-link-label" href="https://canarytokens.org" target="_blank" rel="noopener">canarytokens.org</a> y avisan por mail: podés usar el tuyo o uno temporal, por ejemplo de <a class="eko-link-label" href="https://yopmail.com" target="_blank" rel="noopener">yopmail.com</a>.</p>
+    </div>
+  </section>
+
+  <section id="generar" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">1 · Generá los cinco</h2><p class="text-sm text-gray-300 leading-relaxed">Cinco tipos, no cinco tokens del mismo tipo. En la descripción de cada uno poné algo que te sirva después: «E3 · documento del repositorio» es útil dentro de tres horas, «prueba» no. Anotá también la <strong class="text-white">URL de administración</strong> de cada token: la vas a necesitar en el E13 para ver el historial de disparos.</p><script type="application/json" data-wb-seed-for="tokens">[{"tipo": "DNS", "disparo": "dig al subdominio único"}, {"tipo": "Web bug (URL)", "disparo": "abrir la URL en el navegador"}, {"tipo": "Documento Word", "disparo": "abrir el .docx (plantilla remota)"}, {"tipo": "Credenciales AWS", "disparo": "aws s3 ls con la key falsa"}, {"tipo": "Código QR", "disparo": "escanearlo con el celular"}]</script><div class="unified-card is-static p-5" data-wb-table="tokens" data-wb-min="5" data-wb-key="tipo"><div class="table-scroll"><table class="data-table"><thead><tr><th>Tipo</th><th>Cómo se dispara</th><th>Qué metadata trajo</th><th>Qué NO trajo</th><th></th></tr></thead><tbody data-wb-body></tbody></table></div><p class="wb-empty" data-wb-empty hidden>No hay filas. Agregá una para empezar.</p><template data-wb-row><tr><td data-wb-col="tipo" data-wb-fixed style="min-width:130px"></td><td data-wb-col="disparo" data-wb-fixed style="min-width:180px"></td><td class="is-editable" style="min-width:210px"><div class="wb-cell" contenteditable="true" data-wb-col="trajo" data-ph="IP, user-agent, hora, resolver…"></div></td><td class="is-editable" style="min-width:180px"><div class="wb-cell" contenteditable="true" data-wb-col="notrajo" data-ph="lo que esperabas y no vino"></div></td><td class="wb-rowtools"><button class="wb-del" type="button" title="Eliminar fila" aria-label="Eliminar fila"><i class="fas fa-xmark"></i></button></td></tr></template><div class="wb-tablefoot no-print"><button class="wb-btn wb-add" type="button" data-wb-add><i class="fas fa-plus"></i>Agregar token</button><span class="wb-count"></span></div></div>
+  </section>
+  <section id="disparar" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">2 · Disparalos</h2><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Terminal<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code"><span class="c"># DNS — mirá qué IP aparece del otro lado</span>
+dig +short a1b2c3d4e5.canarytokens.com
+
+<span class="c"># credenciales AWS — el token registra la llamada, no el login</span>
+AWS_ACCESS_KEY_ID=AKIA... AWS_SECRET_ACCESS_KEY=... \
+  aws s3 ls --region us-east-1
+
+<span class="c"># web bug — abrilo desde el navegador, no con curl:</span>
+<span class="c">#   curl no manda user-agent de browser y el token trae menos</span></pre></div><p class="text-sm text-gray-300 leading-relaxed">El <code>.docx</code> y el QR se disparan a mano: abrí el documento con Word y escaneá el QR con el celular. Fijate que el QR va a traer la red móvil, no la del aula — es otro punto de observación.</p>
+  </section>
+  <section id="leer" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">3 · Leé los cinco callbacks</h2><div class="callout is-pista"><div class="callout-title"><i class="fas fa-lightbulb"></i>Lo que hay que notar</div><div class="text-sm leading-relaxed text-gray-300"><ul class="list-disc pl-5 space-y-1"><li>El <strong class="text-white">DNS</strong> te da el <em>resolver</em>, no al adversario. Si usa 8.8.8.8, tenés a Google.</li><li>El <strong class="text-white">web bug</strong> te da user-agent e IP, y los pierde detrás de un proxy corporativo.</li><li>Las <strong class="text-white">credenciales AWS</strong> te dicen qué llamada intentó y desde dónde: es el único que te cuenta la <em>intención</em>.</li><li>El <strong class="text-white">documento</strong> dispara desde la máquina de quien lo abre, que puede no ser la que lo descargó.</li></ul></div></div><div class="unified-card is-static p-5"><label class="block text-xs uppercase tracking-[0.15em] text-gray-500 mb-2" data-wb-label="Si tuvieras que quedarte con uno solo para el E3, ¿cuál y por qué?">Si tuvieras que quedarte con uno solo para el E3, ¿cuál y por qué?</label><textarea class="fill-in" data-wb="eleccion" rows="3" placeholder="Dos o tres oraciones. Qué información necesitás que te devuelva y cuál de los cinco te la da."></textarea></div>
+  </section>
+
+  <section id="cierre">
+    <div class="callout is-entregable">
+      <div class="callout-title"><i class="fas fa-box-archive"></i>Entregable · se usa en E3, E6 y E13</div>
+      <p class="text-sm leading-relaxed text-gray-300">La tabla de los cinco tipos con su metadata comparada, y la URL de administración de cada token. Los tres que elijas se plantan en el E3.</p>
+    </div>
+
+    <div class="mt-6">
+      <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-2">Control de avance</h2>
+      <p class="text-xs text-gray-500 mb-5 ml-4">Se guarda en tu navegador y viaja en la exportación.</p>
+      <ul class="checklist">
+        <li><label><input type="checkbox" data-wb="chk.cinco"><span>Generamos cinco tipos distintos, no cinco del mismo tipo</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.disparados"><span>Disparamos los cinco y llegó el callback de cada uno</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.tabla"><span>La tabla tiene la columna «qué NO trajo» completa</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.urls"><span>Guardamos la URL de administración de cada token</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.exportado"><span>Exportamos el trabajo</span></label></li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-white/10 mt-12 py-8">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center justify-between gap-4 flex-wrap mb-6 no-print">
+      <a href="e01-laboratorio-y-delatores.html" class="back-link"><i class="fas fa-arrow-left"></i>E1 · Armá tu laboratorio y rompelo</a>
+      <a href="e03-plantar-en-el-portal.html" class="back-link">E3 · Plantá el engaño en tu portal<i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="flex flex-col md:flex-row items-center justify-between gap-3 pt-6 border-t border-white/5">
+      <span class="text-xs text-gray-500">Active Cyber Defense: Hunt the Fox on His Land · Ekoparty 2026</span>
+      <p class="text-xs text-gray-500">&copy; 2026 BASE4 Security</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/base4-labs.js"></script>
+<script src="../assets/base4-workbook.js"></script>
+</body>
+</html>

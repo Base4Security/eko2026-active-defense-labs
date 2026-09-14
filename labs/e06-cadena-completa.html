@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E6 · La cadena completa — Active Cyber Defense · Ekoparty 2026</title>
+<meta name="description" content="Ejecutás contra tu propio portal la cadena entera desde la posición del adversario, y seguís las dos señales que produce: lo que registra el portal y lo que llega del token, desde otra máquina y horas más tarde.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Boldonse&family=Lato:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="../assets/base4-labs.css" rel="stylesheet">
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { base: { bg:'#282828', surfaceAlt:'#1e1e1e', orange:'#DC780F', orangeAlt:'#F1912D', textMain:'#ffffff', textDim:'#d1d5db' } },
+  fontFamily: { sans:['Lato','sans-serif'], display:['Boldonse','sans-serif'], mono:['JetBrains Mono','ui-monospace','monospace'] }
+} } }
+</script>
+</head>
+<body class="antialiased min-h-screen flex flex-col bg-base-bg text-gray-200" data-lab="e06">
+
+<div class="lab-progress no-print"><i></i></div>
+
+<nav class="top-nav sticky top-0 z-50 bg-base-bg/95 backdrop-blur border-b border-white/10 no-print">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+    <a href="../index.html" class="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 hover:text-base-orangeAlt transition-colors">
+      <i class="fas fa-arrow-left mr-2"></i>Active Cyber Defense · Labs 2026
+    </a>
+    <div class="flex items-center gap-2 flex-wrap">
+      <span class="timer-badge is-neutral"><i class="fas fa-list-check"></i><span data-progress-readout>0 / 0</span></span>
+      <span class="timer-badge" data-timer data-minutes="35">
+        <i class="fas fa-hourglass-half"></i><span data-timer-out>35:00</span>
+        <button data-timer-btn class="ml-1 hover:text-white transition-colors" title="Iniciar / pausar" aria-label="Iniciar o pausar el temporizador"><i class="fas fa-play"></i></button>
+      </span>
+      <button class="back-link" data-reset title="Borrar mis tildes y anotaciones"><i class="fas fa-rotate-left"></i>Reset</button>
+    </div>
+  </div>
+</nav>
+
+<header class="relative py-14 bg-[radial-gradient(circle_at_50%_-30%,_#3a2600_0%,_#282828_60%)] border-b border-white/10">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center gap-3 mb-5 flex-wrap">
+      <span class="timer-badge">Día 2 · el día de los datos</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-clock"></i>35 minutos</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-users"></i>Grupos de 2-3</span>
+      <span class="timer-badge is-neutral" style="border-color:rgba(220,120,15,.45);color:#F1912D"><i class="fas fa-building-columns"></i>Carril A · sistema real</span>
+    </div>
+    <p class="text-base-orange font-bold tracking-[0.3em] uppercase mb-3 text-xs">Ejercicio E6</p>
+    <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-white mb-4" data-wb-title>La cadena completa</h1>
+    <p class="max-w-3xl text-base text-gray-300 leading-relaxed">Ejecutás contra tu propio portal la cadena entera desde la posición del adversario, y seguís las dos señales que produce: lo que registra el portal y lo que llega del token, desde otra máquina y horas más tarde.</p>
+  </div>
+</header>
+
+<main class="flex-grow max-w-6xl mx-auto px-6 py-12 w-full space-y-10" data-wb-scope>
+
+  <div class="wb-toolbar no-print">
+    <button class="wb-btn is-primary" type="button" data-wb-act="md" title="Ver y copiar el trabajo listo para entregar"><i class="fas fa-file-export"></i>Exportar</button>
+    <button class="wb-btn" type="button" data-wb-act="importFile" title="Cargar un respaldo .json"><i class="fas fa-file-import"></i>Importar</button>
+    <button class="wb-btn is-danger" type="button" data-wb-act="clear" title="Borrar todo lo cargado"><i class="fas fa-rotate-left"></i>Limpiar</button>
+    <span class="wb-status is-saved" data-wb-status><span class="dot"></span><span data-wb-status-label>Guardado</span></span>
+  </div>
+
+  <section id="grupo">
+    <div class="unified-card is-static p-6">
+      <div class="wb-ident">
+        <div>
+          <label for="wb-grupo">Grupo</label>
+          <input class="wb-input" id="wb-grupo" data-wb="meta.grupo" placeholder="Ej. Grupo 3" autocomplete="off">
+        </div>
+        <div>
+          <label for="wb-integrantes">Integrantes</label>
+          <input class="wb-input" id="wb-integrantes" data-wb="meta.integrantes" placeholder="Nombres separados por coma" autocomplete="off">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="objetivo">
+    <div class="callout is-objetivo">
+      <div class="callout-title"><i class="fas fa-bullseye"></i>Objetivo</div>
+      <p class="text-sm leading-relaxed text-gray-300">Ver con logs reales <strong class="text-white">cuántos eventos distintos, en cuántos sistemas distintos, produce una sola acción del adversario</strong> — y por qué la IP del portal y la del token no coinciden.</p>
+    </div>
+  </section>
+
+  <section id="ubicacion" class="space-y-5">
+<div class="callout is-pista"><div class="callout-title"><i class="fas fa-folder-tree"></i>Dónde se corre esto</div><div class="text-sm leading-relaxed text-gray-300"><p>Todos los comandos de esta ficha salen desde la carpeta <code>mi-lab/</code> del repositorio, salvo que se aclare lo contrario:</p><pre class="code" style="margin:.6rem 0">cd eko2026-active-defense-labs/mi-lab</pre><p>Si no sabés dónde quedó, está en la <a class="eko-link-label" href="../index.html#preparacion">preparación del programa</a>.</p></div></div>
+  </section>
+  <section id="ejecutar" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">1 · Recorré la cadena</h2><p class="text-sm text-gray-300 leading-relaxed">Poné el reloj en hora y anotá el minuto de cada paso. Hacelo desde el navegador, como lo haría alguien de verdad.</p><div class="step" data-n="1"><h4 class="text-sm text-white">Recon</h4><div class="text-sm text-gray-300 leading-relaxed">Entrás al portal. Mirás el código fuente, el <code>robots.txt</code>, el bundle de JavaScript. ¿Qué rutas se mencionan que no están en el menú?</div></div><div class="step" data-n="2"><h4 class="text-sm text-white">Descubrimiento</h4><div class="text-sm text-gray-300 leading-relaxed">Llegás al repositorio de archivos. Listás lo que hay.</div></div><div class="step" data-n="3"><h4 class="text-sm text-white">Recolección</h4><div class="text-sm text-gray-300 leading-relaxed">Bajás el documento tokenizado. <strong class="text-white">Todavía no disparó nada del token</strong>: bajarlo no es abrirlo.</div></div><div class="step" data-n="4"><h4 class="text-sm text-white">Uso</h4><div class="text-sm text-gray-300 leading-relaxed">Abrís el documento con Word. Ahí sí sale el callback.</div></div><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Mientras tanto, en otra terminal<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code">tail -f portal/logs/access.log
+
+<span class="c"># y con formato, si el log es JSON</span>
+tail -f portal/logs/access.log | jq -c '{t:.time, ip:.remote_addr, m:.method, u:.path, s:.status}'</pre></div>
+  </section>
+  <section id="rastro" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">2 · El rastro, eslabón por eslabón</h2><script type="application/json" data-wb-seed-for="cadena">[{"paso": "Recon"}, {"paso": "Descubrimiento"}, {"paso": "Recolección"}, {"paso": "Uso"}]</script><div class="unified-card is-static p-5" data-wb-table="cadena" data-wb-min="4" data-wb-key="paso"><div class="table-scroll"><table class="data-table"><thead><tr><th>Paso</th><th>Hora</th><th>Qué registró el portal</th><th>Qué llegó del token</th><th></th></tr></thead><tbody data-wb-body></tbody></table></div><p class="wb-empty" data-wb-empty hidden>No hay filas. Agregá una para empezar.</p><template data-wb-row><tr><td data-wb-col="paso" data-wb-fixed style="min-width:130px"></td><td class="is-editable" style="min-width:100px"><div class="wb-cell" contenteditable="true" data-wb-col="hora" data-ph="hh:mm:ss"></div></td><td class="is-editable" style="min-width:220px"><div class="wb-cell" contenteditable="true" data-wb-col="portal" data-ph="ruta, método, código, IP"></div></td><td class="is-editable" style="min-width:200px"><div class="wb-cell" contenteditable="true" data-wb-col="token" data-ph="o «nada todavía»"></div></td><td class="wb-rowtools"><button class="wb-del" type="button" title="Eliminar fila" aria-label="Eliminar fila"><i class="fas fa-xmark"></i></button></td></tr></template><div class="wb-tablefoot no-print"><button class="wb-btn wb-add" type="button" data-wb-add><i class="fas fa-plus"></i>Agregar paso</button><span class="wb-count"></span></div></div>
+  </section>
+  <section id="ips" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">3 · Las dos IPs</h2><div class="callout is-atencion"><div class="callout-title"><i class="fas fa-code-branch"></i>No coinciden, y eso es información</div><div class="text-sm leading-relaxed text-gray-300"><p>El portal registró la IP de quien <strong class="text-white">descargó</strong>. El token registró la IP de quien <strong class="text-white">abrió</strong>. En tu prueba son la misma máquina, pero en una intrusión real casi nunca lo son: el adversario exfiltra el documento a su infraestructura y lo abre ahí, o se lo pasa a otro equipo que lo analiza.</p><p class="mt-2">Esa discrepancia no es un error de tu instrumentación: es <em>el dato</em>. Te dice que hubo movimiento del material fuera del perímetro y te da un segundo punto de observación que no controlás pero que igual te reporta.</p></div></div><div class="unified-card is-static p-5"><label class="block text-xs uppercase tracking-[0.15em] text-gray-500 mb-2" data-wb-label="¿Cuánto pasó entre la descarga y el callback? ¿Y qué habría pasado si el adversario no abre el documento nunca?">¿Cuánto pasó entre la descarga y el callback? ¿Y qué habría pasado si el adversario no abre el documento nunca?</label><textarea class="fill-in" data-wb="delta" rows="3" placeholder="El número, y qué te queda como detección si la segunda señal no llega."></textarea></div>
+  </section>
+  <section id="cuenta" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">4 · La cuenta</h2><div class="unified-card is-static p-5"><label class="block text-xs uppercase tracking-[0.15em] text-gray-500 mb-2" data-wb-label="Cuántos eventos produjo la cadena entera, y en cuántos sistemas distintos">Cuántos eventos produjo la cadena entera, y en cuántos sistemas distintos</label><textarea class="fill-in" data-wb="cuenta" rows="3" placeholder="Contá líneas de access.log, callbacks del token, y cualquier otra cosa que se haya movido."></textarea></div><div class="callout is-pista"><div class="callout-title"><i class="fas fa-lightbulb"></i>Por qué se cuenta</div><div class="text-sm leading-relaxed text-gray-300"><p>Una acción del adversario —bajar un archivo— produjo eventos en al menos dos sistemas, uno de los cuales no es tuyo. Ese es el argumento a favor de instrumentar con engaño en vez de solo con logs: el artefacto <strong class="text-white">trae su propia telemetría</strong>, y la trae desde donde vos no llegás.</p></div></div>
+  </section>
+
+  <section id="cierre">
+    <div class="callout is-entregable">
+      <div class="callout-title"><i class="fas fa-box-archive"></i>Entregable · se usa en E13</div>
+      <p class="text-sm leading-relaxed text-gray-300">La cadena con los cuatro eslabones, la hora de cada uno, las dos señales y el delta entre ellas.</p>
+    </div>
+
+    <div class="mt-6">
+      <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-2">Control de avance</h2>
+      <p class="text-xs text-gray-500 mb-5 ml-4">Se guarda en tu navegador y viaja en la exportación.</p>
+      <ul class="checklist">
+        <li><label><input type="checkbox" data-wb="chk.recorrida"><span>Recorrimos los cuatro pasos desde el navegador</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.horas"><span>Cada paso tiene hora anotada</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.portal"><span>Sabemos qué línea de access.log corresponde a cada paso</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.token"><span>El callback del token llegó y sabemos desde qué IP</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.delta"><span>Medimos el tiempo entre la descarga y el callback</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.cuenta"><span>Contamos los eventos totales y los sistemas involucrados</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.exportado"><span>Exportamos el trabajo</span></label></li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-white/10 mt-12 py-8">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center justify-between gap-4 flex-wrap mb-6 no-print">
+      <a href="e05-endurecer-y-medir.html" class="back-link"><i class="fas fa-arrow-left"></i>E5 · Endurecé el honeypot y medí el delta</a>
+      <a href="e07-cazar-propios-logs.html" class="back-link">E7 · Cazá sobre tus propios logs<i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="flex flex-col md:flex-row items-center justify-between gap-3 pt-6 border-t border-white/5">
+      <span class="text-xs text-gray-500">Active Cyber Defense: Hunt the Fox on His Land · Ekoparty 2026</span>
+      <p class="text-xs text-gray-500">&copy; 2026 BASE4 Security</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/base4-labs.js"></script>
+<script src="../assets/base4-workbook.js"></script>
+</body>
+</html>

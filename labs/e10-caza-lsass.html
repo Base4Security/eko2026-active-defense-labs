@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E10 · Caza 2 · LSASS — Active Cyber Defense · Ekoparty 2026</title>
+<meta name="description" content="La misma técnica, dos fuentes distintas. Cazás el volcado de credenciales por dos caminos y comparás qué encontró cada uno: no dan lo mismo, y elegir fuente es elegir en qué lado de un intercambio parás.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Boldonse&family=Lato:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="../assets/base4-labs.css" rel="stylesheet">
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { base: { bg:'#282828', surfaceAlt:'#1e1e1e', orange:'#DC780F', orangeAlt:'#F1912D', textMain:'#ffffff', textDim:'#d1d5db' } },
+  fontFamily: { sans:['Lato','sans-serif'], display:['Boldonse','sans-serif'], mono:['JetBrains Mono','ui-monospace','monospace'] }
+} } }
+</script>
+</head>
+<body class="antialiased min-h-screen flex flex-col bg-base-bg text-gray-200" data-lab="e10">
+
+<div class="lab-progress no-print"><i></i></div>
+
+<nav class="top-nav sticky top-0 z-50 bg-base-bg/95 backdrop-blur border-b border-white/10 no-print">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+    <a href="../index.html" class="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 hover:text-base-orangeAlt transition-colors">
+      <i class="fas fa-arrow-left mr-2"></i>Active Cyber Defense · Labs 2026
+    </a>
+    <div class="flex items-center gap-2 flex-wrap">
+      <span class="timer-badge is-neutral"><i class="fas fa-list-check"></i><span data-progress-readout>0 / 0</span></span>
+      <span class="timer-badge" data-timer data-minutes="25">
+        <i class="fas fa-hourglass-half"></i><span data-timer-out>25:00</span>
+        <button data-timer-btn class="ml-1 hover:text-white transition-colors" title="Iniciar / pausar" aria-label="Iniciar o pausar el temporizador"><i class="fas fa-play"></i></button>
+      </span>
+      <button class="back-link" data-reset title="Borrar mis tildes y anotaciones"><i class="fas fa-rotate-left"></i>Reset</button>
+    </div>
+  </div>
+</nav>
+
+<header class="relative py-14 bg-[radial-gradient(circle_at_50%_-30%,_#3a2600_0%,_#282828_60%)] border-b border-white/10">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center gap-3 mb-5 flex-wrap">
+      <span class="timer-badge">Día 2 · el día de los datos</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-clock"></i>25 minutos</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-users"></i>Grupos de 2-3</span>
+      
+    </div>
+    <p class="text-base-orange font-bold tracking-[0.3em] uppercase mb-3 text-xs">Ejercicio E10</p>
+    <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-white mb-4" data-wb-title>Caza 2 · LSASS</h1>
+    <p class="max-w-3xl text-base text-gray-300 leading-relaxed">La misma técnica, dos fuentes distintas. Cazás el volcado de credenciales por dos caminos y comparás qué encontró cada uno: no dan lo mismo, y elegir fuente es elegir en qué lado de un intercambio parás.</p>
+  </div>
+</header>
+
+<main class="flex-grow max-w-6xl mx-auto px-6 py-12 w-full space-y-10" data-wb-scope>
+
+  <div class="wb-toolbar no-print">
+    <button class="wb-btn is-primary" type="button" data-wb-act="md" title="Ver y copiar el trabajo listo para entregar"><i class="fas fa-file-export"></i>Exportar</button>
+    <button class="wb-btn" type="button" data-wb-act="importFile" title="Cargar un respaldo .json"><i class="fas fa-file-import"></i>Importar</button>
+    <button class="wb-btn is-danger" type="button" data-wb-act="clear" title="Borrar todo lo cargado"><i class="fas fa-rotate-left"></i>Limpiar</button>
+    <span class="wb-status is-saved" data-wb-status><span class="dot"></span><span data-wb-status-label>Guardado</span></span>
+  </div>
+
+  <section id="grupo">
+    <div class="unified-card is-static p-6">
+      <div class="wb-ident">
+        <div>
+          <label for="wb-grupo">Grupo</label>
+          <input class="wb-input" id="wb-grupo" data-wb="meta.grupo" placeholder="Ej. Grupo 3" autocomplete="off">
+        </div>
+        <div>
+          <label for="wb-integrantes">Integrantes</label>
+          <input class="wb-input" id="wb-integrantes" data-wb="meta.integrantes" placeholder="Nombres separados por coma" autocomplete="off">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="objetivo">
+    <div class="callout is-objetivo">
+      <div class="callout-title"><i class="fas fa-bullseye"></i>Objetivo</div>
+      <p class="text-sm leading-relaxed text-gray-300">Ver que una técnica tiene <strong class="text-white">más de una fuente de datos</strong>, que cada una cuesta distinto de evadir y de operar, y saber decir cuál elegirías para este entorno.</p>
+    </div>
+  </section>
+
+  <section id="cadena" class="space-y-5">
+<div class="callout is-pista"><div class="callout-title"><i class="fas fa-link"></i>La cadena de traducción</div><div class="text-sm leading-relaxed text-gray-300"><p class="mb-2">Cinco eslabones. La mayoría de los equipos salta del primero al último, y por eso escribe consultas que no encuentran nada.</p><ol class="list-decimal pl-5 space-y-1"><li><strong class="text-white">Técnica</strong> — <code>T1003.001</code> OS Credential Dumping: LSASS Memory.</li><li><strong class="text-white">Comportamiento</strong> — Un proceso abre un handle al proceso <code>lsass.exe</code> con permisos de lectura de memoria y vuelca su contenido a disco. En este caso, usando un binario firmado de Microsoft como intermediario.</li><li><strong class="text-white">Fuente</strong> — Dos, y hay que recorrer las dos: <strong class="text-white">EID 10</strong> (acceso a proceso, con la máscara de <code>GrantedAccess</code>) y <strong class="text-white">EID 1</strong> (creación de proceso, con la línea de comandos).</li><li><strong class="text-white">Hipótesis</strong> — falsable, con ventana temporal. La escribís vos.</li><li><strong class="text-white">Consulta</strong> — con el número de resultados esperado <em>antes</em> de correrla.</li></ol></div></div>
+  </section>
+  <section id="caminoA" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">Camino A · por el acceso al proceso</h2><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>KQL · EID 10<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code">event.code: "10"
+  and winlog.event_data.TargetImage: *lsass.exe
+  and winlog.event_data.GrantedAccess: ("0x1010" or "0x1410" or "0x143a" or "0x1fffff")</pre></div><p class="text-sm text-gray-300 leading-relaxed">Las máscaras de <code>GrantedAccess</code> que importan son las que incluyen <code>PROCESS_VM_READ</code>. Vas a encontrar también accesos legítimos: el antivirus, el EDR y algún agente de inventario hacen esto todo el día.</p>
+  </section>
+  <section id="caminoB" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">Camino B · por la línea de comandos</h2><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>KQL · EID 1<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code">event.code: "1"
+  and process.command_line: (*comsvcs* and *MiniDump*)
+
+<span class="c"># más amplio, por si cambiaron el intermediario:</span>
+event.code: "1" and process.command_line: (*MiniDump* or *lsass*)</pre></div><p class="text-xs text-gray-500 leading-relaxed">Los nombres de campo dependen del pipeline de ingesta. Verificá los tuyos en el data view antes de escribir: consultar contra un esquema imaginario es la forma más común de «cazar» sin cazar nada.</p>
+  </section>
+  <section id="comparar" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">Compará los dos</h2><script type="application/json" data-wb-seed-for="lsass">[{"camino": "A · EID 10 acceso"}, {"camino": "B · EID 1 comandos"}]</script><div class="unified-card is-static p-5" data-wb-table="lsass" data-wb-min="2" data-wb-key="camino"><div class="table-scroll"><table class="data-table"><thead><tr><th>Camino</th><th>¿Qué encontró?</th><th>Ruido legítimo</th><th>¿Cómo lo evadirías?</th><th></th></tr></thead><tbody data-wb-body></tbody></table></div><p class="wb-empty" data-wb-empty hidden>No hay filas. Agregá una para empezar.</p><template data-wb-row><tr><td data-wb-col="camino" data-wb-fixed style="min-width:150px"></td><td class="is-editable" style="min-width:200px"><div class="wb-cell" contenteditable="true" data-wb-col="encontro" data-ph="host, hora, proceso"></div></td><td class="is-editable" style="min-width:180px"><div class="wb-cell" contenteditable="true" data-wb-col="ruido" data-ph="cuánto y de quién"></div></td><td class="is-editable" style="min-width:200px"><div class="wb-cell" contenteditable="true" data-wb-col="evasion" data-ph="si fueras el adversario"></div></td><td class="wb-rowtools"><button class="wb-del" type="button" title="Eliminar fila" aria-label="Eliminar fila"><i class="fas fa-xmark"></i></button></td></tr></template><div class="wb-tablefoot no-print"><button class="wb-btn wb-add" type="button" data-wb-add><i class="fas fa-plus"></i>Agregar camino</button><span class="wb-count"></span></div></div>
+  </section>
+  <section id="respuesta" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">El hallazgo</h2><div class="unified-card is-static p-5"><label class="block text-xs uppercase tracking-[0.15em] text-gray-500 mb-2" data-wb-label="Host y hora exacta del volcado">Host y hora exacta del volcado</label><textarea class="fill-in" data-wb="hallazgo" rows="3" placeholder="El host, el timestamp, el proceso que lo hizo y qué cuenta estaba usando."></textarea></div><div class="callout is-pista"><div class="callout-title"><i class="fas fa-scale-balanced"></i>El intercambio</div><div class="text-sm leading-relaxed text-gray-300"><p>El <strong class="text-white">EID 1</strong> es fácil de evadir: basta con cambiar la línea de comandos, usar otro intermediario, o llamar a la API directamente. A cambio es barato y silencioso en volumen.</p><p class="mt-2">El <strong class="text-white">EID 10</strong> es mucho más caro de evadir —el handle hay que abrirlo igual— y mucho más ruidoso: en una flota real produce miles de eventos benignos por día, porque el EDR también lee LSASS.</p><p class="mt-2">Elegir fuente es elegir en qué lado de ese intercambio parás. Y si el volumen del EID 10 es inviable, lo que queda no es resignarse: es un señuelo con línea base cero. Eso lo vas a decidir en el W1.</p></div></div>
+  </section>
+
+  <section id="cierre">
+    <div class="callout is-entregable">
+      <div class="callout-title"><i class="fas fa-box-archive"></i>Entregable · alimenta el W1</div>
+      <p class="text-sm leading-relaxed text-gray-300">Las dos consultas con su resultado, el ruido de cada una, y la decisión de qué fuente elegirías para EkoFinance con su argumento.</p>
+    </div>
+
+    <div class="mt-6">
+      <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-2">Control de avance</h2>
+      <p class="text-xs text-gray-500 mb-5 ml-4">Se guarda en tu navegador y viaja en la exportación.</p>
+      <ul class="checklist">
+        <li><label><input type="checkbox" data-wb="chk.dos"><span>Corrimos los dos caminos, no uno</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.hallazgo"><span>Tenemos host y hora exacta del volcado</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.ruido"><span>Contamos el ruido legítimo de cada camino</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.evasion"><span>Sabemos decir cómo evadiría cada uno un adversario</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.eleccion"><span>Elegimos una fuente para este entorno y la justificamos</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.exportado"><span>Exportamos el trabajo</span></label></li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-white/10 mt-12 py-8">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center justify-between gap-4 flex-wrap mb-6 no-print">
+      <a href="e09-caza-side-loading.html" class="back-link"><i class="fas fa-arrow-left"></i>E9 · Caza 1 · Side-loading</a>
+      <a href="e11-caza-lateral-y-salida.html" class="back-link">E11 · Caza 3 · Lateral y salida<i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="flex flex-col md:flex-row items-center justify-between gap-3 pt-6 border-t border-white/5">
+      <span class="text-xs text-gray-500">Active Cyber Defense: Hunt the Fox on His Land · Ekoparty 2026</span>
+      <p class="text-xs text-gray-500">&copy; 2026 BASE4 Security</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/base4-labs.js"></script>
+<script src="../assets/base4-workbook.js"></script>
+</body>
+</html>

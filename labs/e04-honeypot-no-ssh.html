@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E4 · El honeypot que no es SSH — Active Cyber Defense · Ekoparty 2026</title>
+<meta name="description" content="Volvés al carril B con tres servicios falsos más: SMB, un portal HTTP de login y un MSSQL. Acá no se planta nada. Se prueba qué captura cada uno y qué se le escapa.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Boldonse&family=Lato:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="../assets/base4-labs.css" rel="stylesheet">
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { base: { bg:'#282828', surfaceAlt:'#1e1e1e', orange:'#DC780F', orangeAlt:'#F1912D', textMain:'#ffffff', textDim:'#d1d5db' } },
+  fontFamily: { sans:['Lato','sans-serif'], display:['Boldonse','sans-serif'], mono:['JetBrains Mono','ui-monospace','monospace'] }
+} } }
+</script>
+</head>
+<body class="antialiased min-h-screen flex flex-col bg-base-bg text-gray-200" data-lab="e04">
+
+<div class="lab-progress no-print"><i></i></div>
+
+<nav class="top-nav sticky top-0 z-50 bg-base-bg/95 backdrop-blur border-b border-white/10 no-print">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+    <a href="../index.html" class="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 hover:text-base-orangeAlt transition-colors">
+      <i class="fas fa-arrow-left mr-2"></i>Active Cyber Defense · Labs 2026
+    </a>
+    <div class="flex items-center gap-2 flex-wrap">
+      <span class="timer-badge is-neutral"><i class="fas fa-list-check"></i><span data-progress-readout>0 / 0</span></span>
+      <span class="timer-badge" data-timer data-minutes="25">
+        <i class="fas fa-hourglass-half"></i><span data-timer-out>25:00</span>
+        <button data-timer-btn class="ml-1 hover:text-white transition-colors" title="Iniciar / pausar" aria-label="Iniciar o pausar el temporizador"><i class="fas fa-play"></i></button>
+      </span>
+      <button class="back-link" data-reset title="Borrar mis tildes y anotaciones"><i class="fas fa-rotate-left"></i>Reset</button>
+    </div>
+  </div>
+</nav>
+
+<header class="relative py-14 bg-[radial-gradient(circle_at_50%_-30%,_#3a2600_0%,_#282828_60%)] border-b border-white/10">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center gap-3 mb-5 flex-wrap">
+      <span class="timer-badge">Día 1 · banco de trabajo</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-clock"></i>25 minutos</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-users"></i>Grupos de 2-3</span>
+      <span class="timer-badge is-neutral" style="border-color:rgba(96,165,250,.45);color:#93c5fd"><i class="fas fa-mask"></i>Carril B · sistema falso</span>
+    </div>
+    <p class="text-base-orange font-bold tracking-[0.3em] uppercase mb-3 text-xs">Ejercicio E4</p>
+    <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-white mb-4" data-wb-title>El honeypot que no es SSH</h1>
+    <p class="max-w-3xl text-base text-gray-300 leading-relaxed">Volvés al carril B con tres servicios falsos más: SMB, un portal HTTP de login y un MSSQL. Acá no se planta nada. Se prueba qué captura cada uno y qué se le escapa.</p>
+  </div>
+</header>
+
+<main class="flex-grow max-w-6xl mx-auto px-6 py-12 w-full space-y-10" data-wb-scope>
+
+  <div class="wb-toolbar no-print">
+    <button class="wb-btn is-primary" type="button" data-wb-act="md" title="Ver y copiar el trabajo listo para entregar"><i class="fas fa-file-export"></i>Exportar</button>
+    <button class="wb-btn" type="button" data-wb-act="importFile" title="Cargar un respaldo .json"><i class="fas fa-file-import"></i>Importar</button>
+    <button class="wb-btn is-danger" type="button" data-wb-act="clear" title="Borrar todo lo cargado"><i class="fas fa-rotate-left"></i>Limpiar</button>
+    <span class="wb-status is-saved" data-wb-status><span class="dot"></span><span data-wb-status-label>Guardado</span></span>
+  </div>
+
+  <section id="grupo">
+    <div class="unified-card is-static p-6">
+      <div class="wb-ident">
+        <div>
+          <label for="wb-grupo">Grupo</label>
+          <input class="wb-input" id="wb-grupo" data-wb="meta.grupo" placeholder="Ej. Grupo 3" autocomplete="off">
+        </div>
+        <div>
+          <label for="wb-integrantes">Integrantes</label>
+          <input class="wb-input" id="wb-integrantes" data-wb="meta.integrantes" placeholder="Nombres separados por coma" autocomplete="off">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="objetivo">
+    <div class="callout is-objetivo">
+      <div class="callout-title"><i class="fas fa-bullseye"></i>Objetivo</div>
+      <p class="text-sm leading-relaxed text-gray-300">Ver que un honeypot <strong class="text-white">no es un detector genérico</strong>: es una apuesta sobre qué va a intentar el adversario, y cada servicio te devuelve una inteligencia distinta.</p>
+    </div>
+  </section>
+
+  <section id="ubicacion" class="space-y-5">
+<div class="callout is-pista"><div class="callout-title"><i class="fas fa-folder-tree"></i>Dónde se corre esto</div><div class="text-sm leading-relaxed text-gray-300"><p>Todos los comandos de esta ficha salen desde la carpeta <code>mi-lab/</code> del repositorio, salvo que se aclare lo contrario:</p><pre class="code" style="margin:.6rem 0">cd eko2026-active-defense-labs/mi-lab</pre><p>Si no sabés dónde quedó, está en la <a class="eko-link-label" href="../index.html#preparacion">preparación del programa</a>.</p></div></div>
+  </section>
+  <section id="separado" class="space-y-5">
+<div class="callout is-atencion"><div class="callout-title"><i class="fas fa-circle-info"></i>A propósito separado del portal</div><div class="text-sm leading-relaxed text-gray-300"><p>Acá no se planta ningún token y no se toca el portal. Estos tres servicios son <strong class="text-white">falsos enteros</strong>, como Cowrie: su valor está en que nadie legítimo debería llegar nunca.</p><p class="mt-2">Mantener los dos carriles separados es lo que te permite contestar, frente a cualquier alerta, la pregunta que ordena todo el diseño: <em>¿lo que se tocó era falso, o era real con algo falso adentro?</em></p></div></div>
+  </section>
+  <section id="levantar" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">1 · Levantá los tres servicios</h2><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Terminal<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code">docker compose up -d opencanary
+docker compose logs -f opencanary   <span class="c"># dejalo abierto en una terminal aparte</span></pre></div>
+  </section>
+  <section id="atacar" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">2 · Atacate</h2><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Segunda terminal<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code"><span class="c"># SMB — enumerá y montá</span>
+smbclient -L //localhost -N
+smbclient //localhost/Contabilidad -U svc_backup%Verano2026
+
+<span class="c"># HTTP — el portal de login falso</span>
+open http://localhost:8081
+<span class="c">#   probá admin / admin, después mcastro / Ekofinance2026</span>
+
+<span class="c"># MSSQL</span>
+sqlcmd -S localhost,1433 -U sa -P Password123  <span class="c"># o cualquier cliente</span></pre></div>
+  </section>
+  <section id="comparar" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">3 · Qué capturó cada uno</h2><p class="text-sm text-gray-300 leading-relaxed">La columna de la derecha es la importante: lo que <em>no</em> te devuelve un servicio es lo que te va a faltar el día que lo necesites.</p><script type="application/json" data-wb-seed-for="servicios">[{"servicio": "SMB"}, {"servicio": "HTTP login"}, {"servicio": "MSSQL"}]</script><div class="unified-card is-static p-5" data-wb-table="servicios" data-wb-min="3" data-wb-key="servicio"><div class="table-scroll"><table class="data-table"><thead><tr><th>Servicio</th><th>Qué capturó</th><th>Qué NO capturó</th><th>¿Cuándo lo elegirías?</th><th></th></tr></thead><tbody data-wb-body></tbody></table></div><p class="wb-empty" data-wb-empty hidden>No hay filas. Agregá una para empezar.</p><template data-wb-row><tr><td data-wb-col="servicio" data-wb-fixed style="min-width:110px"></td><td class="is-editable" style="min-width:220px"><div class="wb-cell" contenteditable="true" data-wb-col="capturo" data-ph="usuario, IP, contraseña, comando…"></div></td><td class="is-editable" style="min-width:220px"><div class="wb-cell" contenteditable="true" data-wb-col="nocapturo" data-ph="y por qué importa"></div></td><td class="is-editable" style="min-width:200px"><div class="wb-cell" contenteditable="true" data-wb-col="cuando" data-ph="qué técnica delata mejor que los otros"></div></td><td class="wb-rowtools"><button class="wb-del" type="button" title="Eliminar fila" aria-label="Eliminar fila"><i class="fas fa-xmark"></i></button></td></tr></template><div class="wb-tablefoot no-print"><button class="wb-btn wb-add" type="button" data-wb-add><i class="fas fa-plus"></i>Agregar servicio</button><span class="wb-count"></span></div></div>
+  </section>
+  <section id="cierre" class="space-y-5">
+<div class="callout is-pista"><div class="callout-title"><i class="fas fa-scale-balanced"></i>La apuesta</div><div class="text-sm leading-relaxed text-gray-300"><p>El SMB te da el usuario y la IP, y nunca la contraseña: el protocolo no la manda en claro. El portal HTTP te la da entera, porque un formulario la manda tal cual. El MSSQL te dice qué cliente usó, que a veces identifica la herramienta.</p><p class="mt-2">Elegir qué servicio simular es elegir <strong class="text-white">qué vas a saber del adversario cuando llegue</strong>. Y cobra distinto según aciertes: un MSSQL falso en una red sin bases de datos es un servicio que nadie va a mirar, ni siquiera el atacante.</p></div></div>
+  </section>
+
+  <section id="cierre">
+    <div class="callout is-entregable">
+      <div class="callout-title"><i class="fas fa-box-archive"></i>Entregable</div>
+      <p class="text-sm leading-relaxed text-gray-300">La tabla de los tres servicios con qué capturó y qué se le escapó a cada uno, y en qué caso elegirías cada uno.</p>
+    </div>
+
+    <div class="mt-6">
+      <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-2">Control de avance</h2>
+      <p class="text-xs text-gray-500 mb-5 ml-4">Se guarda en tu navegador y viaja en la exportación.</p>
+      <ul class="checklist">
+        <li><label><input type="checkbox" data-wb="chk.arriba"><span>Los tres servicios responden</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.atacados"><span>Nos atacamos a nosotros mismos en los tres</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.tabla"><span>La tabla tiene completa la columna «qué NO capturó»</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.eleccion"><span>Para cada servicio sabemos decir cuándo lo elegiríamos</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.separado"><span>No plantamos nada acá: esto es carril B</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.exportado"><span>Exportamos el trabajo</span></label></li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-white/10 mt-12 py-8">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center justify-between gap-4 flex-wrap mb-6 no-print">
+      <a href="e03-plantar-en-el-portal.html" class="back-link"><i class="fas fa-arrow-left"></i>E3 · Plantá el engaño en tu portal</a>
+      <a href="e05-endurecer-y-medir.html" class="back-link">E5 · Endurecé el honeypot y medí el delta<i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="flex flex-col md:flex-row items-center justify-between gap-3 pt-6 border-t border-white/5">
+      <span class="text-xs text-gray-500">Active Cyber Defense: Hunt the Fox on His Land · Ekoparty 2026</span>
+      <p class="text-xs text-gray-500">&copy; 2026 BASE4 Security</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/base4-labs.js"></script>
+<script src="../assets/base4-workbook.js"></script>
+</body>
+</html>

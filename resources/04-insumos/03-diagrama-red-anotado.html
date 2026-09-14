@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagrama de red anotado y recorrido del adversario — EkoFinance</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Boldonse&family=Lato:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="../../assets/base4-labs.css" rel="stylesheet">
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { base: { bg:'#282828', surfaceAlt:'#1e1e1e', orange:'#DC780F', orangeAlt:'#F1912D' } },
+  fontFamily: { sans:['Lato','sans-serif'], display:['Boldonse','sans-serif'], mono:['JetBrains Mono','ui-monospace','monospace'] }
+} } }
+</script>
+</head>
+<body class="antialiased min-h-screen flex flex-col bg-base-bg text-gray-200">
+
+<nav class="top-nav sticky top-0 z-50 bg-base-bg/95 backdrop-blur border-b border-white/10 no-print">
+  <div class="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+    <a href="../../labs/lab-04-lectura-de-insumos.html" class="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 hover:text-base-orangeAlt transition-colors">
+      <i class="fas fa-arrow-left mr-2"></i>LAB 04 · Lectura de insumos
+    </a>
+    <div class="flex gap-2 flex-wrap items-center">
+      <a class="nav-pill" href="01-informe-tecnico-dfir.html"><span class="num">01</span> DFIR</a>
+      <a class="nav-pill" href="02-reporte-inteligencia-cti.html"><span class="num">02</span> CTI</a>
+      <a class="nav-pill" href="03-diagrama-red-anotado.html"><span class="num">03</span> Red</a>
+      <a class="nav-pill" href="04-estado-del-deception.html"><span class="num">04</span> Deception</a>
+      <button class="wb-btn" type="button" onclick="window.print()"><i class="fas fa-print"></i>PDF</button>
+    </div>
+  </div>
+</nav>
+
+<header class="border-b border-white/10 py-12">
+  <div class="max-w-5xl mx-auto px-6">
+    <div class="doc-banner mb-8">
+      <i class="fas fa-lock"></i><span>Uso interno · Confidencial</span>
+      <span style="margin-left:auto;letter-spacing:0.08em">Documento de ejercitación · escenario ficticio</span>
+    </div>
+    <p class="text-base-orange font-bold tracking-[0.3em] uppercase mb-3 text-xs">EkoFinance · Insumo 03</p>
+    <h1 class="text-3xl md:text-4xl font-black tracking-tighter text-white mb-6">Diagrama de red anotado y recorrido del adversario</h1>
+    <div class="unified-card is-static p-5">
+      <table class="doc-meta">
+        <tr><td>Documento</td><td>Insumo 03 · Anexo cartográfico al informe DFIR</td></tr>
+        <tr><td>Emitido por</td><td>Arquitectura de Infraestructura · EkoFinance</td></tr>
+        <tr><td>Fecha de emisión</td><td>06/07/2026</td></tr>
+        <tr><td>Estado del inventario</td><td>Al 30/06/2026, posterior a la contención</td></tr>
+        <tr><td>Alcance</td><td>Activos de las zonas DMZ, VLAN PROD, VLAN Oficina y sitio Konex</td></tr>
+        <tr><td>Referencias</td><td>Insumo 01 (DFIR), Insumo 02 (CTI)</td></tr>
+      </table>
+    </div>
+  </div>
+</header>
+
+<main class="flex-grow max-w-5xl mx-auto px-6 py-12 w-full doc-body">
+
+  <section>
+    <h2>Propósito</h2>
+    <p>
+      Este anexo fija la nomenclatura de activos, el direccionamiento de las zonas y el recorrido reconstruido del adversario, para que
+      los informes técnicos y de inteligencia se puedan leer contra un mapa único. Hasta el incidente, la documentación de red de
+      EkoFinance estaba dispersa en tres planillas con nombres de host inconsistentes; parte del retraso en la reconstrucción de la
+      cronología se debe a eso.
+    </p>
+    <div class="callout is-atencion">
+      <div class="callout-title"><i class="fas fa-triangle-exclamation"></i>Advertencia de alcance</div>
+      <p class="text-sm leading-relaxed text-gray-300" style="margin:0">
+        El recorrido de la sección 4 combina hallazgos forenses directos (Insumo 01) con actividad inferida a partir de inteligencia
+        externa (Insumo 02). <strong class="text-white">Los saltos 8 a 12 no fueron verificados sobre los sistemas</strong>: el alcance
+        de la pericia no incluyó el controlador de dominio. Están representados porque el equipo de CTI los reporta, no porque estén
+        confirmados.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Direccionamiento por zona</h2>
+    <div class="unified-card is-static p-6">
+      <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr><th>Zona</th><th>Subred</th><th>Ubicación física</th><th>Expuesta a internet</th></tr></thead>
+        <tbody>
+          <tr><td class="col-accent">DMZ</td><td class="col-label">10.20.50.0/24</td><td>Centro de Convenciones (CEC)</td><td><strong class="text-white">Sí</strong> — publicación NAT en el balanceador</td></tr>
+          <tr><td class="col-accent">VLAN PROD</td><td class="col-label">10.20.30.0/24</td><td>Centro de Convenciones (CEC)</td><td>No</td></tr>
+          <tr><td class="col-accent">VLAN Oficina</td><td class="col-label">10.20.10.0/24</td><td>Centro de Convenciones (CEC)</td><td>No</td></tr>
+          <tr><td class="col-accent">Konex (DR)</td><td class="col-label">10.40.30.0/24</td><td>Centro cultural Konex</td><td>No — enlace punto a punto con CEC</td></tr>
+          <tr><td class="col-accent">AWS</td><td class="col-label">10.60.0.0/16</td><td>Nube (producto Hacking Finances)</td><td><strong class="text-white">Sí</strong></td></tr>
+          <tr><td class="col-accent">Home Office</td><td class="col-label">—</td><td>Domicilios de los empleados</td><td>Acceso vía VDI publicado</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="text-xs text-gray-500 italic mt-4">
+        <i class="fas fa-circle-info mr-1"></i>No existe segmentación entre VLAN Oficina y VLAN PROD: el filtrado entre ambas se
+        implementó a nivel de switch en 2023 y quedó en modo permisivo tras una migración.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Inventario de activos relevantes</h2>
+    <div class="unified-card is-static p-6">
+      <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr><th>Host</th><th>Dirección</th><th>Zona</th><th>Rol</th><th>Sistema</th></tr></thead>
+        <tbody>
+          <tr><td class="col-tag">EKO-VDI01</td><td class="col-label">10.20.50.11</td><td>DMZ</td><td>VMware Horizon · Connection Server y gateway</td><td>Windows Server 2019</td></tr>
+          <tr><td class="col-tag">eko-web01</td><td class="col-label">10.20.50.20</td><td>DMZ</td><td>Web Server Mobile Banking</td><td>Ubuntu 22.04 · NodeJS</td></tr>
+          <tr><td class="col-tag">EKO-BAL01</td><td class="col-label">10.20.50.5</td><td>DMZ</td><td>Balanceador y publicación NAT</td><td>Appliance</td></tr>
+          <tr><td class="col-tag">EKO-DC01</td><td class="col-label">10.20.30.10</td><td>VLAN PROD</td><td>Controlador de dominio <code class="inline">ekofinance.local</code></td><td>Windows Server 2019</td></tr>
+          <tr><td class="col-tag">EKO-EXC01</td><td class="col-label">10.20.30.20</td><td>VLAN PROD</td><td>Exchange Server</td><td>Windows Server 2019</td></tr>
+          <tr><td class="col-tag">EKO-FS01</td><td class="col-label">10.20.30.30</td><td>VLAN PROD</td><td>Servidor de archivos</td><td>Windows Server 2019</td></tr>
+          <tr><td class="col-tag">EKO-DNS01</td><td class="col-label">10.20.30.40</td><td>VLAN PROD</td><td>DNS interno</td><td>Windows Server 2019</td></tr>
+          <tr><td class="col-tag">EKO-DEV01</td><td class="col-label">10.20.30.50</td><td>VLAN PROD</td><td>Desarrollos internos</td><td>Debian 12</td></tr>
+          <tr><td class="col-tag">eko-api01</td><td class="col-label">10.20.30.60</td><td>VLAN PROD</td><td>API Mobile Banking · PostgreSQL</td><td>Ubuntu 22.04 · Django</td></tr>
+          <tr><td class="col-tag">EKO-ESX01/02</td><td class="col-label">10.20.30.71-72</td><td>VLAN PROD</td><td>Hipervisores</td><td>VMware ESXi</td></tr>
+          <tr><td class="col-tag">EKO-WS0xx</td><td class="col-label">10.20.10.0/24</td><td>VLAN Oficina</td><td>Estaciones de trabajo (≈180)</td><td>Windows 10 / 11</td></tr>
+          <tr><td class="col-tag">EKO-DC02</td><td class="col-label">10.40.30.10</td><td>Konex</td><td>Controlador de dominio secundario</td><td>Windows Server 2019</td></tr>
+          <tr><td class="col-tag">eko-api01-dr</td><td class="col-label">10.40.30.60</td><td>Konex</td><td>Réplica del API</td><td>Ubuntu 22.04</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <h3 class="numbered">Cuentas de servicio con privilegio elevado</h3>
+    <div class="unified-card is-static p-6">
+      <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr><th>Cuenta</th><th>Uso declarado</th><th>Pertenencia</th><th>Última rotación</th></tr></thead>
+        <tbody>
+          <tr><td class="col-tag">svc_vmwadmin</td><td class="col-label">Integración de Horizon con Active Directory</td><td><strong class="text-white">Domain Admins</strong></td><td>11/2021</td></tr>
+          <tr><td class="col-tag">svc_backup</td><td class="col-label">Agente de respaldo</td><td>Backup Operators</td><td>03/2025</td></tr>
+          <tr><td class="col-tag">svc_sqlprod</td><td class="col-label">Servicio de base de datos</td><td>Local en eko-api01</td><td>08/2024</td></tr>
+          <tr><td class="col-tag">adm_deception</td><td class="col-label">Despliegue de artefactos de engaño</td><td>Account Operators</td><td>01/2025</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Recorrido reconstruido del adversario</h2>
+    <p>
+      Doce saltos entre el <span class="ref">08/06/2026 03:14</span> y la contención del <span class="ref">29/06/2026</span>. Los saltos
+      con borde continuo fueron verificados forensemente; los de borde punteado provienen de inteligencia externa y
+      <strong class="text-white">no fueron confirmados sobre los sistemas</strong>.
+    </p>
+
+    <div class="unified-card is-static p-6 mb-6">
+      <div class="path-wrap">
+      <svg class="path-svg" viewBox="0 0 880 620" xmlns="http://www.w3.org/2000/svg" role="img"
+           aria-label="Recorrido del adversario en doce saltos, desde internet hasta la exfiltración">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#F1912D"/>
+          </marker>
+          <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#a78bfa"/>
+          </marker>
+        </defs>
+
+        <!-- bandas de zona -->
+        <g font-family="Lato, sans-serif" font-size="10" font-weight="700" letter-spacing="1.4">
+          <rect x="0" y="8"   width="880" height="96"  rx="6" fill="#DC780F" opacity="0.05"/>
+          <text x="12" y="26"  fill="#9ca3af">INTERNET</text>
+          <rect x="0" y="112" width="880" height="120" rx="6" fill="#DC780F" opacity="0.08"/>
+          <text x="12" y="130" fill="#9ca3af">DMZ · 10.20.50.0/24</text>
+          <rect x="0" y="240" width="880" height="104" rx="6" fill="#DC780F" opacity="0.05"/>
+          <text x="12" y="258" fill="#9ca3af">VLAN OFICINA · 10.20.10.0/24</text>
+          <rect x="0" y="352" width="880" height="260" rx="6" fill="#DC780F" opacity="0.08"/>
+          <text x="12" y="370" fill="#9ca3af">VLAN PROD · 10.20.30.0/24</text>
+        </g>
+
+        <!-- nodos -->
+        <g font-family="Lato, sans-serif">
+          <!-- internet -->
+          <rect x="60" y="42" width="150" height="44" rx="8" fill="#1e1e1e" stroke="#4b5563"/>
+          <text x="135" y="62" text-anchor="middle" font-size="11" font-weight="900" fill="#e5e7eb">Adversario</text>
+          <text x="135" y="76" text-anchor="middle" font-size="9" fill="#9ca3af">origen no atribuido</text>
+
+          <rect x="640" y="42" width="180" height="44" rx="8" fill="#1e1e1e" stroke="#f87171" stroke-dasharray="4 3"/>
+          <text x="730" y="62" text-anchor="middle" font-size="11" font-weight="900" fill="#fca5a5">cdn-sync-eu[.]net</text>
+          <text x="730" y="76" text-anchor="middle" font-size="9" fill="#9ca3af">C2 y destino de exfiltración</text>
+
+          <!-- dmz -->
+          <rect x="60" y="150" width="170" height="52" rx="8" fill="#1e1e1e" stroke="#F1912D" stroke-width="1.6"/>
+          <text x="145" y="170" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">EKO-VDI01</text>
+          <text x="145" y="184" text-anchor="middle" font-size="9" fill="#9ca3af">10.20.50.11 · Horizon</text>
+          <text x="145" y="196" text-anchor="middle" font-size="8.5" fill="#F1912D">paciente cero</text>
+
+          <!-- oficina -->
+          <rect x="330" y="272" width="170" height="46" rx="8" fill="#1e1e1e" stroke="#F1912D" stroke-width="1.6"/>
+          <text x="415" y="291" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">EKO-WS041 / 067 / 112</text>
+          <text x="415" y="305" text-anchor="middle" font-size="9" fill="#9ca3af">estaciones periciadas</text>
+
+          <!-- prod -->
+          <rect x="60" y="404" width="170" height="52" rx="8" fill="#1e1e1e" stroke="#a78bfa" stroke-width="1.6" stroke-dasharray="4 3"/>
+          <text x="145" y="424" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">EKO-DC01</text>
+          <text x="145" y="438" text-anchor="middle" font-size="9" fill="#9ca3af">10.20.30.10 · dominio</text>
+          <text x="145" y="450" text-anchor="middle" font-size="8.5" fill="#a78bfa">fuera del alcance pericial</text>
+
+          <rect x="330" y="404" width="150" height="52" rx="8" fill="#1e1e1e" stroke="#4b5563"/>
+          <text x="405" y="424" text-anchor="middle" font-size="11" font-weight="900" fill="#e5e7eb">EKO-FS01</text>
+          <text x="405" y="438" text-anchor="middle" font-size="9" fill="#9ca3af">10.20.30.30 · archivos</text>
+
+          <rect x="560" y="404" width="150" height="52" rx="8" fill="#1e1e1e" stroke="#4b5563"/>
+          <text x="635" y="424" text-anchor="middle" font-size="11" font-weight="900" fill="#e5e7eb">eko-api01</text>
+          <text x="635" y="438" text-anchor="middle" font-size="9" fill="#9ca3af">10.20.30.60 · PostgreSQL</text>
+
+          <rect x="330" y="524" width="380" height="46" rx="8" fill="#1e1e1e" stroke="#a78bfa" stroke-dasharray="4 3"/>
+          <text x="520" y="543" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">C:\Windows\Temp\vmw\ntds  ·  ntds.dit + SYSTEM</text>
+          <text x="520" y="557" text-anchor="middle" font-size="9" fill="#9ca3af">volcado de directorio, comprimido en partes de 100 MB</text>
+        </g>
+
+        <!-- flechas verificadas -->
+        <g stroke="#F1912D" stroke-width="1.8" fill="none" marker-end="url(#ar)">
+          <path d="M135,88 L140,146"/>
+          <path d="M232,176 C300,176 300,268 328,272"/>
+          <path d="M230,182 C420,196 640,120 700,88" stroke-dasharray="0"/>
+        </g>
+        <!-- flechas inferidas -->
+        <g stroke="#a78bfa" stroke-width="1.8" fill="none" marker-end="url(#ar2)" stroke-dasharray="5 4">
+          <path d="M140,206 L143,400"/>
+          <path d="M232,432 L326,430"/>
+          <path d="M482,430 L556,430"/>
+          <path d="M145,460 C145,500 300,522 328,530"/>
+          <path d="M712,540 C800,520 820,120 806,88"/>
+        </g>
+
+        <!-- números de salto -->
+        <g font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700">
+          <circle cx="152" cy="118" r="11" fill="#DC780F"/><text x="152" y="122" text-anchor="middle" fill="#fff">1</text>
+          <circle cx="300" cy="222" r="11" fill="#DC780F"/><text x="300" y="226" text-anchor="middle" fill="#fff">5</text>
+          <circle cx="470" cy="150" r="11" fill="#DC780F"/><text x="470" y="154" text-anchor="middle" fill="#fff">6</text>
+          <circle cx="158" cy="300" r="11" fill="#7c3aed"/><text x="158" y="304" text-anchor="middle" fill="#fff">7</text>
+          <circle cx="278" cy="414" r="11" fill="#7c3aed"/><text x="278" y="418" text-anchor="middle" fill="#fff">9</text>
+          <circle cx="520" cy="414" r="11" fill="#7c3aed"/><text x="520" y="418" text-anchor="middle" fill="#fff">10</text>
+          <circle cx="250" cy="508" r="11" fill="#7c3aed"/><text x="250" y="512" text-anchor="middle" fill="#fff">11</text>
+          <circle cx="800" cy="300" r="11" fill="#7c3aed"/><text x="800" y="304" text-anchor="middle" fill="#fff">12</text>
+        </g>
+
+        <!-- leyenda -->
+        <g font-family="Lato, sans-serif" font-size="9.5">
+          <line x1="620" y1="248" x2="660" y2="248" stroke="#F1912D" stroke-width="1.8"/>
+          <text x="668" y="252" fill="#9ca3af">verificado forensemente</text>
+          <line x1="620" y1="266" x2="660" y2="266" stroke="#a78bfa" stroke-width="1.8" stroke-dasharray="5 4"/>
+          <text x="668" y="270" fill="#9ca3af">inferido de inteligencia externa</text>
+        </g>
+      </svg>
+      </div>
+      <p class="text-xs text-gray-500 italic mt-4">
+        <i class="fas fa-circle-info mr-1"></i>Los saltos 2, 3, 4 y 8 son técnicas de evasión y persistencia que ocurren
+        <em>dentro</em> de un host y no se representan como desplazamiento. Ver la tabla de la sección 5.
+      </p>
+    </div>
+
+    <div class="unified-card is-static p-5">
+      <h3 class="numbered">Arquitectura, sin anotar</h3>
+      <p style="margin-bottom:14px">Mismo mapa que el del LAB 00. Sirve para contrastar el recorrido de arriba contra la topología limpia.</p>
+      <div data-eko-network></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Tabla de saltos</h2>
+    <div class="unified-card is-static p-6">
+      <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Momento</th><th>Origen &rarr; destino</th><th>Acción</th><th>Verificación</th></tr></thead>
+        <tbody>
+          <tr><td class="col-accent">1</td><td class="col-label">T0 · 08/06 03:14</td><td>Internet &rarr; EKO-VDI01</td><td>Explotación del componente Log4j del gateway de Horizon</td><td>Forense · DFIR §4.1</td></tr>
+          <tr><td class="col-accent">2</td><td class="col-label">T0 + 21 min</td><td>en EKO-VDI01</td><td>Creación de servicio de arranque automático que carga una DLL</td><td>Forense · DFIR §4.2</td></tr>
+          <tr><td class="col-accent">3</td><td class="col-label">T0 + 26 min</td><td>en EKO-VDI01</td><td>Side-loading vía <code class="inline">OLEVIEW.EXE</code></td><td>Forense · DFIR §4.3</td></tr>
+          <tr><td class="col-accent">4</td><td class="col-label">T0 + 26 min</td><td>en EKO-VDI01</td><td>DLL inflada a 78 MB para evadir escaneo</td><td>Forense · DFIR §4.3</td></tr>
+          <tr><td class="col-accent">5</td><td class="col-label">T0 + 41 min</td><td>EKO-VDI01 &rarr; VLAN Oficina</td><td>Reconocimiento con PowerShell codificado</td><td>Forense · DFIR §5.1</td></tr>
+          <tr><td class="col-accent">6</td><td class="col-label">T0 + 48 min</td><td>EKO-VDI01 &rarr; Internet</td><td>Primera baliza al canal de comando y control</td><td>Forense · DFIR §5.2</td></tr>
+          <tr><td class="col-accent">7</td><td class="col-label">T0 + 2 h 10 min</td><td>en EKO-VDI01</td><td>Volcado de memoria de LSASS con <code class="inline">comsvcs.dll</code></td><td>Forense · DFIR §6</td></tr>
+          <tr><td class="col-accent">8</td><td class="col-label">T0 + 3 d</td><td>EKO-VDI01 &rarr; EKO-DC01</td><td>Movimiento lateral con credenciales de <code class="inline">svc_vmwadmin</code></td><td><strong style="color:#a78bfa">Inferido</strong> · CTI §3</td></tr>
+          <tr><td class="col-accent">9</td><td class="col-label">T0 + 3 d</td><td>en EKO-DC01</td><td>Persistencia por suscripción de eventos WMI</td><td><strong style="color:#a78bfa">Inferido</strong> · CTI §3</td></tr>
+          <tr><td class="col-accent">10</td><td class="col-label">T0 + 3 d</td><td>en EKO-DC01</td><td>Inyección de DLL en <code class="inline">spoolsv.exe</code> mediante binario firmado</td><td><strong style="color:#a78bfa">Inferido</strong> · CTI §3</td></tr>
+          <tr><td class="col-accent">11</td><td class="col-label">T0 + 11 d</td><td>en EKO-DC01</td><td>Volcado del directorio con <code class="inline">ntdsutil</code></td><td><strong style="color:#a78bfa">Inferido</strong> · CTI §3</td></tr>
+          <tr><td class="col-accent">12</td><td class="col-label">T0 + 11 a 14 d</td><td>EKO-DC01 &rarr; Internet</td><td>Compresión con <code class="inline">rar</code> y exfiltración con <code class="inline">curl</code></td><td><strong style="color:#a78bfa">Inferido</strong> · CTI §3</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Observaciones de arquitectura</h2>
+    <ul class="space-y-3">
+      <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span><strong class="text-white">EKO-VDI01 atraviesa el perímetro por diseño.</strong> Es el único activo con interfaz publicada a internet y pertenencia al dominio. Se documentó como control de seguridad («reduce la superficie de ataque habilitando escritorios virtualizados») y opera como punto de tránsito.</span></li>
+      <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span><strong class="text-white">La cuenta <code class="inline">svc_vmwadmin</code> pertenece a Domain Admins</strong> y no rota desde noviembre de 2021. Su credencial reside en memoria de EKO-VDI01 de forma permanente por requisito de la integración.</span></li>
+      <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span><strong class="text-white">No hay filtrado efectivo entre VLAN Oficina y VLAN PROD.</strong> Las reglas existen en la configuración del switch pero quedaron en modo permisivo tras la migración de 2023.</span></li>
+      <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span><strong class="text-white">El enlace con Konex replica sin inspección.</strong> Cualquier modificación en el directorio de CEC se propaga al DC secundario en menos de 15 minutos, incluidas las que introduce un adversario.</span></li>
+      <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span><strong class="text-white">La versión de Horizon estaba 14 meses atrasada</strong> respecto de la línea de soporte del fabricante al momento del incidente.</span></li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="border-t border-white/10 mt-12 py-8 no-print">
+  <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+    <a href="../../labs/lab-04-lectura-de-insumos.html" class="back-link"><i class="fas fa-arrow-left"></i>Volver al LAB 04</a>
+    <p class="text-xs text-gray-500">Escenario de ejercitación · Active Cyber Defense · Ekoparty 2026</p>
+  </div>
+</footer>
+
+<script src="../../assets/ekofinance-network.js"></script>
+</body>
+</html>

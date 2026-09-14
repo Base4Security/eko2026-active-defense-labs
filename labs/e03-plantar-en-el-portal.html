@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E3 · Plantá el engaño en tu portal — Active Cyber Defense · Ekoparty 2026</title>
+<meta name="description" content="Recibís el Portal de Conciliación de EkoFinance: una aplicación que funciona, con datos y usuarios reales. Nada de eso es falso. El engaño es lo que vos le agregás encima, y tenés seis lugares donde ponerlo.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Boldonse&family=Lato:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="../assets/base4-labs.css" rel="stylesheet">
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { base: { bg:'#282828', surfaceAlt:'#1e1e1e', orange:'#DC780F', orangeAlt:'#F1912D', textMain:'#ffffff', textDim:'#d1d5db' } },
+  fontFamily: { sans:['Lato','sans-serif'], display:['Boldonse','sans-serif'], mono:['JetBrains Mono','ui-monospace','monospace'] }
+} } }
+</script>
+</head>
+<body class="antialiased min-h-screen flex flex-col bg-base-bg text-gray-200" data-lab="e03">
+
+<div class="lab-progress no-print"><i></i></div>
+
+<nav class="top-nav sticky top-0 z-50 bg-base-bg/95 backdrop-blur border-b border-white/10 no-print">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+    <a href="../index.html" class="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 hover:text-base-orangeAlt transition-colors">
+      <i class="fas fa-arrow-left mr-2"></i>Active Cyber Defense · Labs 2026
+    </a>
+    <div class="flex items-center gap-2 flex-wrap">
+      <span class="timer-badge is-neutral"><i class="fas fa-list-check"></i><span data-progress-readout>0 / 0</span></span>
+      <span class="timer-badge" data-timer data-minutes="30">
+        <i class="fas fa-hourglass-half"></i><span data-timer-out>30:00</span>
+        <button data-timer-btn class="ml-1 hover:text-white transition-colors" title="Iniciar / pausar" aria-label="Iniciar o pausar el temporizador"><i class="fas fa-play"></i></button>
+      </span>
+      <button class="back-link" data-reset title="Borrar mis tildes y anotaciones"><i class="fas fa-rotate-left"></i>Reset</button>
+    </div>
+  </div>
+</nav>
+
+<header class="relative py-14 bg-[radial-gradient(circle_at_50%_-30%,_#3a2600_0%,_#282828_60%)] border-b border-white/10">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center gap-3 mb-5 flex-wrap">
+      <span class="timer-badge">Día 1 · banco de trabajo</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-clock"></i>30 minutos</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-users"></i>Grupos de 2-3</span>
+      <span class="timer-badge is-neutral" style="border-color:rgba(220,120,15,.45);color:#F1912D"><i class="fas fa-building-columns"></i>Carril A · sistema real</span>
+    </div>
+    <p class="text-base-orange font-bold tracking-[0.3em] uppercase mb-3 text-xs">Ejercicio E3</p>
+    <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-white mb-4" data-wb-title>Plantá el engaño en tu portal</h1>
+    <p class="max-w-3xl text-base text-gray-300 leading-relaxed">Recibís el Portal de Conciliación de EkoFinance: una aplicación que funciona, con datos y usuarios reales. Nada de eso es falso. El engaño es lo que vos le agregás encima, y tenés seis lugares donde ponerlo.</p>
+  </div>
+</header>
+
+<main class="flex-grow max-w-6xl mx-auto px-6 py-12 w-full space-y-10" data-wb-scope>
+
+  <div class="wb-toolbar no-print">
+    <button class="wb-btn is-primary" type="button" data-wb-act="md" title="Ver y copiar el trabajo listo para entregar"><i class="fas fa-file-export"></i>Exportar</button>
+    <button class="wb-btn" type="button" data-wb-act="importFile" title="Cargar un respaldo .json"><i class="fas fa-file-import"></i>Importar</button>
+    <button class="wb-btn is-danger" type="button" data-wb-act="clear" title="Borrar todo lo cargado"><i class="fas fa-rotate-left"></i>Limpiar</button>
+    <span class="wb-status is-saved" data-wb-status><span class="dot"></span><span data-wb-status-label>Guardado</span></span>
+  </div>
+
+  <section id="grupo">
+    <div class="unified-card is-static p-6">
+      <div class="wb-ident">
+        <div>
+          <label for="wb-grupo">Grupo</label>
+          <input class="wb-input" id="wb-grupo" data-wb="meta.grupo" placeholder="Ej. Grupo 3" autocomplete="off">
+        </div>
+        <div>
+          <label for="wb-integrantes">Integrantes</label>
+          <input class="wb-input" id="wb-integrantes" data-wb="meta.integrantes" placeholder="Nombres separados por coma" autocomplete="off">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="objetivo">
+    <div class="callout is-objetivo">
+      <div class="callout-title"><i class="fas fa-bullseye"></i>Objetivo</div>
+      <p class="text-sm leading-relaxed text-gray-300">Desplegar tres piezas de engaño dentro de un sistema real y poder defender cada una contra la pregunta que en un honeypot no tiene sentido: <strong class="text-white">¿qué usuario legítimo del portal podría tocar esto?</strong></p>
+    </div>
+  </section>
+
+  <section id="ubicacion" class="space-y-5">
+<div class="callout is-pista"><div class="callout-title"><i class="fas fa-folder-tree"></i>Dónde se corre esto</div><div class="text-sm leading-relaxed text-gray-300"><p>Todos los comandos de esta ficha salen desde la carpeta <code>mi-lab/</code> del repositorio, salvo que se aclare lo contrario:</p><pre class="code" style="margin:.6rem 0">cd eko2026-active-defense-labs/mi-lab</pre><p>Si no sabés dónde quedó, está en la <a class="eko-link-label" href="../index.html#preparacion">preparación del programa</a>.</p></div></div>
+  </section>
+  <section id="portal" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">El portal</h2><p class="text-sm text-gray-300 leading-relaxed">EkoFinance está migrando su portal de conciliación a una plataforma nueva. El equipo de desarrollo interno levantó un entorno con su propio grupo de usuarios y una carpeta de documentación. La migración está a mitad de camino y la documentación quedó desactualizada. <strong class="text-white">Todo eso es cierto y todo eso funciona</strong>: hay conciliaciones con datos, usuarios que entran, documentos que se descargan.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Terminal<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code">docker compose up -d portal
+open http://localhost:8080        <span class="c"># usuario: mcastro / demo1234</span>
+
+<span class="c"># el log de acceso del portal — es el carril A del E7</span>
+tail -f portal/logs/access.log</pre></div><p class="text-sm text-gray-300 leading-relaxed mt-4">Las superficies plantables son carpetas y archivos del proyecto. <strong class="text-white">Plantar es dejar caer un archivo o cambiar una línea</strong>: no hay que entrar a ningún contenedor.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Estructura<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code">mi-lab/portal/
+├── archivos/       <span class="c">← documentos que el portal ofrece para descargar</span>
+├── config/.env     <span class="c">← variables y credenciales</span>
+├── data/usuarios.json  <span class="c">← el directorio de usuarios</span>
+├── static/app.js   <span class="c">← el bundle que sirve el navegador</span>
+├── static/robots.txt
+└── logs/access.log <span class="c">← tu telemetría del carril A</span></pre></div>
+  </section>
+  <section id="superficies" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">Las seis superficies</h2><div class="unified-card is-static p-5"><div class="table-scroll"><table class="data-table"><thead><tr><th>Pieza</th><th>Dónde va</th><th>Qué la dispara</th></tr></thead><tbody><tr><td class="text-white">Documento tokenizado</td><td><code>portal/archivos/</code></td><td>descargarlo y abrirlo</td></tr><tr><td class="text-white">Credencial señuelo</td><td><code>portal/config/.env</code></td><td><em>usar</em> la credencial</td></tr><tr><td class="text-white">Endpoint de admin</td><td><code>una ruta que se ve jugosa</code></td><td>cualquier request</td></tr><tr><td class="text-white">Usuario señuelo</td><td><code>portal/data/usuarios.json</code></td><td>intento de login con ese usuario</td></tr><tr><td class="text-white">Entrada en robots.txt</td><td><code>portal/static/robots.txt</code></td><td>visitar la ruta prohibida</td></tr><tr><td class="text-white">API key falsa</td><td><code>portal/static/app.js</code></td><td><em>usar</em> la key</td></tr></tbody></table></div></div><p class="text-sm text-gray-300 leading-relaxed">Elegí <strong class="text-white">tres</strong>. La escasez es parte del ejercicio: con seis no priorizás, ponés todo.</p>
+  </section>
+  <section id="regla" class="space-y-5">
+<div class="callout is-atencion"><div class="callout-title"><i class="fas fa-circle-question"></i>La regla: una línea por pieza</div><div class="text-sm leading-relaxed text-gray-300"><p>Por cada pieza que plantes, contestá por escrito: <strong class="text-white">¿qué usuario legítimo del portal podría tocar esto?</strong></p><p class="mt-2">En un honeypot esta pregunta se contesta sola —nadie legítimo llega nunca— y por eso no enseña nada. Acá el portal tiene usuarios de verdad haciendo su trabajo, así que hay que pensarla pieza por pieza. Si no podés nombrar a nadie, puede que la pieza esté donde nadie va a mirar. Si podés nombrar a alguien, vas a tener falsos positivos el martes.</p><p class="mt-2">Una buena pieza vive entre las dos: invisible para el flujo de trabajo normal, inevitable para alguien que está enumerando.</p></div></div>
+  </section>
+  <section id="plantar" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">Plantá las tres</h2><div class="unified-card is-static p-5" data-wb-table="piezas" data-wb-min="3"><div class="table-scroll"><table class="data-table"><thead><tr><th>Pieza</th><th>Dónde exactamente</th><th>Qué token usa</th><th>Qué evento produce</th><th>¿Qué usuario legítimo la tocaría?</th><th></th></tr></thead><tbody data-wb-body></tbody></table></div><p class="wb-empty" data-wb-empty hidden>No hay filas. Agregá una para empezar.</p><template data-wb-row><tr><td class="is-editable" style="min-width:160px"><div class="wb-cell" contenteditable="true" data-wb-col="pieza" data-ph="ej. documento tokenizado"></div></td><td class="is-editable" style="min-width:190px"><div class="wb-cell" contenteditable="true" data-wb-col="donde" data-ph="ruta o archivo concreto"></div></td><td class="is-editable" style="min-width:120px"><div class="wb-cell" contenteditable="true" data-wb-col="token" data-ph="del E2"></div></td><td class="is-editable" style="min-width:190px"><div class="wb-cell" contenteditable="true" data-wb-col="dispara" data-ph="log del portal / callback del token"></div></td><td class="is-editable" style="min-width:210px"><div class="wb-cell" contenteditable="true" data-wb-col="legitimo" data-ph="nombrá el rol, o por qué ninguno"></div></td><td class="wb-rowtools"><button class="wb-del" type="button" title="Eliminar fila" aria-label="Eliminar fila"><i class="fas fa-xmark"></i></button></td></tr></template><div class="wb-tablefoot no-print"><button class="wb-btn wb-add" type="button" data-wb-add><i class="fas fa-plus"></i>Agregar pieza</button><span class="wb-count"></span></div></div>
+  </section>
+  <section id="rotacion" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">Rotación · diez minutos</h2><p class="text-sm text-gray-300 leading-relaxed">Pasá al portal del grupo de al lado y hacé recon crudo: navegá, mirá el código fuente, probá rutas. No tenés que encontrar todo — es una primera pasada. La cacería seria es el E14, contra el portal ya endurecido.</p><div class="unified-card is-static p-5" data-wb-table="rotacion" data-wb-min="2"><div class="table-scroll"><table class="data-table"><thead><tr><th>Grupo</th><th>Qué encontraste</th><th>Cómo</th><th>¿La disparaste?</th><th></th></tr></thead><tbody data-wb-body></tbody></table></div><p class="wb-empty" data-wb-empty hidden>No hay filas. Agregá una para empezar.</p><template data-wb-row><tr><td class="is-editable" style="min-width:80px"><div class="wb-cell" contenteditable="true" data-wb-col="grupo" data-ph="G2"></div></td><td class="is-editable" style="min-width:200px"><div class="wb-cell" contenteditable="true" data-wb-col="hallazgo" data-ph="la pieza, o «nada»"></div></td><td class="is-editable" style="min-width:200px"><div class="wb-cell" contenteditable="true" data-wb-col="como" data-ph="el paso concreto que la reveló"></div></td><td style="min-width:130px"><select class="wb-select" data-wb-col="disparo"><option value="">— elegir —</option><option value="Sí">Sí</option><option value="No">No</option></select></td><td class="wb-rowtools"><button class="wb-del" type="button" title="Eliminar fila" aria-label="Eliminar fila"><i class="fas fa-xmark"></i></button></td></tr></template><div class="wb-tablefoot no-print"><button class="wb-btn wb-add" type="button" data-wb-add><i class="fas fa-plus"></i>Agregar hallazgo</button><span class="wb-count"></span></div></div>
+  </section>
+  <section id="dos" class="space-y-5">
+<div class="callout is-pista"><div class="callout-title"><i class="fas fa-code-branch"></i>Dos detecciones, no una</div><div class="text-sm leading-relaxed text-gray-300"><p>El portal te avisa que alguien <strong class="text-white">leyó</strong> la carnada: aparece en <code>access.log</code>, al instante.</p><p class="mt-2">El token te avisa que alguien la <strong class="text-white">usó</strong>: llega después, desde otra máquina y otra IP — la de quien abrió el documento, no la de quien lo descargó.</p><p class="mt-2">Son dos señales separadas y la distancia entre ellas es lo que vas a medir en el E13. Tener las dos es lo que te deja distinguir a alguien que husmeó de alguien que actuó.</p></div></div>
+  </section>
+
+  <section id="cierre">
+    <div class="callout is-entregable">
+      <div class="callout-title"><i class="fas fa-box-archive"></i>Entregable · se usa en E6, E7, E13 y E14</div>
+      <p class="text-sm leading-relaxed text-gray-300">Las tres piezas desplegadas con su justificación, y el resultado de la rotación. En el E6 las vas a ver disparar en cadena; en el E14 otro grupo va a intentar quemarlas.</p>
+    </div>
+
+    <div class="mt-6">
+      <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-2">Control de avance</h2>
+      <p class="text-xs text-gray-500 mb-5 ml-4">Se guarda en tu navegador y viaja en la exportación.</p>
+      <ul class="checklist">
+        <li><label><input type="checkbox" data-wb="chk.portal"><span>El portal levanta y podemos entrar con un usuario</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.tres"><span>Hay exactamente tres piezas plantadas, no seis</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.concreto"><span>Cada pieza dice la ruta o archivo exacto, no «en el portal»</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.legitimo"><span>Cada pieza tiene contestada la pregunta del usuario legítimo</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.evento"><span>Sabemos qué evento produce cada pieza y dónde aparece</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.rotacion"><span>Hicimos la rotación y anotamos qué encontró el otro grupo</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.exportado"><span>Exportamos el trabajo</span></label></li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-white/10 mt-12 py-8">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center justify-between gap-4 flex-wrap mb-6 no-print">
+      <a href="e02-cinco-tokens.html" class="back-link"><i class="fas fa-arrow-left"></i>E2 · Cinco tokens, cinco disparos</a>
+      <a href="e04-honeypot-no-ssh.html" class="back-link">E4 · El honeypot que no es SSH<i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="flex flex-col md:flex-row items-center justify-between gap-3 pt-6 border-t border-white/5">
+      <span class="text-xs text-gray-500">Active Cyber Defense: Hunt the Fox on His Land · Ekoparty 2026</span>
+      <p class="text-xs text-gray-500">&copy; 2026 BASE4 Security</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/base4-labs.js"></script>
+<script src="../assets/base4-workbook.js"></script>
+</body>
+</html>

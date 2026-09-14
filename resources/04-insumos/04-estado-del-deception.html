@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estado de la plataforma de engaño — EkoFinance</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Boldonse&family=Lato:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="../../assets/base4-labs.css" rel="stylesheet">
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { base: { bg:'#282828', surfaceAlt:'#1e1e1e', orange:'#DC780F', orangeAlt:'#F1912D' } },
+  fontFamily: { sans:['Lato','sans-serif'], display:['Boldonse','sans-serif'], mono:['JetBrains Mono','ui-monospace','monospace'] }
+} } }
+</script>
+</head>
+<body class="antialiased min-h-screen flex flex-col bg-base-bg text-gray-200">
+
+<nav class="top-nav sticky top-0 z-50 bg-base-bg/95 backdrop-blur border-b border-white/10 no-print">
+  <div class="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+    <a href="../../labs/lab-04-lectura-de-insumos.html" class="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 hover:text-base-orangeAlt transition-colors">
+      <i class="fas fa-arrow-left mr-2"></i>LAB 04 · Lectura de insumos
+    </a>
+    <div class="flex gap-2 flex-wrap items-center">
+      <a class="nav-pill" href="01-informe-tecnico-dfir.html"><span class="num">01</span> DFIR</a>
+      <a class="nav-pill" href="02-reporte-inteligencia-cti.html"><span class="num">02</span> CTI</a>
+      <a class="nav-pill" href="03-diagrama-red-anotado.html"><span class="num">03</span> Red</a>
+      <a class="nav-pill" href="04-estado-del-deception.html"><span class="num">04</span> Deception</a>
+      <button class="wb-btn" type="button" onclick="window.print()"><i class="fas fa-print"></i>PDF</button>
+    </div>
+  </div>
+</nav>
+
+<header class="border-b border-white/10 py-12">
+  <div class="max-w-5xl mx-auto px-6">
+    <div class="doc-banner mb-8">
+      <i class="fas fa-lock"></i><span>Uso interno · Confidencial</span>
+      <span style="margin-left:auto;letter-spacing:0.08em">Documento de ejercitación · escenario ficticio</span>
+    </div>
+    <p class="text-base-orange font-bold tracking-[0.3em] uppercase mb-3 text-xs">EkoFinance · Insumo 04 · Deception</p>
+    <h1 class="text-3xl md:text-4xl font-black tracking-tighter text-white mb-6">Estado de la plataforma de engaño</h1>
+    <div class="unified-card is-static p-5">
+      <table class="doc-meta">
+        <tr><td>Documento</td><td>Insumo 04 · Inventario de artefactos de engaño vigentes</td></tr>
+        <tr><td>Emitido por</td><td>Equipo de Ciberdefensa Activa · EkoFinance</td></tr>
+        <tr><td>Fecha de corte</td><td>30/06/2026 (posterior al incidente)</td></tr>
+        <tr><td>Propósito</td><td>Documentar los artefactos desplegados y su comportamiento durante el período del incidente</td></tr>
+        <tr><td>Conclusión del equipo</td><td>La plataforma de deception no registró actividad anómala durante el incidente</td></tr>
+      </table>
+    </div>
+  </div>
+</header>
+
+<main class="flex-grow max-w-5xl mx-auto px-6 py-12 w-full doc-body">
+
+  <section>
+    <h2>Resumen del despliegue</h2>
+    <p>
+      EkoFinance mantiene una plataforma de engaño desplegada desde enero de 2025, con cinco artefactos activos más un elemento de
+      instrumentación de red. El presente inventario documenta cada uno con su configuración y el registro de eventos del período
+      <span class="ref">08/06 – 29/06/2026</span>, correspondiente al incidente IR-2026-0088.
+    </p>
+    <div class="callout is-pista">
+      <div class="callout-title"><i class="fas fa-clipboard-check"></i>Cómo leer este documento en el LAB 06</div>
+      <p class="text-sm leading-relaxed text-gray-300" style="margin:0">
+        Cada artefacto se presenta <strong class="text-white">tal como lo describe el equipo que lo desplegó</strong>, incluida su
+        valoración de éxito. Tu trabajo es auditarlo con la grilla de seis campos de tu ficha del LAB 02 y emitir un veredicto:
+        mantener, corregir o retirar. No todos funcionan como su ficha afirma. Prestá atención tanto a cada artefacto por separado como
+        a lo que tienen en común.
+      </p>
+    </div>
+    <div class="unified-card is-static p-6">
+      <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr><th>Ref</th><th>Artefacto</th><th>Ubicación</th><th>Eventos 08–29/06</th><th>Valoración del equipo</th></tr></thead>
+        <tbody>
+          <tr><td class="col-accent">A1</td><td class="col-label">Cuenta señuelo en AD</td><td>ekofinance.local</td><td>0</td><td>Sin actividad — OK</td></tr>
+          <tr><td class="col-accent">A2</td><td class="col-label">Honeyfile en share de RRHH</td><td>EKO-FS01</td><td>Silenciado</td><td>Ruidoso — alerta pausada</td></tr>
+          <tr><td class="col-accent">A3</td><td class="col-label">Servidor señuelo</td><td>10.90.90.0/24</td><td>0</td><td>Sin actividad — OK</td></tr>
+          <tr><td class="col-accent">A4</td><td class="col-label">Credenciales señuelo en memoria</td><td>Estaciones VLAN Oficina</td><td>Indeterminado</td><td>Sin alertas — OK</td></tr>
+          <tr><td class="col-accent">A5</td><td class="col-label">Documento con canary token</td><td>Share de Finanzas</td><td>1</td><td>Un evento — sin seguimiento</td></tr>
+          <tr><td class="col-accent">A6</td><td class="col-label">Instrumentación de red del entorno</td><td>Segmento de engaño</td><td>—</td><td>Operativa</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>A1 · Cuenta señuelo en Active Directory</h2>
+    <div class="unified-card is-static p-6">
+      <table class="doc-meta">
+        <tr><td>Objeto</td><td><code class="inline">svc_honeypot_01</code></td></tr>
+        <tr><td>Descripción en AD</td><td>(vacía)</td></tr>
+        <tr><td>Grupos</td><td>Domain Users</td></tr>
+        <tr><td>Creada</td><td>15/01/2025 14:02 por <code class="inline">adm_deception</code></td></tr>
+        <tr><td>Detección asociada</td><td>Alerta si la cuenta inicia sesión (Event ID 4624)</td></tr>
+        <tr><td>Eventos en el período</td><td>Ninguno</td></tr>
+      </table>
+    </div>
+    <p>Objetivo declarado: detectar a un adversario que enumere cuentas del directorio y pruebe la señuelo. El equipo la considera correcta por no haber generado falsos positivos en 18 meses.</p>
+  </section>
+
+  <section>
+    <h2>A2 · Honeyfile en el share de Recursos Humanos</h2>
+    <div class="unified-card is-static p-6">
+      <table class="doc-meta">
+        <tr><td>Archivo</td><td><code class="inline">\\EKO-FS01\RRHH\Salarios_2026_FINAL.xlsx</code></td></tr>
+        <tr><td>Detección asociada</td><td>Auditoría de acceso a archivo (Event ID 4663)</td></tr>
+        <tr><td>Historial</td><td>342 alertas entre 01/2025 y 02/2026</td></tr>
+        <tr><td>Origen de las alertas</td><td>Usuarios de RRHH, Auditoría, y el agente de backup</td></tr>
+        <tr><td>Estado de la regla</td><td><strong style="color:#fca5a5">Silenciada el 18/02/2026</strong> por saturación</td></tr>
+        <tr><td>Eventos en el período</td><td>La regla estaba silenciada; no se generaron alertas</td></tr>
+      </table>
+    </div>
+    <p>El share <code class="inline">\\EKO-FS01\RRHH\</code> es de uso diario del área de Recursos Humanos. El archivo generó alertas de forma sostenida hasta que se pausó la regla por fatiga. Continúa figurando en el inventario como control activo.</p>
+  </section>
+
+  <section>
+    <h2>A3 · Servidor señuelo de servicios</h2>
+    <div class="unified-card is-static p-6">
+      <table class="doc-meta">
+        <tr><td>Host</td><td><code class="inline">EKO-HNP01</code> · 10.90.90.20</td></tr>
+        <tr><td>Segmento</td><td>10.90.90.0/24</td></tr>
+        <tr><td>Servicios simulados</td><td>SSH, HTTP, SMB, RDP (emulados)</td></tr>
+        <tr><td>Rutas hacia el segmento</td><td>Ninguna desde VLAN Oficina ni VLAN PROD (segmento aislado)</td></tr>
+        <tr><td>Interacciones desde el despliegue</td><td>0 en 18 meses</td></tr>
+      </table>
+    </div>
+    <p>Objetivo declarado: atraer y observar exploración de red. El equipo destaca las cero interacciones en 18 meses como evidencia de que no hubo actividad de reconocimiento contra el segmento. El segmento <code class="inline">10.90.90.0/24</code> no tiene ruta configurada desde las redes de producción ni de usuarios.</p>
+  </section>
+
+  <section>
+    <h2>A4 · Credenciales señuelo en memoria</h2>
+    <div class="unified-card is-static p-6">
+      <table class="doc-meta">
+        <tr><td>Cuenta simulada</td><td><code class="inline">svc_sql_legacy</code> con contraseña en texto</td></tr>
+        <tr><td>Inyección</td><td>En LSASS de 40 estaciones de VLAN Oficina, vía script de arranque</td></tr>
+        <tr><td>Existencia en AD</td><td><strong style="color:#fca5a5">La cuenta no existe en el directorio</strong></td></tr>
+        <tr><td>Detección asociada</td><td>Ninguna regla específica; se esperaba un fallo de logon (4625)</td></tr>
+        <tr><td>Eventos en el período</td><td>Indeterminado — ver nota</td></tr>
+      </table>
+    </div>
+    <p>
+      Objetivo declarado: que un adversario que vuelque LSASS encuentre la credencial y la use, delatándose. Como la cuenta
+      <code class="inline">svc_sql_legacy</code> no existe en Active Directory, un intento de uso produce un Event ID 4625 (fallo de
+      logon por usuario inexistente), indistinguible de un error de tipeo entre los cientos que el DC registra a diario. No se configuró
+      una regla que aísle específicamente esa cuenta. El equipo informa «sin alertas» durante el incidente.
+    </p>
+  </section>
+
+  <section>
+    <h2>A5 · Documento con canary token</h2>
+    <div class="unified-card is-static p-6">
+      <table class="doc-meta">
+        <tr><td>Archivo</td><td><code class="inline">\\EKO-FS01\Finanzas\Conciliacion_Q2_bancos.xlsx</code></td></tr>
+        <tr><td>Token</td><td>Canary embebido; emite consulta DNS al abrirse</td></tr>
+        <tr><td>Evento registrado</td><td><strong style="color:#F1912D">1 disparo — 11/06/2026 09:22</strong></td></tr>
+        <tr><td>Origen</td><td>Consulta DNS desde 10.20.50.11 (EKO-VDI01)</td></tr>
+        <tr><td>Notificación</td><td>Correo a <code class="inline">seguridad@ekofinance.com</code></td></tr>
+        <tr><td>Dueño de esa casilla</td><td>Casilla compartida, sin responsable asignado</td></tr>
+        <tr><td>Estado de la notificación</td><td><strong style="color:#fca5a5">Sin leer al 30/06</strong></td></tr>
+      </table>
+    </div>
+    <p>
+      El token se disparó el <span class="ref">11/06/2026 09:22</span> —tres días después del compromiso inicial— con origen en
+      <code class="inline">EKO-VDI01</code>, el host que el DFIR identificó como paciente cero. La notificación se envió por correo a una
+      casilla compartida que no tiene responsable designado. El mensaje permanecía sin leer al momento de este corte. El equipo lo
+      registra como «un evento, sin seguimiento».
+    </p>
+    <div class="callout is-pista">
+      <div class="callout-title"><i class="fas fa-clock"></i>Contraste con la cronología</div>
+      <p class="text-sm leading-relaxed text-gray-300" style="margin:0">
+        Este disparo ocurrió el 11/06. La alerta del SOC que abrió el incidente fue el <span class="ref">19/06</span>. El engaño produjo
+        una señal válida <strong class="text-white">ocho días antes</strong> que la detección tradicional. Cruzá esto con la sección de
+        cronología del LAB 04.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>A6 · Instrumentación del entorno de engaño</h2>
+    <div class="unified-card is-static p-6">
+      <table class="doc-meta">
+        <tr><td>Cobertura</td><td>Captura de red y auditoría sobre el segmento de engaño</td></tr>
+        <tr><td>Estado</td><td>Operativa durante todo el período</td></tr>
+        <tr><td>Volumen registrado</td><td>Acorde a la ausencia de interacciones reportada por los demás artefactos</td></tr>
+      </table>
+    </div>
+    <p>Instrumentación de soporte. El equipo la reporta operativa.</p>
+  </section>
+
+  <section>
+    <h2>Metadatos de despliegue</h2>
+    <p>Datos de creación de los objetos de directorio y archivos asociados a la plataforma, exportados del registro de cambios de AD y del sistema de archivos.</p>
+    <div class="unified-card is-static p-6">
+      <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr><th>Artefacto</th><th>Creado</th><th>Cuenta creadora</th><th>Descripción del objeto</th></tr></thead>
+        <tbody>
+          <tr><td class="col-accent">A1</td><td class="col-label">15/01/2025 14:02:11</td><td>adm_deception</td><td>(vacía)</td></tr>
+          <tr><td class="col-accent">A2</td><td class="col-label">15/01/2025 14:07:44</td><td>adm_deception</td><td>(vacía)</td></tr>
+          <tr><td class="col-accent">A3</td><td class="col-label">15/01/2025 14:19:03</td><td>adm_deception</td><td>(vacía)</td></tr>
+          <tr><td class="col-accent">A4</td><td class="col-label">15/01/2025 14:26:38</td><td>adm_deception</td><td>(vacía)</td></tr>
+          <tr><td class="col-accent">A5</td><td class="col-label">15/01/2025 14:34:52</td><td>adm_deception</td><td>(vacía)</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <p class="text-xs text-gray-500 italic mt-3"><i class="fas fa-circle-info mr-1"></i>Exportación tal cual del registro de cambios. Todos los objetos comparten cuenta creadora, descripción y una ventana de creación de 33 minutos.</p>
+  </section>
+
+  <section>
+    <h2>Conclusión del equipo de deception</h2>
+    <p>
+      Durante el incidente, la plataforma de engaño no registró actividad anómala en sus artefactos de detección primarios (A1, A3). El
+      honeyfile de RRHH (A2) tenía la regla pausada. Las credenciales señuelo (A4) no generaron alertas. Se registró un único evento en
+      el canary de Finanzas (A5) que no tuvo seguimiento. El equipo evalúa que la plataforma operó dentro de lo esperado y no aportó
+      indicadores tempranos del incidente.
+    </p>
+    <div class="callout is-atencion">
+      <div class="callout-title"><i class="fas fa-magnifying-glass"></i>Antes de aceptar esta conclusión</div>
+      <p class="text-sm leading-relaxed text-gray-300" style="margin:0">
+        La conclusión afirma dos cosas: que los artefactos «no registraron actividad» y que la plataforma «operó dentro de lo esperado».
+        En el LAB 06 vas a examinar si esas dos afirmaciones se sostienen —artefacto por artefacto, y también mirando el conjunto—.
+        <strong class="text-white">«Sin actividad» y «funciona» no son lo mismo</strong>, y un artefacto que produjo una señal que nadie
+        leyó no es lo mismo que uno que no produjo nada.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-white/10 mt-12 py-8 no-print">
+  <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+    <a href="../../labs/lab-04-lectura-de-insumos.html" class="back-link"><i class="fas fa-arrow-left"></i>Volver al LAB 04</a>
+    <p class="text-xs text-gray-500">Escenario de ejercitación · Active Cyber Defense · Ekoparty 2026</p>
+  </div>
+</footer>
+
+</body>
+</html>

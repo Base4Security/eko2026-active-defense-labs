@@ -1,0 +1,71 @@
+# ════════════════════════════════════════════════════════════════════════
+# Laboratorio · Active Cyber Defense · Ekoparty 2026
+#
+# Tres servicios, dos carriles:
+#
+#   CARRIL A · portal      un sistema REAL. Tiene datos, usuarios y
+#                          documentos. El engaño es lo que vos le agregás.
+#
+#   CARRIL B · cowrie      sistemas FALSOS enteros. Nadie legítimo tiene
+#              opencanary  motivo para llegar; detectan a quien los toque.
+#
+# No los mezcles: la diferencia entre los dos carriles es la mitad de las
+# decisiones de diseño del curso.
+#
+#   docker compose up -d --build
+#   docker compose ps
+# ════════════════════════════════════════════════════════════════════════
+
+services:
+
+  # ─── CARRIL A ────────────────────────────────────────────────────────
+  portal:
+    build: ./portal
+    container_name: b4-portal
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      # Las seis superficies plantables, montadas desde el disco.
+      # Editás un archivo acá afuera y el portal lo ve en la próxima
+      # recarga del navegador: no hace falta reiniciar nada.
+      - ./portal/config:/portal/config
+      - ./portal/data:/portal/data
+      - ./portal/archivos:/portal/archivos
+      - ./portal/static:/portal/static
+      - ./portal/logs:/portal/logs
+    networks: [lab]
+
+  # ─── CARRIL B · honeypot SSH ─────────────────────────────────────────
+  # Interacción media: el adversario obtiene un shell falso y cada comando
+  # que tipea queda en JSON estructurado. Viene SIN configurar a propósito:
+  # el E1 es encontrar qué lo delata y el E5 es arreglarlo.
+  cowrie:
+    image: cowrie/cowrie:latest
+    container_name: b4-cowrie
+    restart: unless-stopped
+    ports:
+      - "2222:2222"
+    volumes:
+      - ./cowrie/var:/cowrie/var
+      - ./cowrie/etc:/cowrie/etc
+    networks: [lab]
+
+  # ─── CARRIL B · servicios falsos varios ──────────────────────────────
+  # SMB, un portal HTTP de login y un MSSQL. Cada uno captura una cosa
+  # distinta del adversario, y eso es el ejercicio E4.
+  opencanary:
+    build: ./opencanary
+    container_name: b4-opencanary
+    restart: unless-stopped
+    ports:
+      - "8081:8081"    # portal de login falso
+      - "1445:445"     # SMB   (445 suele estar tomado en el host)
+      - "1433:1433"    # MSSQL
+    volumes:
+      - ./opencanary/logs:/var/tmp/opencanary
+    networks: [lab]
+
+networks:
+  lab:
+    name: b4-lab

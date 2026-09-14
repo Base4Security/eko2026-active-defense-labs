@@ -1,0 +1,13 @@
+CHECKLIST DE CIERRE MENSUAL
+Contaduría · uso interno
+
+[ ] Todas las conciliaciones del período en estado Conciliada o Con diferencia
+    documentada.
+[ ] Diferencias mayores a ARS 500.000 con nota de escalamiento adjunta.
+[ ] Extractos de las 7 contrapartes descargados y archivados.
+[ ] Conciliación de cuentas en dólares revisada por Supervisor.
+[ ] Respaldo de la base confirmado (lo corre svc_backup a las 03:00).
+[ ] Reporte de cierre enviado a Gerencia Financiera antes del día 5.
+
+Durante la migración: verificar además que SIGCON y el Portal coincidan en
+el total del período. Si no coinciden, NO cerrar y avisar a Infraestructura.

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W3 · Defensa de cinco minutos — Active Cyber Defense · Ekoparty 2026</title>
+<meta name="description" content="Cinco minutos por grupo, con la terminal proyectada y no con slides. Tres números obligatorios y un descarte. Cronómetro visible y corte estricto.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Boldonse&family=Lato:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="../assets/base4-labs.css" rel="stylesheet">
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { base: { bg:'#282828', surfaceAlt:'#1e1e1e', orange:'#DC780F', orangeAlt:'#F1912D', textMain:'#ffffff', textDim:'#d1d5db' } },
+  fontFamily: { sans:['Lato','sans-serif'], display:['Boldonse','sans-serif'], mono:['JetBrains Mono','ui-monospace','monospace'] }
+} } }
+</script>
+</head>
+<body class="antialiased min-h-screen flex flex-col bg-base-bg text-gray-200" data-lab="w3">
+
+<div class="lab-progress no-print"><i></i></div>
+
+<nav class="top-nav sticky top-0 z-50 bg-base-bg/95 backdrop-blur border-b border-white/10 no-print">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+    <a href="../index.html" class="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 hover:text-base-orangeAlt transition-colors">
+      <i class="fas fa-arrow-left mr-2"></i>Active Cyber Defense · Labs 2026
+    </a>
+    <div class="flex items-center gap-2 flex-wrap">
+      <span class="timer-badge is-neutral"><i class="fas fa-list-check"></i><span data-progress-readout>0 / 0</span></span>
+      <span class="timer-badge" data-timer data-minutes="30">
+        <i class="fas fa-hourglass-half"></i><span data-timer-out>30:00</span>
+        <button data-timer-btn class="ml-1 hover:text-white transition-colors" title="Iniciar / pausar" aria-label="Iniciar o pausar el temporizador"><i class="fas fa-play"></i></button>
+      </span>
+      <button class="back-link" data-reset title="Borrar mis tildes y anotaciones"><i class="fas fa-rotate-left"></i>Reset</button>
+    </div>
+  </div>
+</nav>
+
+<header class="relative py-14 bg-[radial-gradient(circle_at_50%_-30%,_#3a2600_0%,_#282828_60%)] border-b border-white/10">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center gap-3 mb-5 flex-wrap">
+      <span class="timer-badge">Día 2 · el día de los datos</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-clock"></i>30 minutos</span>
+      <span class="timer-badge is-neutral"><i class="fas fa-users"></i>Plenario</span>
+      <span class="timer-badge is-neutral" style="border-color:rgba(167,139,250,.45);color:#c4b5fd"><i class="fas fa-pen"></i>Escritura</span>
+    </div>
+    <p class="text-base-orange font-bold tracking-[0.3em] uppercase mb-3 text-xs">Ejercicio W3</p>
+    <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-white mb-4" data-wb-title>Defensa de cinco minutos</h1>
+    <p class="max-w-3xl text-base text-gray-300 leading-relaxed">Cinco minutos por grupo, con la terminal proyectada y no con slides. Tres números obligatorios y un descarte. Cronómetro visible y corte estricto.</p>
+  </div>
+</header>
+
+<main class="flex-grow max-w-6xl mx-auto px-6 py-12 w-full space-y-10" data-wb-scope>
+
+  <div class="wb-toolbar no-print">
+    <button class="wb-btn is-primary" type="button" data-wb-act="md" title="Ver y copiar el trabajo listo para entregar"><i class="fas fa-file-export"></i>Exportar</button>
+    <button class="wb-btn" type="button" data-wb-act="importFile" title="Cargar un respaldo .json"><i class="fas fa-file-import"></i>Importar</button>
+    <button class="wb-btn is-danger" type="button" data-wb-act="clear" title="Borrar todo lo cargado"><i class="fas fa-rotate-left"></i>Limpiar</button>
+    <span class="wb-status is-saved" data-wb-status><span class="dot"></span><span data-wb-status-label>Guardado</span></span>
+  </div>
+
+  <section id="grupo">
+    <div class="unified-card is-static p-6">
+      <div class="wb-ident">
+        <div>
+          <label for="wb-grupo">Grupo</label>
+          <input class="wb-input" id="wb-grupo" data-wb="meta.grupo" placeholder="Ej. Grupo 3" autocomplete="off">
+        </div>
+        <div>
+          <label for="wb-integrantes">Integrantes</label>
+          <input class="wb-input" id="wb-integrantes" data-wb="meta.integrantes" placeholder="Nombres separados por coma" autocomplete="off">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="objetivo">
+    <div class="callout is-objetivo">
+      <div class="callout-title"><i class="fas fa-bullseye"></i>Objetivo</div>
+      <p class="text-sm leading-relaxed text-gray-300">Defender la operación con <strong class="text-white">números que midieron ustedes</strong>. Gana el equipo que podría empezar el lunes con la gente que ya tiene, no el que diseñó lo más elegante.</p>
+    </div>
+  </section>
+
+  <section id="formato" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">Los cinco minutos</h2><div class="unified-card is-static p-5"><div class="table-scroll"><table class="data-table"><thead><tr><th>Tiempo</th><th>Contenido</th><th>El error a evitar</th></tr></thead><tbody><tr><td class="font-mono text-xs">0:00 – 1:00</td><td class="text-white">El diagnóstico en una frase, y el dwell time del E11</td><td>Narrar el incidente. Ya lo conocen todos</td></tr><tr><td class="font-mono text-xs">1:00 – 2:30</td><td class="text-white">Las decisiones del W1: qué desplegaron y dónde, con nombres</td><td>Listar las cinco. Mostrá dos bien</td></tr><tr><td class="font-mono text-xs">2:30 – 3:30</td><td class="text-white">La demo: tocá un artefacto en vivo y mostrá la alerta</td><td>Hablar de la latencia en vez de mostrarla</td></tr><tr><td class="font-mono text-xs">3:30 – 4:30</td><td class="text-white">Los números del E13 y el marcador del E14</td><td>Dejarlo para el final y quedarse sin tiempo</td></tr><tr><td class="font-mono text-xs">4:30 – 5:00</td><td class="text-white">El descarte argumentado</td><td>Omitirlo. Es lo que da credibilidad al resto</td></tr></tbody></table></div></div>
+  </section>
+  <section id="numeros" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">Los tres números</h2><p class="text-sm text-gray-300 leading-relaxed">Obligatorios. Si falta uno, es que no se midió.</p><script type="application/json" data-wb-seed-for="numeros">[{"numero": "Dwell time del incidente (E11)"}, {"numero": "Latencia de nuestro mejor artefacto (E13)"}, {"numero": "Marcador de la cacería cruzada (E14)"}]</script><div class="unified-card is-static p-5" data-wb-table="numeros" data-wb-min="3" data-wb-key="numero"><div class="table-scroll"><table class="data-table"><thead><tr><th>Número</th><th>Valor</th><th>Qué dice</th><th></th></tr></thead><tbody data-wb-body></tbody></table></div><p class="wb-empty" data-wb-empty hidden>No hay filas. Agregá una para empezar.</p><template data-wb-row><tr><td data-wb-col="numero" data-wb-fixed style="min-width:230px"></td><td class="is-editable" style="min-width:150px"><div class="wb-cell" contenteditable="true" data-wb-col="valor" data-ph="el dato"></div></td><td class="is-editable" style="min-width:300px"><div class="wb-cell" contenteditable="true" data-wb-col="dice" data-ph="en una oración, para alguien que no es técnico"></div></td><td class="wb-rowtools"><button class="wb-del" type="button" title="Eliminar fila" aria-label="Eliminar fila"><i class="fas fa-xmark"></i></button></td></tr></template><div class="wb-tablefoot no-print"><button class="wb-btn wb-add" type="button" data-wb-add><i class="fas fa-plus"></i>Agregar número</button><span class="wb-count"></span></div></div>
+  </section>
+  <section id="guion" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">El guion</h2><div class="unified-card is-static p-5"><label class="block text-xs uppercase tracking-[0.15em] text-gray-500 mb-2" data-wb-label="El diagnóstico en una frase">El diagnóstico en una frase</label><textarea class="fill-in" data-wb="diagnostico" rows="2" placeholder="Qué le pasó a EkoFinance y cuál es el eslabón donde había que cortar."></textarea></div><div class="unified-card is-static p-5"><label class="block text-xs uppercase tracking-[0.15em] text-gray-500 mb-2" data-wb-label="Qué vas a mostrar en vivo, y el comando exacto">Qué vas a mostrar en vivo, y el comando exacto</label><textarea class="fill-in" data-wb="demo" rows="2" placeholder="Un solo artefacto, el que mejor funciona. Tenelo probado: una demo que falla se come los cinco minutos."></textarea></div><div class="unified-card is-static p-5"><label class="block text-xs uppercase tracking-[0.15em] text-gray-500 mb-2" data-wb-label="El descarte, y por qué">El descarte, y por qué</label><textarea class="fill-in" data-wb="descarte2" rows="2" placeholder="Del W1. Algo que decidieron no hacer, con el argumento."></textarea></div>
+  </section>
+  <section id="rubrica" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">La rúbrica</h2><p class="text-sm text-gray-300 leading-relaxed">Se publica antes de presentar, no después.</p><div class="unified-card is-static p-5"><div class="table-scroll"><table class="data-table"><thead><tr><th>Criterio</th><th>Peso</th><th>Insuficiente</th><th>Sólido</th></tr></thead><tbody><tr><td class="text-white">Concreción</td><td class="font-mono">40%</td><td>Nombres de herramientas sin decir qué se desplegó</td><td>Rutas, cuentas, event IDs y umbrales. Un administrador podría ejecutarlo</td></tr><tr><td class="text-white">Medición</td><td class="font-mono">40%</td><td>Sin números, o números estimados</td><td>Los tres números, medidos hoy, con su línea base</td></tr><tr><td class="text-white">Descarte</td><td class="font-mono">20%</td><td>Todo es prioritario</td><td>Al menos un descarte con argumento defendible</td></tr></tbody></table></div></div>
+  </section>
+  <section id="correccion" class="space-y-5">
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">Corrección final</h2><p class="text-sm text-gray-300 leading-relaxed">Últimos minutos, con todas las presentaciones escuchadas. Se entrega junto con el reporte.</p><div class="unified-card is-static p-5"><label class="block text-xs uppercase tracking-[0.15em] text-gray-500 mb-2" data-wb-label="¿Qué cambiarías de tu propuesta después de escuchar a los otros grupos?">¿Qué cambiarías de tu propuesta después de escuchar a los otros grupos?</label><textarea class="fill-in" data-wb="cambio" rows="3" placeholder="Traé lo que anotaste en el E14."></textarea></div><div class="unified-card is-static p-5"><label class="block text-xs uppercase tracking-[0.15em] text-gray-500 mb-2" data-wb-label="¿Cuál fue la mejor idea que no fue tuya, y por qué no se te ocurrió?">¿Cuál fue la mejor idea que no fue tuya, y por qué no se te ocurrió?</label><textarea class="fill-in" data-wb="mejor" rows="2" placeholder="La segunda parte es la importante."></textarea></div><div class="unified-card is-static p-5"><label class="block text-xs uppercase tracking-[0.15em] text-gray-500 mb-2" data-wb-label="De todo lo que hiciste en dos días, ¿qué es lo primero que vas a intentar en tu organización?">De todo lo que hiciste en dos días, ¿qué es lo primero que vas a intentar en tu organización?</label><textarea class="fill-in" data-wb="lunes" rows="2" placeholder="Una cosa, concreta, con fecha."></textarea></div>
+  </section>
+
+  <section id="cierre">
+    <div class="callout is-entregable">
+      <div class="callout-title"><i class="fas fa-box-archive"></i>Entregable</div>
+      <p class="text-sm leading-relaxed text-gray-300">La defensa presentada, y la corrección final escrita. Con eso cierra el curso.</p>
+    </div>
+
+    <div class="mt-6">
+      <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-2">Control de avance</h2>
+      <p class="text-xs text-gray-500 mb-5 ml-4">Se guarda en tu navegador y viaja en la exportación.</p>
+      <ul class="checklist">
+        <li><label><input type="checkbox" data-wb="chk.ensayada"><span>La exposición está ensayada y cabe en cinco minutos</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.numeros"><span>Los tres números están y son medidos, no estimados</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.demo"><span>La demo está probada y el comando anotado</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.descarte"><span>Tenemos un descarte argumentado</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.correccion"><span>La corrección final está escrita</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.lunes"><span>Sabemos qué vamos a intentar el lunes en nuestra organización</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.exportado"><span>Exportamos el trabajo</span></label></li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-white/10 mt-12 py-8">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center justify-between gap-4 flex-wrap mb-6 no-print">
+      <a href="e14-caceria-cruzada.html" class="back-link"><i class="fas fa-arrow-left"></i>E14 · Cacería cruzada</a>
+      <a href="../index.html" class="back-link">Volver al programa<i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="flex flex-col md:flex-row items-center justify-between gap-3 pt-6 border-t border-white/5">
+      <span class="text-xs text-gray-500">Active Cyber Defense: Hunt the Fox on His Land · Ekoparty 2026</span>
+      <p class="text-xs text-gray-500">&copy; 2026 BASE4 Security</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/base4-labs.js"></script>
+<script src="../assets/base4-workbook.js"></script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+[
+  {
+    "usuario": "mcastro",
+    "nombre": "Marina Castro",
+    "area": "Tesorería",
+    "rol": "Operador",
+    "clave": "demo1234",
+    "habilitado": true,
+    "ultimo_acceso": "17/06/2026 22:08",
+    "senuelo": false
+  },
+  {
+    "usuario": "jlopez",
+    "nombre": "Javier López",
+    "area": "Contaduría",
+    "rol": "Operador",
+    "clave": "demo1234",
+    "habilitado": true,
+    "ultimo_acceso": "16/06/2026 00:51",
+    "senuelo": false
+  },
+  {
+    "usuario": "rdiaz",
+    "nombre": "Rocío Díaz",
+    "area": "Tesorería",
+    "rol": "Supervisor",
+    "clave": "demo1234",
+    "habilitado": true,
+    "ultimo_acceso": "16/06/2026 22:40",
+    "senuelo": false
+  },
+  {
+    "usuario": "pmendez",
+    "nombre": "Pablo Méndez",
+    "area": "Contaduría",
+    "rol": "Operador",
+    "clave": "demo1234",
+    "habilitado": true,
+    "ultimo_acceso": "14/06/2026 22:17",
+    "senuelo": false
+  },
+  {
+    "usuario": "agonzalez",
+    "nombre": "Ana González",
+    "area": "Auditoría Interna",
+    "rol": "Lectura",
+    "clave": "demo1234",
+    "habilitado": true,
+    "ultimo_acceso": "16/06/2026 04:02",
+    "senuelo": false
+  },
+  {
+    "usuario": "fsoria",
+    "nombre": "Federico Soria",
+    "area": "Sistemas",
+    "rol": "Administrador",
+    "clave": "demo1234",
+    "habilitado": true,
+    "ultimo_acceso": "15/06/2026 22:16",
+    "senuelo": false
+  },
+  {
+    "usuario": "lvarela",
+    "nombre": "Lucía Varela",
+    "area": "Tesorería",
+    "rol": "Operador",
+    "clave": "demo1234",
+    "habilitado": true,
+    "ultimo_acceso": "16/06/2026 01:28",
+    "senuelo": false
+  },
+  {
+    "usuario": "hquiroga",
+    "nombre": "Hernán Quiroga",
+    "area": "Contaduría",
+    "rol": "Supervisor",
+    "clave": "demo1234",
+    "habilitado": true,
+    "ultimo_acceso": "12/06/2026 02:12",
+    "senuelo": false
+  },
+  {
+    "usuario": "svc_sigcon",
+    "nombre": "Integración SIGCON",
+    "area": "Sistemas",
+    "rol": "Servicio",
+    "clave": "Migr4ci0n-2025",
+    "habilitado": true,
+    "ultimo_acceso": "10/06/2026 22:49",
+    "senuelo": false
+  },
+  {
+    "usuario": "svc_backup",
+    "nombre": "Respaldo nocturno",
+    "area": "Sistemas",
+    "rol": "Servicio",
+    "clave": "b4ckup-eko-01",
+    "habilitado": true,
+    "ultimo_acceso": "15/06/2026 06:15",
+    "senuelo": false
+  }
+]
