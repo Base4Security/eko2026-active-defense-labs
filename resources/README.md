@@ -4,14 +4,15 @@
 sin abrirla: acá hay material de apoyo para consultar durante el curso y,
 sobre todo, para llevarse después.
 
-El programa está en **[`../index.html`](../index.html)**.
+Todo esto está indexado con contexto en **[`../material-extra.html`](../material-extra.html)**.
+El programa del curso está en **[`../index.html`](../index.html)**.
 
 ---
 
 ## Los documentos del caso · `04-insumos/`
 
 Los cuatro informes del incidente de EkoFinance. **Son los únicos que conviene
-tener a mano durante el Día 2**: cuando en el E8 reconstruyas la red desde la
+tener a mano durante la segunda parte**: cuando en el E8 reconstruyas la red desde la
 telemetría y en el E11 armes la cadena, acá está el contexto que los logs no dan.
 
 1. **[`01-informe-tecnico-dfir.html`](04-insumos/01-informe-tecnico-dfir.html)** — el punto de vista forense: qué se encontró en los sistemas y qué evidencia se preservó
@@ -20,10 +21,6 @@ telemetría y en el E11 armes la cadena, acá está el contexto que los logs no 
 4. **[`04-estado-del-deception.html`](04-insumos/04-estado-del-deception.html)** — los artefactos de engaño que EkoFinance tenía desplegados, y qué reportaron
 
 Los cuatro tienen botón **PDF** y hoja de estilo de impresión en claro.
-
-> **No abras el insumo 03 antes del E8.** El ejercicio es reconstruir la red
-> desde los logs; si mirás el diagrama primero, se pierde entero. El E8 te dice
-> cuándo abrirlo.
 
 ---
 

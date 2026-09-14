@@ -29,7 +29,7 @@ funcionan abriéndolas con doble clic.
 
 ## Antes del curso: Docker
 
-Los ejercicios del Día 1 corren en tu máquina. Necesitás **Docker** instalado y
+Los ejercicios de la primera parte corren en tu máquina. Necesitás **Docker** instalado y
 corriendo, y conviene levantar el laboratorio una vez antes de empezar: la
 primera construcción tarda dos o tres minutos.
 
@@ -51,7 +51,8 @@ Puertos, credenciales y resolución de problemas:
 | **[`index.html`](index.html)** | **El programa. Empezá acá.** |
 | [`labs/`](labs/) | Las diecisiete guías, una por ejercicio |
 | [`mi-lab/`](mi-lab/) | Tu laboratorio: el portal y los dos honeypots |
-| [`resources/`](resources/) | Material extra: el caso, fichas y mapas de referencia |
+| [`material-extra.html`](material-extra.html) | Material extra: el caso, fichas y mapas de referencia |
+| `resources/` | Los archivos que esa página indexa |
 | `assets/` | Estilos y scripts de las guías |
 
 ---

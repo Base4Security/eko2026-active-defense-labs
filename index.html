@@ -24,10 +24,10 @@ tailwind.config = { theme: { extend: {
     <div class="flex gap-2 flex-wrap items-center">
       <a class="nav-pill" href="#preparacion"><i class="fas fa-box-open text-[10px]"></i> Preparación</a>
       <a class="nav-pill" href="#engano"><i class="fas fa-code-compare text-[10px]"></i> Dos formas de engañar</a>
-      <a class="nav-pill" href="#dia1"><span class="num">1</span> Día 1</a>
-      <a class="nav-pill" href="#dia2"><span class="num">2</span> Día 2</a>
-      <a class="nav-pill" href="#cadena"><i class="fas fa-link text-[10px]"></i> Encadenamiento</a>
-      <a class="nav-pill" href="#extra"><i class="fas fa-folder-open text-[10px]"></i> Material extra</a>
+      <a class="nav-pill" href="#parte1"><span class="num">1</span> Primera parte</a>
+      <a class="nav-pill" href="#parte2"><span class="num">2</span> Segunda parte</a>
+      <a class="nav-pill" href="#entregables"><i class="fas fa-box-archive text-[10px]"></i> Qué entregás</a>
+      <a class="nav-pill" href="material-extra.html"><i class="fas fa-folder-open text-[10px]"></i> Material extra</a>
     </div>
   </div>
 </nav>
@@ -60,7 +60,7 @@ tailwind.config = { theme: { extend: {
   <section id="preparacion" class="space-y-6">
     <h2 class="text-3xl font-black text-white border-l-4 border-base-orange pl-4">Preparación · una sola vez</h2>
     <p class="text-base text-gray-300 leading-relaxed max-w-3xl">
-      Todo el Día 1 corre en tu máquina y no depende de la red del venue. Necesitás <strong class="text-white">Docker</strong>
+      La primera parte corre entera en tu máquina y no depende de la red del venue. Necesitás <strong class="text-white">Docker</strong>
       instalado y corriendo. Hacelo antes de empezar: la primera construcción tarda dos o tres minutos.
     </p>
 
@@ -99,7 +99,7 @@ ssh root@localhost -p 2222</pre>
           <li>Puerto ocupado: cambiá el mapeo en <code>docker-compose.yml</code>.</li>
           <li>Cowrie tarda en el primer arranque: genera claves.</li>
           <li>Sin internet: bajá <code>b4-lab-kit.tar</code> desde <a class="eko-link-label" href="https://github.com/Base4Security/eko2026-active-defense-labs/releases" target="_blank" rel="noopener">Releases</a> y usá <code>docker load -i</code>.</li>
-          <li>Sin Docker: trabajá con un compañero. El Día 2 funciona igual.</li>
+          <li>Sin Docker: trabajá con un compañero. La segunda parte funciona igual.</li>
         </ul>
       </div>
       <div class="unified-card is-static p-5">
@@ -157,15 +157,15 @@ ssh root@localhost -p 2222</pre>
     </div>
   </section>
 
-  <!-- ═══════════════ DÍA 1 ═══════════════ -->
-  <section id="dia1" class="space-y-6">
+  <!-- ═══════════════ PRIMERA PARTE ═══════════════ -->
+  <section id="parte1" class="space-y-6">
     <div class="flex items-baseline gap-4 flex-wrap border-l-4 border-base-orange pl-4">
-      <h2 class="text-3xl font-black text-white">Día 1 · El banco de trabajo</h2>
+      <h2 class="text-3xl font-black text-white">Primera parte · El banco de trabajo</h2>
       <span class="font-mono text-sm text-gray-500">105 min · intercalados con la teoría</span>
     </div>
     <p class="text-base text-gray-300 leading-relaxed max-w-3xl">
       Cuatro ejercicios cortos, cada uno después del módulo teórico que le corresponde. Todo local, cero dependencia
-      de la red. Al terminar el día cada grupo tiene un laboratorio corriendo, cinco tokens disparados y tres piezas
+      de la red. Al terminar, cada grupo tiene un laboratorio corriendo, cinco tokens disparados y tres piezas
       de engaño desplegadas en su portal.
     </p>
 
@@ -214,21 +214,21 @@ ssh root@localhost -p 2222</pre>
     </div>
   </section>
 
-  <!-- ═══════════════ DÍA 2 ═══════════════ -->
-  <section id="dia2" class="space-y-6">
+  <!-- ═══════════════ SEGUNDA PARTE ═══════════════ -->
+  <section id="parte2" class="space-y-6">
     <div class="flex items-baseline gap-4 flex-wrap border-l-4 border-base-orange pl-4">
-      <h2 class="text-3xl font-black text-white">Día 2 · El día de los datos</h2>
-      <span class="font-mono text-sm text-gray-500">375 min · 09:00 – 17:30</span>
+      <h2 class="text-3xl font-black text-white">Segunda parte · Los datos</h2>
+      <span class="font-mono text-sm text-gray-500">375 min</span>
     </div>
     <p class="text-base text-gray-300 leading-relaxed max-w-3xl">
       EkoFinance no existe como red: existe como <strong class="text-white">dataset</strong>. Se reconstruye desde la
-      telemetría, que es como se lo encuentra un equipo real. La mañana endurece lo del Día 1 y entra a los datos;
-      la tarde caza, decide, mide y se pone a prueba.
+      telemetría, que es como se lo encuentra un equipo real. Primero se endurece lo de la primera parte y se entra a
+      los datos; después se caza, se decide, se mide y se pone a prueba.
     </p>
 
     <div class="space-y-4">
 
-      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">09:15 – 10:30 · Deception que aguanta una inspección</div>
+      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">75 min · Deception que aguanta una inspección</div>
       <div class="grid md:grid-cols-2 gap-5">
         <a href="labs/e05-endurecer-y-medir.html" class="unified-card p-5 block group">
           <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E5</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>40 min</span></div>
@@ -242,7 +242,7 @@ ssh root@localhost -p 2222</pre>
         </a>
       </div>
 
-      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">10:45 – 12:00 · De tus datos a los del incidente</div>
+      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">75 min · De tus datos a los del incidente</div>
       <div class="grid md:grid-cols-2 gap-5">
         <a href="labs/e07-cazar-propios-logs.html" class="unified-card p-5 block group" style="border-left:3px solid #a78bfa">
           <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E7</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>35 min</span></div>
@@ -256,7 +256,7 @@ ssh root@localhost -p 2222</pre>
         </a>
       </div>
 
-      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">12:00 – 12:45 · Primeras dos cazas</div>
+      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">45 min · Primeras dos cazas</div>
       <div class="grid md:grid-cols-2 gap-5">
         <a href="labs/e09-caza-side-loading.html" class="unified-card p-5 block group">
           <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E9</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>20 min</span></div>
@@ -270,7 +270,7 @@ ssh root@localhost -p 2222</pre>
         </a>
       </div>
 
-      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">13:45 – 15:15 · Cierre de cazas y las dos fichas escritas</div>
+      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">90 min · Cierre de cazas y las dos fichas escritas</div>
       <div class="grid md:grid-cols-2 gap-5">
         <a href="labs/e11-caza-lateral-y-salida.html" class="unified-card p-5 block group">
           <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E11</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>30 min</span></div>
@@ -294,7 +294,7 @@ ssh root@localhost -p 2222</pre>
         </a>
       </div>
 
-      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">15:30 – 16:00 · Medición</div>
+      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">30 min · Medición</div>
       <div class="grid md:grid-cols-2 gap-5">
         <a href="labs/e13-prueba-de-disparo.html" class="unified-card p-5 block group">
           <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E13</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>30 min</span></div>
@@ -310,7 +310,7 @@ ssh root@localhost -p 2222</pre>
         </div>
       </div>
 
-      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">16:00 – 17:00 · Cacería cruzada y defensa</div>
+      <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 border-b border-white/5 pb-2 pt-4">60 min · Cacería cruzada y defensa</div>
       <div class="grid md:grid-cols-2 gap-5">
         <a href="labs/e14-caceria-cruzada.html" class="unified-card p-5 block group">
           <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E14</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>30 min</span></div>
@@ -327,33 +327,9 @@ ssh root@localhost -p 2222</pre>
     </div>
   </section>
 
-  <!-- ═══════════════ ENCADENAMIENTO ═══════════════ -->
-  <section id="cadena" class="space-y-6">
-    <h2 class="text-3xl font-black text-white border-l-4 border-base-orange pl-4">Qué alimenta a qué</h2>
-    <p class="text-base text-gray-300 leading-relaxed max-w-3xl">
-      Ningún ejercicio es autocontenido. Si un grupo no produce el entregable de uno, el siguiente se rompe:
-      conviene tenerlo presente al decidir qué recortar cuando el reloj apremia.
-    </p>
-
-    <div class="unified-card is-static overflow-hidden">
-      <div class="code-caption"><i class="fas fa-link"></i>Cadena de entregables</div>
-      <pre class="code">E1  lista de delatores ──────────────────────────► E5  los arreglás y medís el delta
-E2  cinco tokens disparados ────────────────────► E3  tres de ellos se plantan
-E3  tres piezas en el portal ───────┬───────────► E6  las ves disparar en cadena
-                                    ├───────────► E13 medís su latencia real
-                                    └───────────► E14 otro grupo intenta quemarlas
-E5  honeypot endurecido ────────────────────────► E14 se pone a prueba
-E7  falsos positivos contados ──────────────────► W1  el argumento de la decisión
-E8  inventario reconstruido ────────────────────► E9  E10  E11  E12
-E11 dwell time calculado ───────────┬───────────► E13 la línea base
-                                    └───────────► W3  el primer número
-E10 volumen del EID 10 ─────────────┐
-E12 el punto ciego ─────────────────┴───────────► W1  cinco decisiones
-W1  cinco decisiones ───────────────────────────► W2  la ficha de operación
-E13 latencias medidas ──────────────┐
-E14 marcador de la cacería ─────────┴───────────► W3  la defensa</pre>
-    </div>
-
+  <!-- ═══════════════ ENTREGABLES ═══════════════ -->
+  <section id="entregables" class="space-y-6">
+    <h2 class="text-3xl font-black text-white border-l-4 border-base-orange pl-4">Qué entregás</h2>
     <div class="callout is-entregable">
       <div class="callout-title"><i class="fas fa-box-archive"></i>Qué entregás</div>
       <ul class="text-sm leading-relaxed text-gray-300 list-disc pl-5 space-y-1">
@@ -388,79 +364,6 @@ E14 marcador de la cacería ─────────┴───────�
           cierra la pestaña o cambia de laptop.
         </p>
       </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════ MATERIAL EXTRA ═══════════════ -->
-  <section id="extra" class="space-y-6">
-    <h2 class="text-3xl font-black text-white border-l-4 border-base-orange pl-4">Material extra</h2>
-    <p class="text-base text-gray-300 leading-relaxed max-w-3xl">
-      <strong class="text-white">Ningún ejercicio depende de esta carpeta.</strong> Las diecisiete guías se completan
-      sin abrirla. Está para consultar durante el curso y, sobre todo, para llevarse después.
-      Índice completo en <a href="resources/" class="eko-link-label">resources/</a>.
-    </p>
-
-    <div class="grid md:grid-cols-2 gap-5">
-      <div class="unified-card is-static p-6">
-        <h3 class="text-base font-black text-white mb-2"><i class="fas fa-folder-open text-base-orange mr-2"></i>Los documentos del caso</h3>
-        <p class="text-sm text-gray-400 leading-relaxed mb-4">
-          Los cuatro informes del incidente de EkoFinance. Son los únicos que conviene tener a mano el Día 2:
-          dan el contexto que los logs no dan.
-        </p>
-        <ul class="text-sm text-gray-300 space-y-1.5">
-          <li><a href="resources/04-insumos/01-informe-tecnico-dfir.html" class="eko-link-label">Informe técnico DFIR</a> — el punto de vista forense</li>
-          <li><a href="resources/04-insumos/02-reporte-inteligencia-cti.html" class="eko-link-label">Reporte de inteligencia CTI</a> — el punto de vista del adversario</li>
-          <li><a href="resources/04-insumos/03-diagrama-red-anotado.html" class="eko-link-label">Diagrama de red anotado</a> — inventario y recorrido, salto por salto</li>
-          <li><a href="resources/04-insumos/04-estado-del-deception.html" class="eko-link-label">Estado del deception</a> — qué tenía EkoFinance y qué reportó</li>
-        </ul>
-      </div>
-
-      <div class="unified-card is-static p-6">
-        <h3 class="text-base font-black text-white mb-2"><i class="fas fa-crosshairs text-base-orange mr-2"></i>Referencia de caza</h3>
-        <p class="text-sm text-gray-400 leading-relaxed mb-4">
-          Para tener al lado mientras escribís consultas en el E9 al E12.
-        </p>
-        <ul class="text-sm text-gray-300 space-y-1.5">
-          <li>Mapa mental de los logs nativos de Windows</li>
-          <li>Qué event code cubre qué técnica</li>
-          <li>Mapeo técnica ↔ evento configurable de Sysmon</li>
-          <li>Configuración de Sysmon de referencia</li>
-          <li>Mapa mental de caza en memoria</li>
-        </ul>
-        <p class="text-xs text-gray-500 mt-4"><code>resources/03-hunting/</code></p>
-      </div>
-
-      <div class="unified-card is-static p-6">
-        <h3 class="text-base font-black text-white mb-2"><i class="fas fa-user-secret text-base-orange mr-2"></i>El actor</h3>
-        <p class="text-sm text-gray-400 leading-relaxed mb-3">
-          Ficha de APT19 con TTPs e IOCs, y su taxonomía visual. La fuente canónica es
-          <a href="https://attack.mitre.org/groups/G0073" target="_blank" rel="noopener" class="eko-link-label">G0073</a>:
-          los IDs cambian entre versiones, verificá antes de citar.
-        </p>
-        <p class="text-xs text-gray-500"><code>resources/01-apt19/</code></p>
-      </div>
-
-      <div class="unified-card is-static p-6">
-        <h3 class="text-base font-black text-white mb-2"><i class="fas fa-mask text-base-orange mr-2"></i>Más artefactos de engaño</h3>
-        <p class="text-sm text-gray-400 leading-relaxed mb-3">
-          Piezas que no entran en el portal: una cuenta señuelo kerberoasteable para Active Directory, un honeyfile
-          con beacon, un token que emite DNS al ejecutarse, y el mapa de actividades combinables.
-        </p>
-        <p class="text-sm text-gray-400 leading-relaxed mb-3">
-          El <code>.ps1</code> es el más útil para llevarse: en una red con dominio es la pieza con mejor relación
-          esfuerzo/resultado, y es la línea base cero de la que habla el E7.
-        </p>
-        <p class="text-xs text-gray-500"><code>resources/02-deception/</code></p>
-      </div>
-    </div>
-
-    <div class="callout is-atencion">
-      <div class="callout-title"><i class="fas fa-eye-slash"></i>No abras el diagrama de red antes del E8</div>
-      <p class="text-sm leading-relaxed text-gray-300">
-        El ejercicio es reconstruir la red de EkoFinance desde la telemetría, que es como se lo encuentra un equipo
-        real. Si mirás el diagrama primero, se pierde entero. El E8 te dice cuándo abrirlo — y la comparación del
-        final sólo sirve si la hacés después.
-      </p>
     </div>
   </section>
 
