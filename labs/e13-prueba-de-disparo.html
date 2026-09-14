@@ -92,7 +92,7 @@ tailwind.config = { theme: { extend: {
 date -u +%H:%M:%S.%3N
 
 <span class="c"># tocá el artefacto (ejemplo: la pieza del portal)</span>
-curl -s http://localhost:8080/admin-conciliacion > /dev/null
+curl -s http://localhost:8080/admin-pagos > /dev/null
 
 <span class="c"># T1 — cuándo aparece en el log local</span>
 tail -1 portal/logs/access.log | jq -r .time

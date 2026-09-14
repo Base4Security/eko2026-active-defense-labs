@@ -1,5 +1,5 @@
-MIGRACIÓN SIGCON → PORTAL DE CONCILIACIÓN v2.4
-==============================================
+MIGRACIÓN SIGCON → PORTAL DE PAGOS v2.4
+=======================================
 Última actualización: 14/03/2026 — Infraestructura
 
 Estado: en curso. La interfaz con SIGCON sigue activa y se apaga cuando

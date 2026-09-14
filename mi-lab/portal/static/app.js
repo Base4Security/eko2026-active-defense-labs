@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   Portal de Conciliación · front-end
+   Portal de Pagos · front-end
    Build 2.4.1 · migración SIGCON
 
    Nota de la migración: este bundle todavía no pasa por el empaquetador.
@@ -59,6 +59,6 @@
   document.addEventListener('DOMContentLoaded', function () {
     marcarDiferencias();
     ordenable();
-    console.log('Portal de Conciliación v' + CONFIG.version + ' — migración en curso');
+    console.log('Portal de Pagos v' + CONFIG.version + ' — migración en curso');
   });
 })();

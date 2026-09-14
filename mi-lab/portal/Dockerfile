@@ -1,4 +1,4 @@
-# Portal de Conciliación · EkoFinance
+# Portal de Pagos · EkoFinance
 # Sin dependencias: sólo biblioteca estándar de Python. La imagen se
 # construye en segundos y no necesita red después del primer pull.
 FROM python:3.12-slim

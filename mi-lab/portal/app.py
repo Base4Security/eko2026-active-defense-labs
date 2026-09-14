@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Portal de Conciliación · EkoFinance
+Portal de Pagos · EkoFinance
 ═══════════════════════════════════════════════════════════════════════════
 
-Esta es una aplicación REAL. Tiene usuarios que entran, conciliaciones con
+Esta es una aplicación REAL. Tiene usuarios que entran, pagos con
 datos, documentos que se descargan y una API. Nada de lo que hay acá adentro
 es un señuelo.
 
@@ -44,7 +44,7 @@ PUERTO = int(os.environ.get("PUERTO", "8080"))
 F_ENV = os.path.join(BASE, "config", ".env")
 F_SENUELOS = os.path.join(BASE, "config", "senuelos.json")
 F_USUARIOS = os.path.join(BASE, "data", "usuarios.json")
-F_CONCILIACIONES = os.path.join(BASE, "data", "conciliaciones.json")
+F_PAGOS = os.path.join(BASE, "data", "pagos.json")
 F_FECHAS = os.path.join(BASE, "data", "archivos.json")
 D_ARCHIVOS = os.path.join(BASE, "archivos")
 D_STATIC = os.path.join(BASE, "static")
@@ -87,13 +87,13 @@ def usuarios():
     return leer_json(F_USUARIOS, [])
 
 
-def conciliaciones():
-    return leer_json(F_CONCILIACIONES, [])
+def pagos():
+    return leer_json(F_PAGOS, [])
 
 
 def senuelos():
     """Rutas señuelo declaradas por el alumno.
-    Formato: [{"ruta": "/admin-conciliacion", "titulo": "...", "cuerpo": "..."}]
+    Formato: [{"ruta": "/admin-pagos", "titulo": "...", "cuerpo": "..."}]
     """
     return leer_json(F_SENUELOS, [])
 
@@ -160,13 +160,13 @@ def registrar(ip, metodo, ruta, estado, usuario, agente, bytes_, es_senuelo):
 CABECERA = """<!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{titulo} · Portal de Conciliación</title>
+<title>{titulo} · Portal de Pagos</title>
 <link rel="stylesheet" href="/static/estilo.css">
 </head><body>
 <header class="barra">
-  <a class="marca" href="/conciliaciones">EkoFinance <span>· Conciliación</span></a>
+  <a class="marca" href="/pagos">EkoFinance <span>· Pagos</span></a>
   <nav>
-    <a href="/conciliaciones">Conciliaciones</a>
+    <a href="/pagos">Pagos</a>
     <a href="/archivos">Documentos</a>
     <a href="/usuarios">Directorio</a>
     {admin}
@@ -178,8 +178,8 @@ CABECERA = """<!DOCTYPE html>
 
 PIE = """</main>
 <footer>
-  <p>Portal de Conciliación v2.4.1 &middot; migración en curso desde SIGCON &middot;
-     dudas a <a href="mailto:conciliacion@ekofinance.local">conciliacion@ekofinance.local</a></p>
+  <p>Portal de Pagos v2.4.1 &middot; migración en curso desde SIGCON &middot;
+     dudas a <a href="mailto:pagos@ekofinance.local">pagos@ekofinance.local</a></p>
 </footer>
 <script src="/static/app.js"></script>
 </body></html>
@@ -209,7 +209,7 @@ def vista_login(error=None):
     aviso = '<p class="error">%s</p>' % e(error) if error else ""
     return pagina("Ingreso", """
 <div class="ingreso">
-  <h1>Portal de Conciliación</h1>
+  <h1>Portal de Pagos</h1>
   <p class="bajada">Acceso restringido al personal de Tesorería y Contaduría.</p>
   %s
   <form method="post" action="/login">
@@ -222,42 +222,42 @@ def vista_login(error=None):
 """ % aviso)
 
 
-def vista_conciliaciones(usuario):
+def vista_pagos(usuario):
     filas = []
-    for c in conciliaciones():
+    for c in pagos():
         filas.append(
-            '<tr><td class="mono"><a href="/conciliaciones/%s">%s</a></td>'
+            '<tr><td class="mono"><a href="/pagos/%s">%s</a></td>'
             '<td>%s</td><td>%s</td><td class="num">%s</td><td class="mono">%s</td>'
             '<td><span class="estado %s">%s</span></td><td>%s</td></tr>'
             % (e(c["id"]), e(c["id"]), e(c["fecha"]), e(c["contraparte"]),
                e("{:,.2f}".format(c["monto"]).replace(",", "·").replace(".", ",").replace("·", ".")),
                e(c["moneda"]), e(c["estado"].lower().replace(" ", "-")),
                e(c["estado"]), e(c["operador"])))
-    return pagina("Conciliaciones", """
-<h1>Conciliaciones</h1>
-<p class="bajada">Movimientos pendientes de conciliar del período en curso.
+    return pagina("Pagos", """
+<h1>Pagos</h1>
+<p class="bajada">Pagos y transferencias del período en curso.
    Los cerrados se archivan a los 90 días.</p>
 <table class="grilla">
   <thead><tr><th>ID</th><th>Fecha</th><th>Contraparte</th><th>Monto</th>
              <th>Mon.</th><th>Estado</th><th>Operador</th></tr></thead>
   <tbody>%s</tbody>
 </table>
-<p class="nota">%d movimientos. Exportación a CSV deshabilitada durante la migración.</p>
-""" % ("".join(filas), len(conciliaciones())), usuario, es_admin(usuario))
+<p class="nota">%d pagos. Exportación a CSV deshabilitada durante la migración.</p>
+""" % ("".join(filas), len(pagos())), usuario, es_admin(usuario))
 
 
-def vista_conciliacion(usuario, cid):
-    for c in conciliaciones():
+def vista_pago(usuario, cid):
+    for c in pagos():
         if c["id"] == cid:
             detalle = "".join(
                 '<div class="campo"><dt>%s</dt><dd>%s</dd></div>' % (e(k), e(v))
                 for k, v in c.items())
-            return pagina("Conciliación %s" % cid, """
-<h1>Conciliación <span class="mono">%s</span></h1>
+            return pagina("Pago %s" % cid, """
+<h1>Pago <span class="mono">%s</span></h1>
 <dl class="detalle">%s</dl>
-<p><a class="volver" href="/conciliaciones">&larr; Volver al listado</a></p>
+<p><a class="volver" href="/pagos">&larr; Volver al listado</a></p>
 """ % (e(cid), detalle), usuario, es_admin(usuario)), 200
-    return pagina("No encontrada", "<h1>404</h1><p>No existe esa conciliación.</p>",
+    return pagina("No encontrado", "<h1>404</h1><p>No existe ese pago.</p>",
                   usuario, es_admin(usuario)), 404
 
 
@@ -298,7 +298,7 @@ def vista_archivos(usuario):
                      % (urllib.parse.quote(n), e(n), e(tam), e(mod)))
     return pagina("Documentos", """
 <h1>Repositorio de documentos</h1>
-<p class="bajada">Documentación operativa del proceso de conciliación.
+<p class="bajada">Documentación operativa del área de Pagos.
    Parte del material quedó desactualizado durante la migración desde SIGCON.</p>
 <table class="grilla">
   <thead><tr><th>Archivo</th><th>Tamaño</th><th>Modificado</th></tr></thead>
@@ -406,22 +406,22 @@ class Handler(http.server.BaseHTTPRequestHandler):
             return self.servir_archivo(os.path.join(D_STATIC, nombre))
 
         # 3 · API pública (sin sesión, como tantas APIs internas mal expuestas)
-        if ruta == "/api/conciliaciones":
-            return self.responder(json.dumps(conciliaciones(), ensure_ascii=False, indent=2),
+        if ruta == "/api/pagos":
+            return self.responder(json.dumps(pagos(), ensure_ascii=False, indent=2),
                                   200, "application/json; charset=utf-8")
         if ruta == "/api/usuarios":
             publicos = [{k: v for k, v in u.items() if k != "clave"} for u in usuarios()]
             return self.responder(json.dumps(publicos, ensure_ascii=False, indent=2),
                                   200, "application/json; charset=utf-8")
         if ruta == "/api/estado":
-            return self.responder(json.dumps({"servicio": "conciliacion",
+            return self.responder(json.dumps({"servicio": "pagos",
                                               "version": "2.4.1",
                                               "migracion": "en curso"}, ensure_ascii=False),
                                   200, "application/json; charset=utf-8")
 
         # 4 · páginas
         if ruta == "/":
-            return self.redirigir("/conciliaciones") if self.sesion() else self.responder(vista_login())
+            return self.redirigir("/pagos") if self.sesion() else self.responder(vista_login())
         if ruta == "/logout":
             galletas = self.headers.get("Cookie", "")
             for parte in galletas.split(";"):
@@ -433,10 +433,10 @@ class Handler(http.server.BaseHTTPRequestHandler):
         if not u:
             return
 
-        if ruta == "/conciliaciones":
-            return self.responder(vista_conciliaciones(u))
-        if ruta.startswith("/conciliaciones/"):
-            cuerpo, estado = vista_conciliacion(u, ruta.split("/")[-1])
+        if ruta == "/pagos":
+            return self.responder(vista_pagos(u))
+        if ruta.startswith("/pagos/"):
+            cuerpo, estado = vista_pago(u, ruta.split("/")[-1])
             return self.responder(cuerpo, estado)
         if ruta == "/usuarios":
             return self.responder(vista_usuarios(u))
@@ -480,7 +480,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
                     return self.responder(vista_login("Esa cuenta está deshabilitada."), 403)
                 sid = uuid.uuid4().hex
                 _sesiones[sid] = u
-                return self.redirigir("/conciliaciones",
+                return self.redirigir("/pagos",
                                       [("Set-Cookie", "sesion=%s; Path=/; HttpOnly" % sid)])
 
         # Login fallido. Si el usuario intentado es un señuelo, lo marcamos.
@@ -513,7 +513,7 @@ class Servidor(socketserver.ThreadingTCPServer):
 if __name__ == "__main__":
     os.makedirs(os.path.dirname(F_LOG), exist_ok=True)
     aplicar_fechas()
-    print("Portal de Conciliación · EkoFinance", file=sys.stderr)
+    print("Portal de Pagos · EkoFinance", file=sys.stderr)
     print("  http://localhost:%d" % PUERTO, file=sys.stderr)
     print("  log: logs/access.log (JSON por línea)", file=sys.stderr)
     Servidor(("0.0.0.0", PUERTO), Handler).serve_forever()

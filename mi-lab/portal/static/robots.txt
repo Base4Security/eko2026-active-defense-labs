@@ -1,4 +1,4 @@
-# Portal de Conciliación · EkoFinance
+# Portal de Pagos · EkoFinance
 # Indexación deshabilitada: es una aplicación interna.
 
 User-agent: *

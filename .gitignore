@@ -7,9 +7,11 @@ desktop.ini
 *.tar
 *.tar.gz
 
-# Estado de Cowrie al correr el entorno
-resources/docker/cowrie/var/
-resources/docker/cowrie/etc/
+# Estado de los contenedores al correr el laboratorio
+mi-lab/cowrie/var/
+mi-lab/cowrie/etc/
+mi-lab/opencanary/logs/
+mi-lab/portal/logs/
 
 # Python
 __pycache__/

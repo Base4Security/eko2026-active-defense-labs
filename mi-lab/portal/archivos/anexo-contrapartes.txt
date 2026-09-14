@@ -1,11 +1,11 @@
 ANEXO — CONTRAPARTES HABILITADAS
 Contaduría · actualizado 28/02/2026
 
-BCRA                  cuenta corriente en pesos, conciliación diaria
+BCRA                  cuenta corriente en pesos, procesamiento diario
 COELSA                cámara electrónica, archivo a las 09:15
-Interbanking          transferencias empresa, conciliación diaria
-Prisma                liquidación tarjetas, conciliación semanal (martes)
-Red Link              cajeros, conciliación diaria
+Interbanking          transferencias empresa, procesamiento diario
+Prisma                liquidación tarjetas, procesamiento semanal (martes)
+Red Link              cajeros, procesamiento diario
 Visa Argentina        liquidación quincenal
 Naranja X             liquidación semanal (jueves)
 

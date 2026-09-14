@@ -1,4 +1,4 @@
-/* Portal de Conciliación · hoja de estilos
+/* Portal de Pagos · hoja de estilos
    Heredada del portal anterior (SIGCON), adaptada en la migración.
    Pendiente unificar con el manual de marca — ticket INFRA-2190. */
 
@@ -43,7 +43,7 @@ h1{font-size:21px;font-weight:600;margin:0 0 6px;color:var(--azul)}
 
 .estado{font-size:11.5px;padding:2px 7px;border-radius:2px;white-space:nowrap;
         background:#e8edf1;color:#4a5560}
-.estado.conciliada{background:#e4f2ea;color:var(--ok)}
+.estado.procesado{background:#e4f2ea;color:var(--ok)}
 .estado.pendiente{background:#eef1f4;color:var(--tenue)}
 .estado.con-diferencia{background:#fbeee2;color:var(--alerta)}
 .estado.en-revisión,.estado.en-revision{background:#e8eefa;color:var(--azul-claro)}

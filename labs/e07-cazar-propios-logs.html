@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>E7 · Cazá sobre tus propios logs — Active Cyber Defense · Ekoparty 2026</title>
-<meta name="description" content="Corrés la misma consulta sobre los dos carriles: el portal, que tiene usuarios de verdad, y el honeypot, que no tiene ninguno. Mismo esfuerzo, relación señal/ruido opuesta.">
+<meta name="description" content="Corrés la misma consulta sobre los dos sistemas que levantaste: el portal, que tiene usuarios de verdad, y el honeypot, que no tiene ninguno. Mismo esfuerzo, relación señal/ruido opuesta.">
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Boldonse&family=Lato:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -42,11 +42,11 @@ tailwind.config = { theme: { extend: {
       <span class="timer-badge">Día 2 · el día de los datos</span>
       <span class="timer-badge is-neutral"><i class="fas fa-clock"></i>35 minutos</span>
       <span class="timer-badge is-neutral"><i class="fas fa-users"></i>Grupos de 2-3</span>
-      <span class="timer-badge is-neutral" style="border-color:rgba(167,139,250,.45);color:#c4b5fd"><i class="fas fa-code-compare"></i>Los dos carriles</span>
+      <span class="timer-badge is-neutral" style="border-color:rgba(167,139,250,.45);color:#c4b5fd"><i class="fas fa-code-compare"></i>Portal y honeypot</span>
     </div>
     <p class="text-base-orange font-bold tracking-[0.3em] uppercase mb-3 text-xs">Ejercicio E7</p>
     <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-white mb-4" data-wb-title>Cazá sobre tus propios logs</h1>
-    <p class="max-w-3xl text-base text-gray-300 leading-relaxed">Corrés la misma consulta sobre los dos carriles: el portal, que tiene usuarios de verdad, y el honeypot, que no tiene ninguno. Mismo esfuerzo, relación señal/ruido opuesta.</p>
+    <p class="max-w-3xl text-base text-gray-300 leading-relaxed">Corrés la misma consulta sobre los dos sistemas que levantaste: el portal, que tiene usuarios de verdad, y el honeypot, que no tiene ninguno. Mismo esfuerzo, relación señal/ruido opuesta.</p>
   </div>
 </header>
 
@@ -85,23 +85,23 @@ tailwind.config = { theme: { extend: {
 <div class="callout is-pista"><div class="callout-title"><i class="fas fa-folder-tree"></i>Dónde se corre esto</div><div class="text-sm leading-relaxed text-gray-300"><p>Todos los comandos de esta ficha salen desde la carpeta <code>mi-lab/</code> del repositorio, salvo que se aclare lo contrario:</p><pre class="code" style="margin:.6rem 0">cd eko2026-active-defense-labs/mi-lab</pre><p>Si no sabés dónde quedó, está en la <a class="eko-link-label" href="../index.html#preparacion">preparación del programa</a>.</p></div></div>
   </section>
   <section id="ruido" class="space-y-5">
-<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">1 · Generá tráfico en los dos carriles</h2><p class="text-sm text-gray-300 leading-relaxed">Primero uso normal del portal: que dos o tres del grupo entren, naveguen, bajen documentos, se equivoquen de contraseña una vez. Eso es el trabajo de un martes cualquiera y tiene que estar en el log.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Carril A · uso legítimo<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code"><span class="c"># hacelo desde el navegador, con usuarios distintos</span>
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">1 · Generá tráfico en los dos</h2><p class="text-sm text-gray-300 leading-relaxed">Primero uso normal del portal: que dos o tres del grupo entren, naveguen, bajen documentos, se equivoquen de contraseña una vez. Eso es el trabajo de un martes cualquiera y tiene que estar en el log.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>En el portal · uso legítimo<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code"><span class="c"># hacelo desde el navegador, con usuarios distintos</span>
 open http://localhost:8080
-<span class="c">#   mcastro / demo1234    → conciliaciones, descargá dos documentos</span>
+<span class="c">#   mcastro / demo1234    → pagos, descargá dos documentos</span>
 <span class="c">#   jlopez  / demo1234    → directorio, cambiá de página</span>
-<span class="c">#   y una contraseña mal, que también pasa en la vida real</span></pre></div><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Carril B · nadie legítimo<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code"><span class="c"># fuerza bruta contra el honeypot</span>
+<span class="c">#   y una contraseña mal, que también pasa en la vida real</span></pre></div><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>En el honeypot · nadie legítimo<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code"><span class="c"># fuerza bruta contra el honeypot</span>
 for u in root admin oracle svc_backup postgres; do
   ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 \
       "$u@localhost" -p 2222 'id; whoami' 2>/dev/null
 done</pre></div>
   </section>
   <section id="consultar" class="space-y-5">
-<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">2 · La misma pregunta, a los dos logs</h2><p class="text-sm text-gray-300 leading-relaxed">La pregunta es la de siempre: <em>¿quién intentó autenticarse y con qué?</em> Es el razonamiento de una query de SIEM, con <code>jq</code> en lugar de KQL.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Carril A · el portal<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code"><span class="c"># intentos de login en el portal</span>
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">2 · La misma pregunta, a los dos logs</h2><p class="text-sm text-gray-300 leading-relaxed">La pregunta es la de siempre: <em>¿quién intentó autenticarse y con qué?</em> Es el razonamiento de una query de SIEM, con <code>jq</code> en lugar de KQL.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>El portal<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code"><span class="c"># intentos de login en el portal</span>
 jq -r 'select(.path=="/login" and .status==401) | .usuario' \
   portal/logs/access.log | sort | uniq -c | sort -rn
 
 <span class="c"># rutas más pedidas</span>
-jq -r .path portal/logs/access.log | sort | uniq -c | sort -rn | head</pre></div><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Carril B · el honeypot<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code">LOG=var/log/cowrie/cowrie.json
+jq -r .path portal/logs/access.log | sort | uniq -c | sort -rn | head</pre></div><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>El honeypot<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code">LOG=var/log/cowrie/cowrie.json
 
 <span class="c"># usuarios más intentados</span>
 docker compose exec cowrie cat $LOG | \
@@ -118,13 +118,13 @@ docker compose exec cowrie cat $LOG | \
 <div class="callout is-atencion"><div class="callout-title"><i class="fas fa-scale-unbalanced"></i>El número de la derecha es cero</div><div class="text-sm leading-relaxed text-gray-300"><p>En el honeypot los falsos positivos son <strong class="text-white">cero</strong>, y lo van a seguir siendo: ningún usuario de EkoFinance tiene motivo para llegar ahí. Cada línea de ese log es una alerta accionable.</p><p class="mt-2">En el portal <strong class="text-white">no</strong>, porque tiene gente haciendo su trabajo. La misma consulta te devuelve a mcastro que se equivocó de contraseña. Y ahora multiplicá: la misma query sobre las 400 estaciones Windows de EkoFinance buscando PowerShell con argumentos codificados da miles de líneas benignas y un analista que abandona al tercer día.</p><p class="mt-2">Mismo esfuerzo de escritura, resultado incomparable. <strong class="text-white">La diferencia no está en la query, está en dónde pusiste el sensor.</strong> Ese es el argumento con el que se justifica el presupuesto de una operación de engaño, y acabás de medirlo.</p></div></div>
   </section>
   <section id="traducir" class="space-y-5">
-<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">4 · Traducí al revés: del evento a la técnica</h2><p class="text-sm text-gray-300 leading-relaxed">Recorriste la cadena de arriba hacia abajo. Ahora hacela al revés, que es lo que hace un analista frente a un log: por cada evento que viste, ¿qué técnica de ATT&amp;CK estabas observando?</p><div class="unified-card is-static p-5" data-wb-table="traduccion" data-wb-min="3"><div class="table-scroll"><table class="data-table"><thead><tr><th>Evento observado</th><th>Carril</th><th>Comportamiento</th><th>Técnica (ID)</th><th></th></tr></thead><tbody data-wb-body></tbody></table></div><p class="wb-empty" data-wb-empty hidden>No hay filas. Agregá una para empezar.</p><template data-wb-row><tr><td class="is-editable" style="min-width:200px"><div class="wb-cell" contenteditable="true" data-wb-col="evento" data-ph="la línea del log"></div></td><td style="min-width:130px"><select class="wb-select" data-wb-col="carril"><option value="">— elegir —</option><option value="A · portal">A · portal</option><option value="B · honeypot">B · honeypot</option></select></td><td class="is-editable" style="min-width:210px"><div class="wb-cell" contenteditable="true" data-wb-col="comportamiento" data-ph="qué hace el sistema, no qué quiere el atacante"></div></td><td class="is-editable" style="min-width:120px"><div class="wb-cell" contenteditable="true" data-wb-col="tecnica" data-ph="T1110, T1078…"></div></td><td class="wb-rowtools"><button class="wb-del" type="button" title="Eliminar fila" aria-label="Eliminar fila"><i class="fas fa-xmark"></i></button></td></tr></template><div class="wb-tablefoot no-print"><button class="wb-btn wb-add" type="button" data-wb-add><i class="fas fa-plus"></i>Agregar evento</button><span class="wb-count"></span></div></div>
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">4 · Traducí al revés: del evento a la técnica</h2><p class="text-sm text-gray-300 leading-relaxed">Recorriste la cadena de arriba hacia abajo. Ahora hacela al revés, que es lo que hace un analista frente a un log: por cada evento que viste, ¿qué técnica de ATT&amp;CK estabas observando?</p><div class="unified-card is-static p-5" data-wb-table="traduccion" data-wb-min="3"><div class="table-scroll"><table class="data-table"><thead><tr><th>Evento observado</th><th>Dónde</th><th>Comportamiento</th><th>Técnica (ID)</th><th></th></tr></thead><tbody data-wb-body></tbody></table></div><p class="wb-empty" data-wb-empty hidden>No hay filas. Agregá una para empezar.</p><template data-wb-row><tr><td class="is-editable" style="min-width:200px"><div class="wb-cell" contenteditable="true" data-wb-col="evento" data-ph="la línea del log"></div></td><td style="min-width:130px"><select class="wb-select" data-wb-col="donde"><option value="">— elegir —</option><option value="Portal">Portal</option><option value="Honeypot">Honeypot</option></select></td><td class="is-editable" style="min-width:210px"><div class="wb-cell" contenteditable="true" data-wb-col="comportamiento" data-ph="qué hace el sistema, no qué quiere el atacante"></div></td><td class="is-editable" style="min-width:120px"><div class="wb-cell" contenteditable="true" data-wb-col="tecnica" data-ph="T1110, T1078…"></div></td><td class="wb-rowtools"><button class="wb-del" type="button" title="Eliminar fila" aria-label="Eliminar fila"><i class="fas fa-xmark"></i></button></td></tr></template><div class="wb-tablefoot no-print"><button class="wb-btn wb-add" type="button" data-wb-add><i class="fas fa-plus"></i>Agregar evento</button><span class="wb-count"></span></div></div>
   </section>
 
   <section id="cierre">
     <div class="callout is-entregable">
       <div class="callout-title"><i class="fas fa-box-archive"></i>Entregable · se usa en W1</div>
-      <p class="text-sm leading-relaxed text-gray-300">La tabla comparativa con los falsos positivos contados en los dos carriles, y la traducción evento → técnica. El número de falsos positivos es el argumento que vas a usar en el W1.</p>
+      <p class="text-sm leading-relaxed text-gray-300">La tabla comparativa con los falsos positivos contados en los dos, y la traducción evento → técnica. El número de falsos positivos es el argumento que vas a usar en el W1.</p>
     </div>
 
     <div class="mt-6">
@@ -134,8 +134,8 @@ docker compose exec cowrie cat $LOG | \
         <li><label><input type="checkbox" data-wb="chk.trafico"><span>Generamos uso legítimo del portal con más de un usuario</span></label></li>
         <li><label><input type="checkbox" data-wb="chk.bruta"><span>Generamos intentos contra el honeypot</span></label></li>
         <li><label><input type="checkbox" data-wb="chk.misma"><span>Corrimos la misma pregunta contra los dos logs</span></label></li>
-        <li><label><input type="checkbox" data-wb="chk.contados"><span>Contamos los falsos positivos de cada carril</span></label></li>
-        <li><label><input type="checkbox" data-wb="chk.cero"><span>Podemos explicar por qué en el carril B el número es cero</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.contados"><span>Contamos los falsos positivos de cada uno</span></label></li>
+        <li><label><input type="checkbox" data-wb="chk.cero"><span>Podemos explicar por qué en el honeypot el número es cero</span></label></li>
         <li><label><input type="checkbox" data-wb="chk.traduccion"><span>Cada evento tiene técnica de ATT&CK asignada</span></label></li>
         <li><label><input type="checkbox" data-wb="chk.exportado"><span>Exportamos el trabajo</span></label></li>
       </ul>

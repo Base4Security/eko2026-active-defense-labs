@@ -1,6 +1,6 @@
 # Tu laboratorio
 
-Tres servicios, dos carriles. Corre entero en tu máquina.
+Tres servicios. Corre entero en tu máquina.
 
 Esta carpeta viene **adentro del repositorio de las guías**: si lo clonaste para
 leer el programa, ya la tenés.
@@ -13,11 +13,11 @@ docker compose up -d --build
 docker compose ps             # portal, cowrie y opencanary en "running"
 ```
 
-| | Servicio | Puerto | Qué es |
-|---|---|---|---|
-| **Carril A** | Portal de Conciliación | `8080` | Un sistema **real**: datos, usuarios, documentos |
-| **Carril B** | Cowrie | `2222` | Honeypot SSH. Sistema **falso** entero |
-| **Carril B** | OpenCanary | `8081 · 1445 · 1433` | HTTP, SMB y MSSQL **falsos** |
+| Servicio | Puerto | Qué es |
+|---|---|---|
+| Portal de Pagos | `8080` | Un sistema **real**: datos, usuarios, documentos. El engaño es lo que le agregás |
+| Cowrie | `2222` | Honeypot SSH. **Falso entero**: nadie legítimo tiene motivo para llegar |
+| OpenCanary | `8081 · 1445 · 1433` | HTTP, SMB y MSSQL, también **falsos enteros** |
 
 ```bash
 open http://localhost:8080     # mcastro / demo1234
@@ -45,7 +45,7 @@ honeypot en el **E5**.
 
 ## El portal es real
 
-Tiene 28 conciliaciones con datos, 10 usuarios que entran de verdad, cuatro
+Tiene 28 pagos con datos, 10 usuarios que entran de verdad, cuatro
 documentos operativos, una API y una zona de administración con control de rol.
 **Nada de eso es un señuelo.**
 
@@ -57,13 +57,14 @@ portal/
 │   └── senuelos.json       ← superficie 3 · rutas señuelo
 ├── data/
 │   ├── usuarios.json       ← superficie 4 · usuario señuelo
-│   └── conciliaciones.json
+│   ├── pagos.json
+│   └── archivos.json        fechas de los documentos
 ├── archivos/               ← superficie 1 · documento tokenizado
 ├── static/
 │   ├── app.js              ← superficie 6 · API key falsa
 │   ├── robots.txt          ← superficie 5 · Disallow que invita
 │   └── estilo.css
-└── logs/access.log         tu telemetría del carril A
+└── logs/access.log         tu telemetría del portal
 ```
 
 Todo eso está **montado desde el disco**: editás un archivo acá afuera, recargás
@@ -84,8 +85,8 @@ mismo formato y tono que las de arriba.
 ```json
 [
   {
-    "ruta": "/admin-conciliacion",
-    "titulo": "Consola de conciliación",
+    "ruta": "/admin-pagos",
+    "titulo": "Consola de pagos",
     "cuerpo": "Acceso restringido. Registre el ticket antes de operar."
   }
 ]

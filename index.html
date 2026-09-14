@@ -23,10 +23,11 @@ tailwind.config = { theme: { extend: {
     <span class="text-xs font-bold tracking-[0.2em] uppercase text-gray-400">Laboratorios · Ekoparty 2026</span>
     <div class="flex gap-2 flex-wrap items-center">
       <a class="nav-pill" href="#preparacion"><i class="fas fa-box-open text-[10px]"></i> Preparación</a>
-      <a class="nav-pill" href="#carriles"><i class="fas fa-code-compare text-[10px]"></i> Los dos carriles</a>
+      <a class="nav-pill" href="#engano"><i class="fas fa-code-compare text-[10px]"></i> Dos formas de engañar</a>
       <a class="nav-pill" href="#dia1"><span class="num">1</span> Día 1</a>
       <a class="nav-pill" href="#dia2"><span class="num">2</span> Día 2</a>
       <a class="nav-pill" href="#cadena"><i class="fas fa-link text-[10px]"></i> Encadenamiento</a>
+      <a class="nav-pill" href="#extra"><i class="fas fa-folder-open text-[10px]"></i> Material extra</a>
     </div>
   </div>
 </nav>
@@ -85,7 +86,7 @@ ssh root@localhost -p 2222</pre>
       <div class="unified-card is-static p-5">
         <h3 class="text-sm font-bold text-white mb-3"><i class="fas fa-plug text-base-orange mr-2"></i>Puertos</h3>
         <ul class="text-sm text-gray-300 space-y-1.5">
-          <li><code>8080</code> · Portal de Conciliación</li>
+          <li><code>8080</code> · Portal de Pagos</li>
           <li><code>2222</code> · SSH del honeypot</li>
           <li><code>8081</code> · portal falso de OpenCanary</li>
           <li><code>1445 · 1433</code> · SMB y MSSQL falsos</li>
@@ -112,18 +113,19 @@ ssh root@localhost -p 2222</pre>
     </div>
   </section>
 
-  <!-- ═══════════════ LOS DOS CARRILES ═══════════════ -->
-  <section id="carriles" class="space-y-6">
-    <h2 class="text-3xl font-black text-white border-l-4 border-base-orange pl-4">Los dos carriles</h2>
+  <!-- ═══════════════ DOS FORMAS DE ENGAÑAR ═══════════════ -->
+  <section id="engano" class="space-y-6">
+    <h2 class="text-3xl font-black text-white border-l-4 border-base-orange pl-4">Dos formas de engañar</h2>
     <p class="text-base text-gray-300 leading-relaxed max-w-3xl">
-      Todo el curso se apoya en una distinción, y conviene tenerla clara antes del primer ejercicio:
-      <strong class="text-white">no es lo mismo un sistema falso que un sistema real con algo falso adentro</strong>.
+      Vas a hacer las dos durante el curso — no son opciones, son dos técnicas distintas y cada ejercicio usa la que
+      corresponde. Lo que conviene tener claro desde el principio es en qué se diferencian:
+      <strong class="text-white">no es lo mismo un sistema falso entero que un sistema real con algo falso adentro</strong>.
     </p>
 
     <div class="grid md:grid-cols-2 gap-5">
       <div class="unified-card is-static p-6" style="border-left:3px solid #DC780F">
-        <p class="text-xs uppercase tracking-[0.2em] text-gray-500 mb-2">Carril A · sistema real</p>
-        <h3 class="text-xl font-black text-white mb-3">Portal de Conciliación</h3>
+        <p class="text-xs uppercase tracking-[0.2em] text-gray-500 mb-2">Un sistema real, con engaño adentro</p>
+        <h3 class="text-xl font-black text-white mb-3">Portal de Pagos</h3>
         <p class="text-sm text-gray-300 leading-relaxed mb-3">
           Una aplicación que funciona, con datos, usuarios y documentos. <strong class="text-white">Nada de esto es falso.</strong>
           El engaño es solo lo que vos le agregás encima, en seis superficies posibles.
@@ -132,7 +134,7 @@ ssh root@localhost -p 2222</pre>
         <p class="font-mono text-xs text-base-orangeAlt">E3 · E6 · E7 · E14</p>
       </div>
       <div class="unified-card is-static p-6" style="border-left:3px solid #60a5fa">
-        <p class="text-xs uppercase tracking-[0.2em] text-gray-500 mb-2">Carril B · sistema falso</p>
+        <p class="text-xs uppercase tracking-[0.2em] text-gray-500 mb-2">Un sistema falso entero</p>
         <h3 class="text-xl font-black text-white mb-3">Cowrie y OpenCanary</h3>
         <p class="text-sm text-gray-300 leading-relaxed mb-3">
           Servicios enteros que no deberían existir. No hay nada real adentro y ningún usuario de EkoFinance
@@ -144,10 +146,10 @@ ssh root@localhost -p 2222</pre>
     </div>
 
     <div class="callout is-atencion">
-      <div class="callout-title"><i class="fas fa-code-compare"></i>Por qué no se mezclan</div>
+      <div class="callout-title"><i class="fas fa-code-compare"></i>Por qué conviene no confundirlas</div>
       <p class="text-sm leading-relaxed text-gray-300">
         La prueba que ordena todo el diseño de deception es una pregunta: <em>¿un empleado legítimo lo tocaría?</em>
-        En el carril B se contesta sola —nadie legítimo llega nunca— y por eso no enseña nada. En el carril A hay gente
+        En el honeypot se contesta sola —nadie legítimo llega nunca— y por eso no enseña nada. En el portal hay gente
         de verdad haciendo su trabajo, así que hay que pensarla pieza por pieza, y ahí la pregunta duele.
         El <strong class="text-white">E7</strong> corre la misma consulta sobre los dos y mide la diferencia:
         es el argumento económico del engaño, demostrado en vez de afirmado.
@@ -176,7 +178,7 @@ ssh root@localhost -p 2222</pre>
         </div>
         <h3 class="text-lg font-black text-white mb-2 group-hover:text-base-orangeAlt transition-colors">Armá tu laboratorio y rompelo</h3>
         <p class="text-sm text-gray-400 leading-relaxed mb-4">Levantás el stack, entrás al honeypot como un adversario y buscás qué lo delata. Lo que encuentres es el backlog del E5.</p>
-        <div class="flex gap-2 flex-wrap"><span class="tag">Docker</span><span class="tag">Cowrie</span><span class="tag">Carril B</span></div>
+        <div class="flex gap-2 flex-wrap"><span class="tag">Docker</span><span class="tag">Cowrie</span><span class="tag">Honeypot</span></div>
       </a>
 
       <a href="labs/e02-cinco-tokens.html" class="unified-card p-6 block group">
@@ -196,7 +198,7 @@ ssh root@localhost -p 2222</pre>
         </div>
         <h3 class="text-lg font-black text-white mb-2 group-hover:text-base-orangeAlt transition-colors">Plantá el engaño en tu portal</h3>
         <p class="text-sm text-gray-400 leading-relaxed mb-4">Seis superficies plantables en una app real con usuarios reales. Elegís tres, y por cada una contestás quién podría tocarla legítimamente.</p>
-        <div class="flex gap-2 flex-wrap"><span class="tag">Carril A</span><span class="tag">Deception</span><span class="tag">Núcleo</span></div>
+        <div class="flex gap-2 flex-wrap"><span class="tag">Portal</span><span class="tag">Deception</span><span class="tag">Núcleo</span></div>
       </a>
 
       <a href="labs/e04-honeypot-no-ssh.html" class="unified-card p-6 block group">
@@ -206,7 +208,7 @@ ssh root@localhost -p 2222</pre>
         </div>
         <h3 class="text-lg font-black text-white mb-2 group-hover:text-base-orangeAlt transition-colors">El honeypot que no es SSH</h3>
         <p class="text-sm text-gray-400 leading-relaxed mb-4">SMB, un portal HTTP de login y un MSSQL falsos. Qué captura cada uno y qué se le escapa: un honeypot no es un detector genérico.</p>
-        <div class="flex gap-2 flex-wrap"><span class="tag">OpenCanary</span><span class="tag">Carril B</span></div>
+        <div class="flex gap-2 flex-wrap"><span class="tag">OpenCanary</span><span class="tag">Honeypot</span></div>
       </a>
 
     </div>
@@ -245,7 +247,7 @@ ssh root@localhost -p 2222</pre>
         <a href="labs/e07-cazar-propios-logs.html" class="unified-card p-5 block group" style="border-left:3px solid #a78bfa">
           <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E7</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>35 min</span></div>
           <h3 class="text-base font-black text-white mb-1.5 group-hover:text-base-orangeAlt transition-colors">Cazá sobre tus propios logs</h3>
-          <p class="text-sm text-gray-400 leading-relaxed">La misma consulta sobre los dos carriles. En el honeypot los falsos positivos son cero; en el portal no. Ahí está el argumento entero.</p>
+          <p class="text-sm text-gray-400 leading-relaxed">La misma consulta sobre el portal y sobre el honeypot. Ahí los falsos positivos son cero; en el portal no. Ahí está el argumento entero.</p>
         </a>
         <a href="labs/e08-reconstruir-ekofinance.html" class="unified-card p-5 block group">
           <div class="flex items-center gap-3 mb-2"><span class="font-mono text-lg font-bold text-base-orangeAlt">E8</span><span class="timer-badge is-neutral"><i class="fas fa-clock"></i>40 min</span></div>
@@ -386,6 +388,79 @@ E14 marcador de la cacería ─────────┴───────�
           cierra la pestaña o cambia de laptop.
         </p>
       </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ MATERIAL EXTRA ═══════════════ -->
+  <section id="extra" class="space-y-6">
+    <h2 class="text-3xl font-black text-white border-l-4 border-base-orange pl-4">Material extra</h2>
+    <p class="text-base text-gray-300 leading-relaxed max-w-3xl">
+      <strong class="text-white">Ningún ejercicio depende de esta carpeta.</strong> Las diecisiete guías se completan
+      sin abrirla. Está para consultar durante el curso y, sobre todo, para llevarse después.
+      Índice completo en <a href="resources/" class="eko-link-label">resources/</a>.
+    </p>
+
+    <div class="grid md:grid-cols-2 gap-5">
+      <div class="unified-card is-static p-6">
+        <h3 class="text-base font-black text-white mb-2"><i class="fas fa-folder-open text-base-orange mr-2"></i>Los documentos del caso</h3>
+        <p class="text-sm text-gray-400 leading-relaxed mb-4">
+          Los cuatro informes del incidente de EkoFinance. Son los únicos que conviene tener a mano el Día 2:
+          dan el contexto que los logs no dan.
+        </p>
+        <ul class="text-sm text-gray-300 space-y-1.5">
+          <li><a href="resources/04-insumos/01-informe-tecnico-dfir.html" class="eko-link-label">Informe técnico DFIR</a> — el punto de vista forense</li>
+          <li><a href="resources/04-insumos/02-reporte-inteligencia-cti.html" class="eko-link-label">Reporte de inteligencia CTI</a> — el punto de vista del adversario</li>
+          <li><a href="resources/04-insumos/03-diagrama-red-anotado.html" class="eko-link-label">Diagrama de red anotado</a> — inventario y recorrido, salto por salto</li>
+          <li><a href="resources/04-insumos/04-estado-del-deception.html" class="eko-link-label">Estado del deception</a> — qué tenía EkoFinance y qué reportó</li>
+        </ul>
+      </div>
+
+      <div class="unified-card is-static p-6">
+        <h3 class="text-base font-black text-white mb-2"><i class="fas fa-crosshairs text-base-orange mr-2"></i>Referencia de caza</h3>
+        <p class="text-sm text-gray-400 leading-relaxed mb-4">
+          Para tener al lado mientras escribís consultas en el E9 al E12.
+        </p>
+        <ul class="text-sm text-gray-300 space-y-1.5">
+          <li>Mapa mental de los logs nativos de Windows</li>
+          <li>Qué event code cubre qué técnica</li>
+          <li>Mapeo técnica ↔ evento configurable de Sysmon</li>
+          <li>Configuración de Sysmon de referencia</li>
+          <li>Mapa mental de caza en memoria</li>
+        </ul>
+        <p class="text-xs text-gray-500 mt-4"><code>resources/03-hunting/</code></p>
+      </div>
+
+      <div class="unified-card is-static p-6">
+        <h3 class="text-base font-black text-white mb-2"><i class="fas fa-user-secret text-base-orange mr-2"></i>El actor</h3>
+        <p class="text-sm text-gray-400 leading-relaxed mb-3">
+          Ficha de APT19 con TTPs e IOCs, y su taxonomía visual. La fuente canónica es
+          <a href="https://attack.mitre.org/groups/G0073" target="_blank" rel="noopener" class="eko-link-label">G0073</a>:
+          los IDs cambian entre versiones, verificá antes de citar.
+        </p>
+        <p class="text-xs text-gray-500"><code>resources/01-apt19/</code></p>
+      </div>
+
+      <div class="unified-card is-static p-6">
+        <h3 class="text-base font-black text-white mb-2"><i class="fas fa-mask text-base-orange mr-2"></i>Más artefactos de engaño</h3>
+        <p class="text-sm text-gray-400 leading-relaxed mb-3">
+          Piezas que no entran en el portal: una cuenta señuelo kerberoasteable para Active Directory, un honeyfile
+          con beacon, un token que emite DNS al ejecutarse, y el mapa de actividades combinables.
+        </p>
+        <p class="text-sm text-gray-400 leading-relaxed mb-3">
+          El <code>.ps1</code> es el más útil para llevarse: en una red con dominio es la pieza con mejor relación
+          esfuerzo/resultado, y es la línea base cero de la que habla el E7.
+        </p>
+        <p class="text-xs text-gray-500"><code>resources/02-deception/</code></p>
+      </div>
+    </div>
+
+    <div class="callout is-atencion">
+      <div class="callout-title"><i class="fas fa-eye-slash"></i>No abras el diagrama de red antes del E8</div>
+      <p class="text-sm leading-relaxed text-gray-300">
+        El ejercicio es reconstruir la red de EkoFinance desde la telemetría, que es como se lo encuentra un equipo
+        real. Si mirás el diagrama primero, se pierde entero. El E8 te dice cuándo abrirlo — y la comparación del
+        final sólo sirve si la hacés después.
+      </p>
     </div>
   </section>
 

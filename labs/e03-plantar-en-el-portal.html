@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>E3 · Plantá el engaño en tu portal — Active Cyber Defense · Ekoparty 2026</title>
-<meta name="description" content="Recibís el Portal de Conciliación de EkoFinance: una aplicación que funciona, con datos y usuarios reales. Nada de eso es falso. El engaño es lo que vos le agregás encima, y tenés seis lugares donde ponerlo.">
+<meta name="description" content="Recibís el Portal de Pagos de EkoFinance: una aplicación que funciona, con datos y usuarios reales. Nada de eso es falso. El engaño es lo que vos le agregás encima, y tenés seis lugares donde ponerlo.">
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Boldonse&family=Lato:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -42,11 +42,11 @@ tailwind.config = { theme: { extend: {
       <span class="timer-badge">Día 1 · banco de trabajo</span>
       <span class="timer-badge is-neutral"><i class="fas fa-clock"></i>30 minutos</span>
       <span class="timer-badge is-neutral"><i class="fas fa-users"></i>Grupos de 2-3</span>
-      <span class="timer-badge is-neutral" style="border-color:rgba(220,120,15,.45);color:#F1912D"><i class="fas fa-building-columns"></i>Carril A · sistema real</span>
+      <span class="timer-badge is-neutral" style="border-color:rgba(220,120,15,.45);color:#F1912D"><i class="fas fa-building-columns"></i>Sobre el portal</span>
     </div>
     <p class="text-base-orange font-bold tracking-[0.3em] uppercase mb-3 text-xs">Ejercicio E3</p>
     <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-white mb-4" data-wb-title>Plantá el engaño en tu portal</h1>
-    <p class="max-w-3xl text-base text-gray-300 leading-relaxed">Recibís el Portal de Conciliación de EkoFinance: una aplicación que funciona, con datos y usuarios reales. Nada de eso es falso. El engaño es lo que vos le agregás encima, y tenés seis lugares donde ponerlo.</p>
+    <p class="max-w-3xl text-base text-gray-300 leading-relaxed">Recibís el Portal de Pagos de EkoFinance: una aplicación que funciona, con datos y usuarios reales. Nada de eso es falso. El engaño es lo que vos le agregás encima, y tenés seis lugares donde ponerlo.</p>
   </div>
 </header>
 
@@ -85,17 +85,17 @@ tailwind.config = { theme: { extend: {
 <div class="callout is-pista"><div class="callout-title"><i class="fas fa-folder-tree"></i>Dónde se corre esto</div><div class="text-sm leading-relaxed text-gray-300"><p>Todos los comandos de esta ficha salen desde la carpeta <code>mi-lab/</code> del repositorio, salvo que se aclare lo contrario:</p><pre class="code" style="margin:.6rem 0">cd eko2026-active-defense-labs/mi-lab</pre><p>Si no sabés dónde quedó, está en la <a class="eko-link-label" href="../index.html#preparacion">preparación del programa</a>.</p></div></div>
   </section>
   <section id="portal" class="space-y-5">
-<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">El portal</h2><p class="text-sm text-gray-300 leading-relaxed">EkoFinance está migrando su portal de conciliación a una plataforma nueva. El equipo de desarrollo interno levantó un entorno con su propio grupo de usuarios y una carpeta de documentación. La migración está a mitad de camino y la documentación quedó desactualizada. <strong class="text-white">Todo eso es cierto y todo eso funciona</strong>: hay conciliaciones con datos, usuarios que entran, documentos que se descargan.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Terminal<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code">docker compose up -d portal
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">El portal</h2><p class="text-sm text-gray-300 leading-relaxed">EkoFinance está migrando su portal de pagos a una plataforma nueva. El equipo de desarrollo interno levantó un entorno con su propio grupo de usuarios y una carpeta de documentación. La migración está a mitad de camino y la documentación quedó desactualizada. <strong class="text-white">Todo eso es cierto y todo eso funciona</strong>: hay pagos con datos, usuarios que entran, documentos que se descargan.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Terminal<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code">docker compose up -d portal
 open http://localhost:8080        <span class="c"># usuario: mcastro / demo1234</span>
 
-<span class="c"># el log de acceso del portal — es el carril A del E7</span>
+<span class="c"># el log de acceso del portal — lo vas a consultar en el E7</span>
 tail -f portal/logs/access.log</pre></div><p class="text-sm text-gray-300 leading-relaxed mt-4">Las superficies plantables son carpetas y archivos del proyecto. <strong class="text-white">Plantar es dejar caer un archivo o cambiar una línea</strong>: no hay que entrar a ningún contenedor.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Estructura<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code">mi-lab/portal/
 ├── archivos/       <span class="c">← documentos que el portal ofrece para descargar</span>
 ├── config/.env     <span class="c">← variables y credenciales</span>
 ├── data/usuarios.json  <span class="c">← el directorio de usuarios</span>
 ├── static/app.js   <span class="c">← el bundle que sirve el navegador</span>
 ├── static/robots.txt
-└── logs/access.log <span class="c">← tu telemetría del carril A</span></pre></div>
+└── logs/access.log <span class="c">← tu telemetría del portal</span></pre></div>
   </section>
   <section id="superficies" class="space-y-5">
 <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">Las seis superficies</h2><div class="unified-card is-static p-5"><div class="table-scroll"><table class="data-table"><thead><tr><th>Pieza</th><th>Dónde va</th><th>Qué la dispara</th></tr></thead><tbody><tr><td class="text-white">Documento tokenizado</td><td><code>portal/archivos/</code></td><td>descargarlo y abrirlo</td></tr><tr><td class="text-white">Credencial señuelo</td><td><code>portal/config/.env</code></td><td><em>usar</em> la credencial</td></tr><tr><td class="text-white">Endpoint de admin</td><td><code>una ruta que se ve jugosa</code></td><td>cualquier request</td></tr><tr><td class="text-white">Usuario señuelo</td><td><code>portal/data/usuarios.json</code></td><td>intento de login con ese usuario</td></tr><tr><td class="text-white">Entrada en robots.txt</td><td><code>portal/static/robots.txt</code></td><td>visitar la ruta prohibida</td></tr><tr><td class="text-white">API key falsa</td><td><code>portal/static/app.js</code></td><td><em>usar</em> la key</td></tr></tbody></table></div></div><p class="text-sm text-gray-300 leading-relaxed">Elegí <strong class="text-white">tres</strong>. La escasez es parte del ejercicio: con seis no priorizás, ponés todo.</p>
