@@ -113,11 +113,14 @@ exit</pre></div>
 docker compose logs --tail=40 cowrie
 
 <span class="c"># JSON estructurado, un evento por línea</span>
-docker compose exec cowrie tail -20 var/log/cowrie/cowrie.json
+tail -20 cowrie/log/cowrie.json
 
 <span class="c"># solo lo que importa (si tenés jq)</span>
-docker compose exec cowrie cat var/log/cowrie/cowrie.json | \
-  jq -c 'select(.eventid|test("login|command")) | {eventid,src_ip,username,input}'</pre></div><div class="unified-card is-static p-5"><label class="block text-xs uppercase tracking-[0.15em] text-gray-500 mb-2" data-wb-label="Cuántos eventos produjo tu sesión de dos minutos">Cuántos eventos produjo tu sesión de dos minutos</label><textarea class="fill-in" data-wb="eventos" rows="2" placeholder="El número, y cuál de esos eventos serviría como alerta."></textarea></div>
+jq -c 'select(.eventid|test("login|command")) | {eventid,src_ip,username,input}' \
+  cowrie/log/cowrie.json
+
+<span class="c"># cuántos eventos produjo tu sesión</span>
+wc -l &lt; cowrie/log/cowrie.json</pre></div><p class="text-sm text-gray-300 leading-relaxed">El JSON se lee <strong class="text-white">desde el host</strong>, no con <code>docker compose exec</code>: la imagen de Cowrie es <em>distroless</em> y no trae <code>sh</code>, <code>cat</code> ni <code>tail</code>. El archivo llega ahí por el bind mount de <code>docker-compose.yml</code>, y por eso sobrevive a un <code>docker compose down</code> — que es lo que el E7 va a necesitar.</p><div class="unified-card is-static p-5"><label class="block text-xs uppercase tracking-[0.15em] text-gray-500 mb-2" data-wb-label="Cuántos eventos produjo tu sesión de dos minutos">Cuántos eventos produjo tu sesión de dos minutos</label><textarea class="fill-in" data-wb="eventos" rows="2" placeholder="El número, y cuál de esos eventos serviría como alerta."></textarea></div>
   </section>
   <section id="romper" class="space-y-5">
 <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">4 · Rompelo</h2><p class="text-sm text-gray-300 leading-relaxed">Diez minutos buscando qué lo delata ante alguien atento. El honeypot está sin configurar y se cae rápido: banner, hostname, contenido del filesystem, comportamiento raro de un comando, fechas.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Por dónde empezar<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code">ssh -v root@localhost -p 2222 2>&1 | grep -i "remote software"

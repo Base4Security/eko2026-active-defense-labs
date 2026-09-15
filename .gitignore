@@ -7,11 +7,18 @@ desktop.ini
 *.tar
 *.tar.gz
 
-# Estado de los contenedores al correr el laboratorio
-mi-lab/cowrie/var/
-mi-lab/cowrie/etc/
-mi-lab/opencanary/logs/
-mi-lab/portal/logs/
+# Estado de los contenedores al correr el laboratorio.
+# Los .gitkeep si van: docker monta estos directorios como bind mount y
+# cowrie no crea los que le faltan — sin ellos el arranque falla en limpio.
+mi-lab/cowrie/log/*
+!mi-lab/cowrie/log/.gitkeep
+mi-lab/cowrie/etc/*
+!mi-lab/cowrie/etc/.gitkeep
+!mi-lab/cowrie/etc/cowrie.cfg
+mi-lab/opencanary/logs/*
+!mi-lab/opencanary/logs/.gitkeep
+mi-lab/portal/logs/*
+!mi-lab/portal/logs/.gitkeep
 
 # Python
 __pycache__/

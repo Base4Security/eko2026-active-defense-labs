@@ -93,8 +93,8 @@ docker compose logs -f opencanary   <span class="c"># dejalo abierto en una term
   </section>
   <section id="atacar" class="space-y-5">
 <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">2 · Atacate</h2><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Segunda terminal<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code"><span class="c"># SMB — enumerá y montá</span>
-smbclient -L //localhost -N
-smbclient //localhost/Contabilidad -U svc_backup%Verano2026
+smbclient -L //localhost -N -p 1445
+smbclient //localhost/Contabilidad -U svc_backup%Verano2026 -p 1445
 
 <span class="c"># HTTP — el portal de login falso</span>
 open http://localhost:8081

@@ -71,6 +71,52 @@ Las tablas se completan en la página y se guardan solas en tu navegador.
 
 ---
 
+## Herramientas de línea de comandos
+
+Docker es lo único que hay que tener sí o sí antes de empezar. El resto se
+instala cuando hace falta, pero conviene mirar la lista ahora: en el aula, sin
+buen wifi, bajar un paquete puede costar más que el ejercicio.
+
+| Herramienta | La usan | Para qué |
+|---|---|---|
+| `jq` | E1 · E6 · E7 · E13 | Leer los logs JSON del honeypot y del portal |
+| `curl` | E2 · E13 · E14 | Disparar tokens y probar servicios |
+| `ssh` | E1 · E5 · E7 · E14 | Entrar al honeypot |
+| `nmap` | E5 · E14 | Fingerprint del honeypot, antes y después |
+| `aws` | E2 | Disparar el token de credenciales |
+| `smbclient` | E4 | Tocar el SMB falso |
+| `sqlcmd` | E4 | Tocar el MSSQL falso — **o cualquier otro cliente** |
+
+```bash
+# macOS
+brew install jq nmap awscli samba
+# Debian / Ubuntu
+sudo apt install jq nmap awscli smbclient
+```
+
+`sqlcmd` es el más incómodo de instalar, y en macOS es directamente molesto. Si
+no lo tenés, el repositorio trae un reemplazo que no necesita instalar nada
+—sólo Python 3, que ya está en todos lados—:
+
+```bash
+python3 mi-lab/herramientas/tds-login.py localhost 1433 sa Password123
+```
+
+Hace el handshake TDS mínimo (PRELOGIN + LOGIN7) contra el MSSQL falso, que es
+lo único que el ejercicio necesita. **Un `curl` o un `nc` al 1433 no alcanzan**:
+el honeypot sólo registra el evento cuando recibe un paquete de login completo,
+así que un TCP connect pelado no deja rastro. Vale la pena probarlo y verlo, es
+media respuesta del E4.
+
+Además del teclado, el **E2** pide dos cosas que no son software:
+
+- **Word o LibreOffice** para abrir el token `.docx`.
+- **Un celular con cámara** para el token QR — y vale la pena que sea con datos
+  móviles, porque el callback va a traer esa red y no la del aula. Es otro punto
+  de observación, no un accidente.
+
+---
+
 ## Aviso
 
 Todo el escenario es **ficticio**. EkoFinance, sus activos, el incidente y los

@@ -47,8 +47,23 @@ services:
     ports:
       - "2222:2222"
     volumes:
-      - ./cowrie/var:/cowrie/var
-      - ./cowrie/etc:/cowrie/etc
+      # OJO con estas dos rutas. El WorkingDir de la imagen es
+      # /cowrie/cowrie-git, asi que el var y el etc que cowrie usa de verdad
+      # cuelgan de ahi: montados en /cowrie/var y /cowrie/etc los bind mounts
+      # quedan inertes y el JSON de sesiones muere con el contenedor, que es
+      # justo la evidencia que el E7 y el E13 necesitan.
+      #
+      # El log se monta en el directorio profundo, no en var/: cowrie no crea
+      # var/log/cowrie si falta, y montar var/ entero tapa el arbol que la
+      # imagen trae (lib/cowrie/tty y demas) y le cuelga las sesiones.
+      - ./cowrie/log:/cowrie/cowrie-git/var/log/cowrie
+      # Vacio a proposito. Aca va el cowrie.cfg que se escribe en el E5.
+      - ./cowrie/etc:/cowrie/cowrie-git/etc
+      # Volumen nombrado, no bind mount: docker copia adentro el arbol que la
+      # imagen ya trae (tty, downloads, snapshots), asi que no lo tapa. Sirve
+      # para que las claves SSH del honeypot no se regeneren en cada arranque:
+      # un servidor que cambia de fingerprint cada vez se delata solo.
+      - cowrie-lib:/cowrie/cowrie-git/var/lib/cowrie
     networks: [lab]
 
   # ─── Sistemas falsos enteros · servicios varios ──────────────────────
@@ -65,6 +80,9 @@ services:
     volumes:
       - ./opencanary/logs:/var/tmp/opencanary
     networks: [lab]
+
+volumes:
+  cowrie-lib:
 
 networks:
   lab:
