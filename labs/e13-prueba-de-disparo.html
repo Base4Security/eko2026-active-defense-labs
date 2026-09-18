@@ -88,7 +88,7 @@ tailwind.config = { theme: { extend: {
 <div class="callout is-atencion"><div class="callout-title"><i class="fas fa-volume-xmark"></i>«Sin actividad» no es «sin incidentes»</div><div class="text-sm leading-relaxed text-gray-300"><p>Un artefacto que nunca reportó nada es ambiguo: puede significar que no hubo adversario, o que el artefacto no funciona. <strong class="text-white">Sin una prueba periódica que confirme que puede disparar, el silencio no es información.</strong></p><p class="mt-2">Esto es Purple Teaming aplicado a defensa activa: alguien de tu propio equipo ejecuta la técnica de forma controlada y registrada, y se mide si la cadena completa reaccionó. No hace falta un ejercicio de emulación de adversario: hace falta una persona, una vez por mes, con una lista de artefactos y un cronómetro.</p></div></div>
   </section>
   <section id="tramos" class="space-y-5">
-<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">1 · Los tres tramos</h2><div class="grid md:grid-cols-3 gap-4"><div class="unified-card is-static p-5"><h4 class="text-sm text-white mb-2">T0 → T1</h4><p class="text-sm text-gray-300 leading-relaxed">Del toque al evento en el log local. Es la parte técnica y va a dar milisegundos.</p></div><div class="unified-card is-static p-5"><h4 class="text-sm text-white mb-2">T1 → T2</h4><p class="text-sm text-gray-300 leading-relaxed">Del log local a la alerta que llega a la casilla. Acá aparecen los minutos.</p></div><div class="unified-card is-static p-5"><h4 class="text-sm text-white mb-2">T2 → humano</h4><p class="text-sm text-gray-300 leading-relaxed">De la alerta al primer ojo que la mira. El tramo que ninguna herramienta resuelve.</p></div></div><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Disparo con marca de tiempo<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code"><span class="c"># T0 — el momento exacto del toque</span>
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">1 · Los tres tramos</h2><div class="grid md:grid-cols-3 gap-4"><div class="unified-card is-static p-5"><h4 class="text-sm text-white mb-2">T0 → T1</h4><p class="text-sm text-gray-300 leading-relaxed">Del toque al evento en el log local. Es la parte técnica y va a dar milisegundos.</p></div><div class="unified-card is-static p-5"><h4 class="text-sm text-white mb-2">T1 → T2</h4><p class="text-sm text-gray-300 leading-relaxed">Del log local a la alerta que llega a la casilla. Acá aparecen los minutos.</p></div><div class="unified-card is-static p-5"><h4 class="text-sm text-white mb-2">T2 → humano</h4><p class="text-sm text-gray-300 leading-relaxed">De la alerta al primer ojo que la mira. El tramo que ninguna herramienta resuelve.</p></div></div><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Disparo con marca de tiempo<span class="os-tabs no-print" data-os-tabs><button type="button" data-os="nix">macOS · Linux</button><button type="button" data-os="win">Windows</button></span><button data-copy class="text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code" data-os="nix"><span class="c"># T0 — el momento exacto del toque</span>
 date -u +%H:%M:%S.%3N
 
 <span class="c"># tocá el artefacto (ejemplo: la pieza del portal)</span>
@@ -96,6 +96,16 @@ curl -s http://localhost:8080/admin-pagos > /dev/null
 
 <span class="c"># T1 — cuándo aparece en el log local</span>
 tail -1 portal/logs/access.log | jq -r .time
+
+<span class="c"># T2 — cuándo llega el mail del token. Miralo en la casilla del grupo.</span></pre><pre class="code" data-os="win"><span class="c"># T0 — el momento exacto del toque</span>
+(Get-Date).ToUniversalTime().ToString("HH:mm:ss.fff")
+
+<span class="c"># tocá el artefacto (ejemplo: la pieza del portal)</span>
+<span class="c">#   ojo: en PowerShell 5.1 "curl" es un alias de Invoke-WebRequest, va el .exe</span>
+curl.exe -s http://localhost:8080/admin-pagos | Out-Null
+
+<span class="c"># T1 — cuándo aparece en el log local</span>
+(Get-Content portal\logs\access.log -Tail 1 | ConvertFrom-Json).time
 
 <span class="c"># T2 — cuándo llega el mail del token. Miralo en la casilla del grupo.</span></pre></div>
   </section>

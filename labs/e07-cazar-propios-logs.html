@@ -85,31 +85,58 @@ tailwind.config = { theme: { extend: {
 <div class="callout is-pista"><div class="callout-title"><i class="fas fa-folder-tree"></i>Dónde se corre esto</div><div class="text-sm leading-relaxed text-gray-300"><p>Todos los comandos de esta ficha salen desde la carpeta <code>mi-lab/</code> del repositorio, salvo que se aclare lo contrario:</p><pre class="code" style="margin:.6rem 0">cd eko2026-active-defense-labs/mi-lab</pre><p>Si no sabés dónde quedó, está en la <a class="eko-link-label" href="../index.html#preparacion">preparación del programa</a>.</p></div></div>
   </section>
   <section id="ruido" class="space-y-5">
-<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">1 · Generá tráfico en los dos</h2><p class="text-sm text-gray-300 leading-relaxed">Primero uso normal del portal: que dos o tres del grupo entren, naveguen, bajen documentos, se equivoquen de contraseña una vez. Eso es el trabajo de un martes cualquiera y tiene que estar en el log.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>En el portal · uso legítimo<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code"><span class="c"># hacelo desde el navegador, con usuarios distintos</span>
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">1 · Generá tráfico en los dos</h2><p class="text-sm text-gray-300 leading-relaxed">Primero uso normal del portal: que dos o tres del grupo entren, naveguen, bajen documentos, se equivoquen de contraseña una vez. Eso es el trabajo de un martes cualquiera y tiene que estar en el log.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>En el portal · uso legítimo<span class="os-tabs no-print" data-os-tabs><button type="button" data-os="nix">macOS · Linux</button><button type="button" data-os="win">Windows</button></span><button data-copy class="text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code" data-os="win"><span class="c"># hacelo desde el navegador, con usuarios distintos</span>
+Start-Process http://localhost:8080
+<span class="c">#   mcastro / demo1234    → pagos, descargá dos documentos</span>
+<span class="c">#   jlopez  / demo1234    → directorio, cambiá de página</span>
+<span class="c">#   y una contraseña mal, que también pasa en la vida real</span></pre><pre class="code" data-os="nix"><span class="c"># hacelo desde el navegador, con usuarios distintos</span>
 open http://localhost:8080
 <span class="c">#   mcastro / demo1234    → pagos, descargá dos documentos</span>
 <span class="c">#   jlopez  / demo1234    → directorio, cambiá de página</span>
-<span class="c">#   y una contraseña mal, que también pasa en la vida real</span></pre></div><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>En el honeypot · nadie legítimo<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code"><span class="c"># fuerza bruta contra el honeypot</span>
+<span class="c">#   y una contraseña mal, que también pasa en la vida real</span></pre></div><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>En el honeypot · nadie legítimo<span class="os-tabs no-print" data-os-tabs><button type="button" data-os="nix">macOS · Linux</button><button type="button" data-os="win">Windows</button></span><button data-copy class="text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code" data-os="nix"><span class="c"># fuerza bruta contra el honeypot</span>
 for u in root admin oracle svc_backup postgres; do
   ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 \
       "$u@localhost" -p 2222 'id; whoami' 2>/dev/null
-done</pre></div>
+done</pre><pre class="code" data-os="win"><span class="c"># fuerza bruta contra el honeypot</span>
+foreach ($u in 'root','admin','oracle','svc_backup','postgres') {
+  ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 `
+      "$u@localhost" -p 2222 'id; whoami'
+}
+<span class="c"># cada uno pide contraseña: cowrie acepta cualquiera, tipeá y seguí</span></pre></div>
   </section>
   <section id="consultar" class="space-y-5">
-<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">2 · La misma pregunta, a los dos logs</h2><p class="text-sm text-gray-300 leading-relaxed">La pregunta es la de siempre: <em>¿quién intentó autenticarse y con qué?</em> Es el razonamiento de una query de SIEM, con <code>jq</code> en lugar de KQL.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>El portal<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code"><span class="c"># intentos de login en el portal</span>
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">2 · La misma pregunta, a los dos logs</h2><p class="text-sm text-gray-300 leading-relaxed">La pregunta es la de siempre: <em>¿quién intentó autenticarse y con qué?</em> Es el razonamiento de una query de SIEM, con <code>jq</code> en lugar de KQL.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>El portal<span class="os-tabs no-print" data-os-tabs><button type="button" data-os="nix">macOS · Linux</button><button type="button" data-os="win">Windows</button></span><button data-copy class="text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code" data-os="nix"><span class="c"># intentos de login en el portal</span>
 jq -r 'select(.path=="/login" and .status==401) | .usuario' \
   portal/logs/access.log | sort | uniq -c | sort -rn
 
 <span class="c"># rutas más pedidas</span>
-jq -r .path portal/logs/access.log | sort | uniq -c | sort -rn | head</pre></div><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>El honeypot<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code">LOG=var/log/cowrie/cowrie.json
+jq -r .path portal/logs/access.log | sort | uniq -c | sort -rn | head</pre><pre class="code" data-os="win"><span class="c"># intentos de login en el portal — sin jq: PowerShell lee JSON solo</span>
+Get-Content portal\logs\access.log | ConvertFrom-Json |
+  Where-Object { $_.path -eq '/login' -and $_.status -eq 401 } |
+  Group-Object usuario | Sort-Object Count -Descending | Select-Object Count, Name
+
+<span class="c"># rutas más pedidas</span>
+Get-Content portal\logs\access.log | ConvertFrom-Json |
+  Group-Object path | Sort-Object Count -Descending | Select-Object Count, Name -First 10
+
+<span class="c"># y si preferís jq, funciona igual — cambia sólo lo de después del pipe</span>
+jq -r .path portal\logs\access.log | Group-Object | Sort-Object Count -Descending | Select-Object Count, Name -First 10</pre></div><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>El honeypot<span class="os-tabs no-print" data-os-tabs><button type="button" data-os="nix">macOS · Linux</button><button type="button" data-os="win">Windows</button></span><button data-copy class="text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code" data-os="nix">LOG=cowrie/log/cowrie.json
 
 <span class="c"># usuarios más intentados</span>
-docker compose exec cowrie cat $LOG | \
-  jq -r 'select(.eventid|test("login")) | .username' | sort | uniq -c | sort -rn
+jq -r 'select(.eventid|test("login")) | .username' $LOG | sort | uniq -c | sort -rn
 
 <span class="c"># comandos ejecutados adentro</span>
-docker compose exec cowrie cat $LOG | \
-  jq -r 'select(.eventid=="cowrie.command.input") | .input'</pre></div>
+jq -r 'select(.eventid=="cowrie.command.input") | .input' $LOG</pre><pre class="code" data-os="win">$LOG = "cowrie\log\cowrie.json"
+
+<span class="c"># usuarios más intentados</span>
+Get-Content $LOG | ConvertFrom-Json |
+  Where-Object { $_.eventid -match 'login' } |
+  Group-Object username | Sort-Object Count -Descending | Select-Object Count, Name
+
+<span class="c"># comandos ejecutados adentro</span>
+Get-Content $LOG | ConvertFrom-Json |
+  Where-Object { $_.eventid -eq 'cowrie.command.input' } |
+  Select-Object -ExpandProperty input</pre></div>
   </section>
   <section id="comparar" class="space-y-5">
 <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">3 · Contá los falsos positivos</h2><script type="application/json" data-wb-seed-for="comparacion">[{"pregunta": "¿Quién intentó autenticarse?"}, {"pregunta": "¿Qué rutas / comandos se pidieron?"}]</script><div class="unified-card is-static p-5" data-wb-table="comparacion" data-wb-min="2" data-wb-key="pregunta"><div class="table-scroll"><table class="data-table"><thead><tr><th>La consulta</th><th>Resultados · portal</th><th>De esos, benignos</th><th>Resultados · honeypot</th><th>De esos, benignos</th><th></th></tr></thead><tbody data-wb-body></tbody></table></div><p class="wb-empty" data-wb-empty hidden>No hay filas. Agregá una para empezar.</p><template data-wb-row><tr><td data-wb-col="pregunta" data-wb-fixed style="min-width:200px"></td><td class="is-editable" style="min-width:140px"><div class="wb-cell" contenteditable="true" data-wb-col="portal_n" data-ph="cuántos"></div></td><td class="is-editable" style="min-width:180px"><div class="wb-cell" contenteditable="true" data-wb-col="portal_fp" data-ph="cuántos y quiénes"></div></td><td class="is-editable" style="min-width:150px"><div class="wb-cell" contenteditable="true" data-wb-col="cowrie_n" data-ph="cuántos"></div></td><td class="is-editable" style="min-width:150px"><div class="wb-cell" contenteditable="true" data-wb-col="cowrie_fp" data-ph="cuántos"></div></td><td class="wb-rowtools"><button class="wb-del" type="button" title="Eliminar fila" aria-label="Eliminar fila"><i class="fas fa-xmark"></i></button></td></tr></template><div class="wb-tablefoot no-print"><button class="wb-btn wb-add" type="button" data-wb-add><i class="fas fa-plus"></i>Agregar consulta</button><span class="wb-count"></span></div></div>

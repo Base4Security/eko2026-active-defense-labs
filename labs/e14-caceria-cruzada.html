@@ -85,14 +85,23 @@ tailwind.config = { theme: { extend: {
 <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">El puntaje</h2><div class="grid md:grid-cols-3 gap-4"><div class="unified-card is-static p-5"><h4 class="text-lg text-white mb-1" style="color:#4ade80">+2</h4><p class="text-sm text-gray-300 leading-relaxed">Identificás una pieza <strong class="text-white">sin dispararla</strong>. La reconociste y no la tocaste.</p></div><div class="unified-card is-static p-5"><h4 class="text-lg text-white mb-1" style="color:#f87171">−1</h4><p class="text-sm text-gray-300 leading-relaxed">Una pieza <strong class="text-white">te detectó</strong>. Caíste, y el defensor tiene tu rastro.</p></div><div class="unified-card is-static p-5"><h4 class="text-lg text-white mb-1" style="color:#9ca3af">0</h4><p class="text-sm text-gray-300 leading-relaxed">No la encontraste. Tampoco le sirvió al defensor: una pieza que nadie encuentra vale cero.</p></div></div><div class="callout is-pista"><div class="callout-title"><i class="fas fa-chess"></i>Por qué el puntaje es así</div><div class="text-sm leading-relaxed text-gray-300"><p>Premia exactamente lo que premia la realidad. Para el atacante, tocar un señuelo es el peor resultado posible: le regala al defensor la confirmación de que está adentro. Para el defensor, una pieza invisible vale lo mismo que no haberla puesto — y una que se quema le enseña al adversario que lo están mirando, que es peor que no tener nada.</p></div></div>
   </section>
   <section id="recon" class="space-y-5">
-<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">Veinte minutos de recon</h2><p class="text-sm text-gray-300 leading-relaxed">Todo lo del curso está permitido. Lo que aprendiste en el E1 y el E5 sobre delatores aplica al honeypot; lo del E3 y el E6, al portal.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Por dónde<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code"><span class="c"># EL HONEYPOT — es falso entero, así que necesita disfraz: buscá las costuras</span>
-nmap -sV -p- <ip-del-otro-grupo>
-ssh -v <ip> -p 2222 2>&1 | grep -i "remote software"
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">Veinte minutos de recon</h2><p class="text-sm text-gray-300 leading-relaxed">Todo lo del curso está permitido. Lo que aprendiste en el E1 y el E5 sobre delatores aplica al honeypot; lo del E3 y el E6, al portal.</p><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Por dónde<span class="os-tabs no-print" data-os-tabs><button type="button" data-os="nix">macOS · Linux</button><button type="button" data-os="win">Windows</button></span><button data-copy class="text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code" data-os="nix"><span class="c"># EL HONEYPOT — es falso entero, así que necesita disfraz: buscá las costuras</span>
+nmap -sV -p- &lt;ip-del-otro-grupo&gt;
+ssh -v root@&lt;ip&gt; -p 2222 2>&1 | grep -i "remote software"
 <span class="c">#   adentro: hostname, /home, last, df, fechas de modificación</span>
 
 <span class="c"># EL PORTAL — es real, no tiene disfraz: buscá lo que le agregaron encima</span>
-curl -s http://<ip>:8080/robots.txt
-curl -s http://<ip>:8080/static/app.js | grep -iE "key|token|secret|api"
+curl -s http://&lt;ip&gt;:8080/robots.txt
+curl -s http://&lt;ip&gt;:8080/static/app.js | grep -iE "key|token|secret|api"
+<span class="c">#   el listado de archivos, el directorio de usuarios, las rutas que se mencionan</span>
+<span class="c">#   y las FECHAS: ¿qué se creó todo junto, el mismo día?</span></pre><pre class="code" data-os="win"><span class="c"># EL HONEYPOT — es falso entero, así que necesita disfraz: buscá las costuras</span>
+nmap -sV -p- &lt;ip-del-otro-grupo&gt;
+ssh -v root@&lt;ip&gt; -p 2222 2>&1 | Select-String "remote software"
+<span class="c">#   adentro: hostname, /home, last, df, fechas de modificación</span>
+
+<span class="c"># EL PORTAL — es real, no tiene disfraz: buscá lo que le agregaron encima</span>
+curl.exe -s http://&lt;ip&gt;:8080/robots.txt
+curl.exe -s http://&lt;ip&gt;:8080/static/app.js | Select-String -Pattern "key|token|secret|api"
 <span class="c">#   el listado de archivos, el directorio de usuarios, las rutas que se mencionan</span>
 <span class="c">#   y las FECHAS: ¿qué se creó todo junto, el mismo día?</span></pre></div><div class="callout is-atencion"><div class="callout-title"><i class="fas fa-fingerprint"></i>La falla transversal</div><div class="text-sm leading-relaxed text-gray-300"><p>Hasta acá buscaste pieza por pieza. Ahora miralas como conjunto: casi siempre hay una falla que no está en ninguna pieza individual y que sin embargo las compromete a todas.</p><p class="mt-2">Pista de método: un adversario que descubre un señuelo va a buscar de inmediato qué tienen en común los demás. Fijate en lo que <em>no</em> es contenido — quién los creó, cuándo, con qué convención de nombres, desde dónde. Si encontrás una, vale <strong class="text-white">+2 extra</strong>.</p></div></div>
   </section>

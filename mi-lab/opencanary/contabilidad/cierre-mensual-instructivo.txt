@@ -1,0 +1,7 @@
+INSTRUCTIVO DE CIERRE MENSUAL
+
+1. Bajar el extracto del portal de pagos antes del dia 3.
+2. Correr la conciliacion contra el libro mayor.
+3. Dejar el resultado en este share, carpeta del mes.
+
+Contacto: contabilidad@ekofinance.example

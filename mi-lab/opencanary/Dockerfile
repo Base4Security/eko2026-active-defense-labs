@@ -4,7 +4,7 @@
 FROM python:3.11-slim
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends gcc libpcap-dev python3-dev samba \
+ && apt-get install -y --no-install-recommends gcc libpcap-dev python3-dev samba rsyslog \
  && pip install --no-cache-dir opencanary \
  && apt-get purge -y gcc python3-dev && apt-get autoremove -y \
  && rm -rf /var/lib/apt/lists/*
@@ -24,5 +24,15 @@ RUN mkdir -p /var/tmp/opencanary
 # abrirlo, que es la prueba que tiene que pasar toda pieza de engano.
 COPY skin /opt/skin
 
+# El SMB falso necesita dos mitades. OpenCanary aporta la segunda --leer la
+# auditoria y emitir el evento-- pero NO la primera: el servidor que atiende
+# el 445 es un smbd de verdad, configurado con el VFS full_audit. Sin esto el
+# puerto acepta el TCP por el docker-proxy y no contesta nada.
+COPY smb.conf /etc/samba/smb.conf
+COPY rsyslog-smb.conf /etc/rsyslog.d/10-opencanary-smb.conf
+COPY contabilidad /srv/contabilidad
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 EXPOSE 8081 445 1433
-CMD ["opencanaryd", "--dev"]
+CMD ["/usr/local/bin/entrypoint.sh"]

@@ -155,13 +155,44 @@
     targets.forEach(function (t) { obs.observe(t); });
   }
 
-  /* ─── 7 · Copiar bloques de código ─────────────────────────────────── */
-  Array.prototype.slice.call(document.querySelectorAll('pre.code')).forEach(function (pre) {
-    var wrap = pre.parentElement;
-    if (!wrap || !wrap.classList.contains('code-wrap')) return;
-    var btn = wrap.querySelector('[data-copy]');
-    if (!btn) return;
+  /* ─── 7 · Bash o PowerShell ────────────────────────────────────────────
+     Los bloques que difieren entre plataformas traen dos <pre data-os>. La
+     elección se guarda fuera del estado del lab: es del alumno, no del
+     ejercicio, y vale para las diecisiete guías. */
+  var OSKEY = 'b4cda26:os';
+
+  function osAplicar(os) {
+    document.body.classList.toggle('os-win', os === 'win');
+    Array.prototype.slice.call(document.querySelectorAll('[data-os-tabs] button')).forEach(function (b) {
+      var on = b.getAttribute('data-os') === os;
+      b.classList.toggle('is-on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+
+  Array.prototype.slice.call(document.querySelectorAll('[data-os-tabs]')).forEach(function (tabs) {
+    tabs.addEventListener('click', function (ev) {
+      var b = ev.target && ev.target.closest ? ev.target.closest('button[data-os]') : null;
+      if (!b) return;
+      var os = b.getAttribute('data-os') === 'win' ? 'win' : 'nix';
+      try { localStorage.setItem(OSKEY, os); } catch (e) { /* noop */ }
+      osAplicar(os);
+    });
+  });
+
+  var osGuardado = 'nix';
+  try { if (localStorage.getItem(OSKEY) === 'win') osGuardado = 'win'; } catch (e) { /* noop */ }
+  osAplicar(osGuardado);
+
+  /* ─── 8 · Copiar bloques de código ─────────────────────────────────── */
+  Array.prototype.slice.call(document.querySelectorAll('[data-copy]')).forEach(function (btn) {
+    var wrap = btn.closest('.code-wrap, .unified-card');
+    if (!wrap) return;
     btn.addEventListener('click', function () {
+      /* En un bloque con pestañas se copia el que está a la vista. */
+      var pres = Array.prototype.slice.call(wrap.querySelectorAll('pre.code'));
+      var pre = pres.filter(function (p) { return p.offsetParent !== null; })[0] || pres[0];
+      if (!pre) return;
       var text = pre.innerText;
       var done = function () {
         btn.innerHTML = '<i class="fas fa-check"></i> Copiado';
@@ -179,7 +210,7 @@
     });
   });
 
-  /* ─── 8 · Al imprimir, abrir todos los desplegables ────────────────── */
+  /* ─── 9 · Al imprimir, abrir todos los desplegables ────────────────── */
   var opened = [];
   window.addEventListener('beforeprint', function () {
     opened = [];

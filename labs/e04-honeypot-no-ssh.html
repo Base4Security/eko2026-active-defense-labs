@@ -92,16 +92,27 @@ tailwind.config = { theme: { extend: {
 docker compose logs -f opencanary   <span class="c"># dejalo abierto en una terminal aparte</span></pre></div>
   </section>
   <section id="atacar" class="space-y-5">
-<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">2 · Atacate</h2><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Segunda terminal<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code"><span class="c"># SMB — enumerá y montá</span>
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">2 · Atacate</h2><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Segunda terminal<span class="os-tabs no-print" data-os-tabs><button type="button" data-os="nix">macOS · Linux</button><button type="button" data-os="win">Windows</button></span><button data-copy class="text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code" data-os="nix"><span class="c"># SMB — enumerá y montá</span>
 smbclient -L //localhost -N -p 1445
 smbclient //localhost/Contabilidad -U svc_backup%Verano2026 -p 1445
+<span class="c">#   sin smbclient, el repo trae un reemplazo que sólo necesita Python 3:</span>
+<span class="c">#   python3 herramientas/smb-touch.py localhost 1445 svc_backup Verano2026</span>
 
 <span class="c"># HTTP — el portal de login falso</span>
 open http://localhost:8081
 <span class="c">#   probá admin / admin, después mcastro / Ekofinance2026</span>
 
 <span class="c"># MSSQL</span>
-sqlcmd -S localhost,1433 -U sa -P Password123  <span class="c"># o cualquier cliente</span></pre></div>
+sqlcmd -S localhost,1433 -U sa -P Password123  <span class="c"># o cualquier cliente</span></pre><pre class="code" data-os="win"><span class="c"># SMB — Windows no sabe hablar SMB a un puerto que no sea el 445, y el 445</span>
+<span class="c">#   local ya lo tiene tomado el propio servicio. Va el script del repo:</span>
+python herramientas\smb-touch.py localhost 1445 svc_backup Verano2026
+
+<span class="c"># HTTP — el portal de login falso</span>
+Start-Process http://localhost:8081
+<span class="c">#   probá admin / admin, después mcastro / Ekofinance2026</span>
+
+<span class="c"># MSSQL — sin instalar sqlcmd, sólo Python 3</span>
+python herramientas\tds-login.py localhost 1433 sa Password123</pre></div><div class="callout is-pista"><div class="callout-title"><i class="fas fa-plug-circle-exclamation"></i>Un TCP connect pelado no deja rastro</div><div class="text-sm leading-relaxed text-gray-300"><p>Ni en el SMB ni en el MSSQL. Los dos registran el evento recién cuando reciben una <strong class="text-white">sesión negociada</strong> — un tree connect en SMB, un LOGIN7 completo en MSSQL. Un <code>nc</code> o un <code>curl</code> al puerto abre y cierra el socket sin decir nada, y el honeypot no se entera.</p><p class="mt-2">Vale la pena comprobarlo: abrí el puerto con <code>nc localhost 1445</code>, mirá que no aparezca nada en los logs, y recién después tocalo en serio. <strong class="text-white">El puerto va a responder igual en los dos casos</strong>, porque quien acepta el TCP es el redirector de Docker, no el servicio. Es el mismo falso positivo que el E13 te va a pedir que no te comas.</p></div></div>
   </section>
   <section id="comparar" class="space-y-5">
 <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">3 · Qué capturó cada uno</h2><p class="text-sm text-gray-300 leading-relaxed">La columna de la derecha es la importante: lo que <em>no</em> te devuelve un servicio es lo que te va a faltar el día que lo necesites.</p><script type="application/json" data-wb-seed-for="servicios">[{"servicio": "SMB"}, {"servicio": "HTTP login"}, {"servicio": "MSSQL"}]</script><div class="unified-card is-static p-5" data-wb-table="servicios" data-wb-min="3" data-wb-key="servicio"><div class="table-scroll"><table class="data-table"><thead><tr><th>Servicio</th><th>Qué capturó</th><th>Qué NO capturó</th><th>¿Cuándo lo elegirías?</th><th></th></tr></thead><tbody data-wb-body></tbody></table></div><p class="wb-empty" data-wb-empty hidden>No hay filas. Agregá una para empezar.</p><template data-wb-row><tr><td data-wb-col="servicio" data-wb-fixed style="min-width:110px"></td><td class="is-editable" style="min-width:220px"><div class="wb-cell" contenteditable="true" data-wb-col="capturo" data-ph="usuario, IP, contraseña, comando…"></div></td><td class="is-editable" style="min-width:220px"><div class="wb-cell" contenteditable="true" data-wb-col="nocapturo" data-ph="y por qué importa"></div></td><td class="is-editable" style="min-width:200px"><div class="wb-cell" contenteditable="true" data-wb-col="cuando" data-ph="qué técnica delata mejor que los otros"></div></td><td class="wb-rowtools"><button class="wb-del" type="button" title="Eliminar fila" aria-label="Eliminar fila"><i class="fas fa-xmark"></i></button></td></tr></template><div class="wb-tablefoot no-print"><button class="wb-btn wb-add" type="button" data-wb-add><i class="fas fa-plus"></i>Agregar servicio</button><span class="wb-count"></span></div></div>

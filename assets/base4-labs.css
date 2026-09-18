@@ -180,6 +180,32 @@ code.inline {
   color: var(--b4-mute); margin-bottom: 6px; display: flex; align-items: center; gap: 7px;
 }
 
+/* ─── Variante por sistema operativo ───
+   Los bloques que difieren traen dos <pre>, uno por plataforma. El default
+   del CSS es el de siempre (bash): si el JS no corre —file:// con scripts
+   bloqueados, navegador viejo— la guía se sigue leyendo entera. La pestaña
+   elegida se guarda global, no por lab: se elige una vez en el E1 y el resto
+   del curso ya viene en el sistema del alumno. */
+.os-tabs {
+  margin-left: auto; display: inline-flex; gap: 2px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 999px; padding: 2px;
+}
+.os-tabs button {
+  font: inherit; font-size: 9.5px; letter-spacing: 0.12em;
+  padding: 3px 10px; border-radius: 999px; border: 0; background: transparent;
+  color: var(--b4-mute); cursor: pointer; transition: color .15s, background .15s;
+  white-space: nowrap;
+}
+.os-tabs button:hover { color: #e5e7eb; }
+.os-tabs button.is-on {
+  background: rgba(241,145,45,0.16); color: var(--b4-orange-lt);
+  box-shadow: inset 0 0 0 1px rgba(241,145,45,0.35);
+}
+pre.code[data-os="win"] { display: none; }
+body.os-win pre.code[data-os="win"] { display: block; }
+body.os-win pre.code[data-os="nix"] { display: none; }
+
 /* ─── Callouts ─── */
 .callout {
   border-radius: 16px 4px 4px 4px;
@@ -355,6 +381,17 @@ body.show-instructor .mode-toggle { border-color: #a78bfa; background: rgba(167,
   pre.code .s { color: #15803d !important; }
   pre.code .n { color: #1d4ed8 !important; }
   code.inline { background: #f0f0f0 !important; color: #b45309 !important; }
+  /* En papel no hay pestaña que apretar: van las dos variantes, rotuladas. */
+  body.os-win pre.code[data-os],
+  pre.code[data-os] { display: block !important; }
+  pre.code[data-os]::before {
+    display: block; font-family: 'Lato', sans-serif; font-size: 8.5px; font-weight: 900;
+    text-transform: uppercase; letter-spacing: 0.18em; color: #92400e !important;
+    margin-bottom: 6px;
+  }
+  pre.code[data-os="nix"]::before { content: "macOS · Linux"; }
+  pre.code[data-os="win"]::before { content: "Windows · PowerShell"; }
+  pre.code[data-os="win"] { margin-top: 10px !important; }
   .step::before { background: #fff !important; border: 1px solid #DC780F !important; color: #92400e !important; }
   .step::after  { background: #e5e7eb !important; }
   .checklist input[type="checkbox"] { border: 1.5px solid #4b5563 !important; background: #fff !important; }

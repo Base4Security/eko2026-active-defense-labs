@@ -85,12 +85,23 @@ tailwind.config = { theme: { extend: {
 <h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">1 · Generá los cinco</h2><p class="text-sm text-gray-300 leading-relaxed">Cinco tipos, no cinco tokens del mismo tipo. En la descripción de cada uno poné algo que te sirva después: «E3 · documento del repositorio» es útil dentro de tres horas, «prueba» no. Anotá también la <strong class="text-white">URL de administración</strong> de cada token: la vas a necesitar en el E13 para ver el historial de disparos.</p><script type="application/json" data-wb-seed-for="tokens">[{"tipo": "DNS", "disparo": "dig al subdominio único"}, {"tipo": "Web bug (URL)", "disparo": "abrir la URL en el navegador"}, {"tipo": "Documento Word", "disparo": "abrir el .docx (plantilla remota)"}, {"tipo": "Credenciales AWS", "disparo": "aws s3 ls con la key falsa"}, {"tipo": "Código QR", "disparo": "escanearlo con el celular"}]</script><div class="unified-card is-static p-5" data-wb-table="tokens" data-wb-min="5" data-wb-key="tipo"><div class="table-scroll"><table class="data-table"><thead><tr><th>Tipo</th><th>Cómo se dispara</th><th>Qué metadata trajo</th><th>Qué NO trajo</th><th></th></tr></thead><tbody data-wb-body></tbody></table></div><p class="wb-empty" data-wb-empty hidden>No hay filas. Agregá una para empezar.</p><template data-wb-row><tr><td data-wb-col="tipo" data-wb-fixed style="min-width:130px"></td><td data-wb-col="disparo" data-wb-fixed style="min-width:180px"></td><td class="is-editable" style="min-width:210px"><div class="wb-cell" contenteditable="true" data-wb-col="trajo" data-ph="IP, user-agent, hora, resolver…"></div></td><td class="is-editable" style="min-width:180px"><div class="wb-cell" contenteditable="true" data-wb-col="notrajo" data-ph="lo que esperabas y no vino"></div></td><td class="wb-rowtools"><button class="wb-del" type="button" title="Eliminar fila" aria-label="Eliminar fila"><i class="fas fa-xmark"></i></button></td></tr></template><div class="wb-tablefoot no-print"><button class="wb-btn wb-add" type="button" data-wb-add><i class="fas fa-plus"></i>Agregar token</button><span class="wb-count"></span></div></div>
   </section>
   <section id="disparar" class="space-y-5">
-<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">2 · Disparalos</h2><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Terminal<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code"><span class="c"># DNS — mirá qué IP aparece del otro lado</span>
+<h2 class="text-2xl font-black text-white border-l-4 border-base-orange pl-4 mb-5" data-wb-md-h="2">2 · Disparalos</h2><div class="unified-card is-static overflow-hidden"><div class="code-caption"><i class="fas fa-terminal"></i>Terminal<span class="os-tabs no-print" data-os-tabs><button type="button" data-os="nix">macOS · Linux</button><button type="button" data-os="win">Windows</button></span><button data-copy class="text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div><pre class="code" data-os="nix"><span class="c"># DNS — mirá qué IP aparece del otro lado</span>
 dig +short a1b2c3d4e5.canarytokens.com
 
 <span class="c"># credenciales AWS — el token registra la llamada, no el login</span>
 AWS_ACCESS_KEY_ID=AKIA... AWS_SECRET_ACCESS_KEY=... \
   aws s3 ls --region us-east-1
+
+<span class="c"># web bug — abrilo desde el navegador, no con curl:</span>
+<span class="c">#   curl no manda user-agent de browser y el token trae menos</span></pre><pre class="code" data-os="win"><span class="c"># DNS — mirá qué IP aparece del otro lado</span>
+Resolve-DnsName a1b2c3d4e5.canarytokens.com -Type A
+<span class="c">#   si no tenés el módulo DNS:  nslookup a1b2c3d4e5.canarytokens.com</span>
+
+<span class="c"># credenciales AWS — el token registra la llamada, no el login</span>
+<span class="c">#   PowerShell no acepta VAR=valor delante del comando: van aparte</span>
+$env:AWS_ACCESS_KEY_ID     = "AKIA..."
+$env:AWS_SECRET_ACCESS_KEY = "..."
+aws s3 ls --region us-east-1
 
 <span class="c"># web bug — abrilo desde el navegador, no con curl:</span>
 <span class="c">#   curl no manda user-agent de browser y el token trae menos</span></pre></div><p class="text-sm text-gray-300 leading-relaxed">El <code>.docx</code> y el QR se disparan a mano: abrí el documento con Word y escaneá el QR con el celular. Fijate que el QR va a traer la red móvil, no la del aula — es otro punto de observación.</p>

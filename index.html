@@ -65,8 +65,8 @@ tailwind.config = { theme: { extend: {
     </p>
 
     <div class="unified-card is-static overflow-hidden">
-      <div class="code-caption"><i class="fas fa-terminal"></i>Terminal<button data-copy class="ml-auto text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div>
-      <pre class="code">docker version
+      <div class="code-caption"><i class="fas fa-terminal"></i>Terminal<span class="os-tabs no-print" data-os-tabs><button type="button" data-os="nix">macOS · Linux</button><button type="button" data-os="win">Windows</button></span><button data-copy class="text-gray-400 hover:text-base-orangeAlt transition-colors no-print"><i class="far fa-copy"></i> Copiar</button></div>
+      <pre class="code" data-os="nix">docker version
 
 <span class="c"># El laboratorio viene adentro de este mismo repositorio, en mi-lab/</span>
 git clone https://github.com/Base4Security/eko2026-active-defense-labs
@@ -80,6 +80,37 @@ open http://localhost:8080      <span class="c"># usuario: mcastro / demo1234</s
 
 <span class="c"># el honeypot también (cualquier contraseña entra)</span>
 ssh root@localhost -p 2222</pre>
+      <pre class="code" data-os="win">docker version
+
+<span class="c"># El laboratorio viene adentro de este mismo repositorio, en mi-lab/</span>
+git clone https://github.com/Base4Security/eko2026-active-defense-labs
+cd eko2026-active-defense-labs\mi-lab
+
+docker compose up -d --build
+docker compose ps        <span class="c"># portal, cowrie y opencanary en "running"</span>
+
+<span class="c"># el portal responde</span>
+Start-Process http://localhost:8080   <span class="c"># usuario: mcastro / demo1234</span>
+
+<span class="c"># el honeypot también (cualquier contraseña entra)</span>
+ssh root@localhost -p 2222</pre>
+    </div>
+
+    <div class="callout is-pista">
+      <div class="callout-title"><i class="fab fa-windows"></i>Windows</div>
+      <div class="text-sm leading-relaxed text-gray-300">
+        <p>El curso corre entero en Windows. Los bloques que cambian traen una pestaña <strong class="text-white">Windows</strong> con el equivalente
+        en <strong class="text-white">PowerShell</strong> — apretala una vez y las diecisiete guías se acomodan solas. Abrí
+        <strong class="text-white">PowerShell</strong>, no <code>cmd</code>: los bloques asumen PowerShell 5.1 o superior, que ya viene con el sistema.</p>
+        <p class="mt-2">Tres cosas para saber de antemano:</p>
+        <ul class="list-disc pl-5 space-y-1 mt-1">
+          <li><code>ssh</code> ya viene instalado desde Windows 10 1809. No hace falta PuTTY.</li>
+          <li><code>curl</code> a secas es un alias de <code>Invoke-WebRequest</code>: escribí <code>curl.exe</code>.</li>
+          <li>Donde en Linux va <code>python3</code>, en Windows el binario se llama <code>python</code>.</li>
+        </ul>
+        <p class="mt-2"><code>jq</code> es opcional en Windows: PowerShell lee JSON de fábrica con <code>ConvertFrom-Json</code>,
+        y las pestañas de Windows están escritas así. Si preferís <code>jq</code>, funciona igual.</p>
+      </div>
     </div>
 
     <div class="grid md:grid-cols-3 gap-5">

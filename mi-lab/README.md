@@ -19,10 +19,30 @@ docker compose ps             # portal, cowrie y opencanary en "running"
 | Cowrie | `2222` | Honeypot SSH. **Falso entero**: nadie legítimo tiene motivo para llegar |
 | OpenCanary | `8081 · 1445 · 1433` | HTTP, SMB y MSSQL, también **falsos enteros** |
 
+> **El SMB son tres procesos, no uno.** OpenCanary *no* levanta un servidor
+> SMB: sólo tail-ea un archivo de auditoría. Quien atiende el 445 es un `smbd`
+> de verdad con el VFS `full_audit`, y quien deja esas líneas donde OpenCanary
+> las busca es un `rsyslog`. Los tres arrancan desde
+> `opencanary/entrypoint.sh`; la cadena está explicada en `opencanary/smb.conf`.
+> Si alguna de las dos primeras piezas se cae, el puerto sigue aceptando
+> conexiones —las acepta el redirector de Docker— y el honeypot deja de
+> registrar sin avisar. Después del primer arranque conviene mirar
+> `docker compose logs opencanary`.
+
 ```bash
 open http://localhost:8080     # mcastro / demo1234
 ssh root@localhost -p 2222     # cualquier contraseña entra
 ```
+
+```powershell
+# Windows · PowerShell
+Start-Process http://localhost:8080
+ssh root@localhost -p 2222
+```
+
+> **Windows**: todo lo de esta página corre igual, salvo la plomería de texto
+> (`tail`, `jq`, `cp`). Cada bloque de abajo trae su equivalente en PowerShell.
+> Abrí PowerShell, no `cmd`, y acordate de `curl.exe` en lugar de `curl`.
 
 ---
 
@@ -122,6 +142,24 @@ jq -c 'select(.senuelo == true) | {time, path, usuario, remote_addr}' \
   portal/logs/access.log
 ```
 
+En Windows no hace falta `jq`: PowerShell lee JSON de fábrica.
+
+```powershell
+# quién intentó entrar y falló
+Get-Content portal\logs\access.log | ConvertFrom-Json |
+  Where-Object { $_.path -eq '/login' -and $_.status -eq 401 } |
+  Group-Object usuario | Sort-Object Count -Descending | Select-Object Count, Name
+
+# rutas más pedidas
+Get-Content portal\logs\access.log | ConvertFrom-Json |
+  Group-Object path | Sort-Object Count -Descending | Select-Object Count, Name -First 10
+
+# sólo los toques a señuelos
+Get-Content portal\logs\access.log | ConvertFrom-Json |
+  Where-Object { $_.senuelo -eq $true } |
+  Select-Object time, path, usuario, remote_addr
+```
+
 El campo `senuelo` aparece únicamente cuando se toca algo que vos plantaste. Es
 instrumentación tuya: el adversario no ve este log. Saber cuáles de tus activos
 son señuelos es lo que te deja medir la latencia en el **E13**.
@@ -149,7 +187,15 @@ docker compose down     # fin del curso
 
 Antes de borrar, los logs son la evidencia de tus ejercicios E7 y E13:
 
+Los dos logs están montados desde el disco, así que alcanza con copiarlos:
+
 ```bash
 cp portal/logs/access.log ~/mis-logs-portal.json
-docker compose cp cowrie:/cowrie/var/log/cowrie ./mis-logs-cowrie
+cp -r cowrie/log ~/mis-logs-cowrie
+```
+
+```powershell
+# Windows · PowerShell
+Copy-Item portal\logs\access.log $HOME\mis-logs-portal.json
+Copy-Item cowrie\log $HOME\mis-logs-cowrie -Recurse
 ```

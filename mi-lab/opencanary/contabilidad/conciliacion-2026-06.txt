@@ -1,0 +1,8 @@
+CONCILIACION BANCARIA - JUNIO 2026
+SIGCON / Contabilidad - EkoFinance
+
+Cuenta operativa 4410-2298      saldo libro    4.812.330,15
+Cuenta operativa 4410-2298      saldo banco    4.809.117,40
+Partida conciliatoria           cheque 88213      3.212,75
+
+Revisado por: svc_backup (proceso automatico)

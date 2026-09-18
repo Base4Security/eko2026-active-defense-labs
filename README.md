@@ -94,19 +94,47 @@ brew install jq nmap awscli samba
 sudo apt install jq nmap awscli smbclient
 ```
 
-`sqlcmd` es el más incómodo de instalar, y en macOS es directamente molesto. Si
-no lo tenés, el repositorio trae un reemplazo que no necesita instalar nada
-—sólo Python 3, que ya está en todos lados—:
+### En Windows
+
+El curso corre entero en Windows, sin WSL. Los bloques de código de las guías
+traen una **pestaña Windows** con el equivalente en PowerShell: se aprieta una
+vez y las diecisiete guías se acomodan solas. Abrí **PowerShell**, no `cmd`.
+
+De la lista de arriba, en Windows:
+
+| Herramienta | Cómo |
+|---|---|
+| `ssh` | ya viene, desde Windows 10 1809 — no hace falta PuTTY |
+| `curl` | ya viene, pero escribí **`curl.exe`**: `curl` a secas es alias de `Invoke-WebRequest` |
+| `nmap` | `winget install Insecure.Nmap` |
+| `aws` | `winget install Amazon.AWSCLI` |
+| `jq` | **opcional** — PowerShell lee JSON de fábrica con `ConvertFrom-Json`, y las pestañas de Windows están escritas así. Si lo querés igual: `winget install jqlang.jq` |
+| `smbclient` | no existe, y Windows no sabe hablar SMB a un puerto que no sea el 445 (que ya tiene tomado). El E4 usa `mi-lab/herramientas/smb-touch.py` |
+| `sqlcmd` | tampoco hace falta: el E4 usa `mi-lab/herramientas/tds-login.py` |
+
+Los dos scripts son stdlib pura y sirven en cualquier plataforma: si no querés
+instalar `smbclient` ni `sqlcmd` en macOS o Linux, usalos también ahí.
+
+Dos detalles que muerden: donde en Linux va `python3`, en Windows el binario se
+llama **`python`**; y `dig` no existe — el E2 usa `Resolve-DnsName`.
+
+`sqlcmd` y `smbclient` son los más incómodos de instalar —en macOS el primero es
+directamente molesto y en Windows el segundo no existe—. Para los dos el
+repositorio trae un reemplazo que no necesita instalar nada, sólo Python 3:
 
 ```bash
-python3 mi-lab/herramientas/tds-login.py localhost 1433 sa Password123
+python3 mi-lab/herramientas/tds-login.py  localhost 1433 sa Password123
+python3 mi-lab/herramientas/smb-touch.py  localhost 1445 svc_backup Verano2026
+#  en Windows el binario se llama python, y las barras van al revés
 ```
 
-Hace el handshake TDS mínimo (PRELOGIN + LOGIN7) contra el MSSQL falso, que es
-lo único que el ejercicio necesita. **Un `curl` o un `nc` al 1433 no alcanzan**:
-el honeypot sólo registra el evento cuando recibe un paquete de login completo,
-así que un TCP connect pelado no deja rastro. Vale la pena probarlo y verlo, es
-media respuesta del E4.
+Cada uno hace el handshake mínimo que el honeypot necesita para registrar el
+toque: PRELOGIN + LOGIN7 en el MSSQL, y NEGOTIATE + SESSION_SETUP +
+TREE_CONNECT en el SMB. **Un `curl` o un `nc` al 1433 o al 1445 no alcanzan**:
+el honeypot sólo registra cuando hay sesión negociada, así que un TCP connect
+pelado no deja rastro — aunque el puerto *parezca* abierto, porque quien acepta
+la conexión es el redirector de Docker y no el servicio. Vale la pena probarlo
+y verlo, es media respuesta del E4.
 
 Además del teclado, el **E2** pide dos cosas que no son software:
 
