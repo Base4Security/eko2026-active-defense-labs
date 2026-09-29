@@ -2,36 +2,34 @@
 
 **Laboratorios · Ekoparty 2026** — Diego Staino · Mariano Quintana · BASE4 Security
 
-Diecisiete ejercicios sobre las ocho horas prácticas del curso. Catorce de
-teclado y tres de escribir. Levantás honeypots, plantás tokens, cazás sobre
-telemetría real y al final intentás quemar el diseño de otro grupo.
+Ejercicios prácticos del curso. Levantás honeypots, plantás engaño sobre un
+sistema real y cazás sobre telemetría real.
 
 ---
 
-## Abrí la guía
+## Las guías
 
-Todo el programa —los diecisiete ejercicios, el cronograma y las guías— está en
-**[`index.html`](index.html)**. Empezá ahí.
+Cada ejercicio es una guía en Markdown, en la carpeta **[`labs/`](labs/)**.
+Se leen en cualquier visor de Markdown o directo en GitHub.
+
+| Guía | Qué es |
+|---|---|
+| [`labs/e01-guia-de-ejecucion.md`](labs/e01-guia-de-ejecucion.md) | E1 · Armá tu laboratorio y rompelo |
+| [`labs/e03-plantar-en-el-portal.md`](labs/e03-plantar-en-el-portal.md) | E3 · Plantá el engaño en el Home Banking |
+| [`labs/hunting-lsass-y-lateral.md`](labs/hunting-lsass-y-lateral.md) | Hunting · Cazá el volcado de LSASS y el salto lateral |
 
 ```bash
 git clone https://github.com/Base4Security/eko2026-active-defense-labs
 cd eko2026-active-defense-labs
-
-open index.html          # macOS
-# xdg-open index.html    # Linux
-# start index.html       # Windows
 ```
-
-No hace falta servidor ni instalar nada para leer las guías: son HTML plano y
-funcionan abriéndolas con doble clic.
 
 ---
 
 ## Antes del curso: Docker
 
-Los ejercicios de la primera parte corren en tu máquina. Necesitás **Docker** instalado y
-corriendo, y conviene levantar el laboratorio una vez antes de empezar: la
-primera construcción tarda dos o tres minutos.
+Los ejercicios de la primera parte corren en tu máquina. Necesitás **Docker**
+instalado y corriendo, y conviene levantar el laboratorio una vez antes de
+empezar: la primera construcción tarda dos o tres minutos.
 
 ```bash
 cd mi-lab
@@ -42,32 +40,19 @@ docker compose ps        # portal, cowrie y opencanary en "running"
 Puertos, credenciales y resolución de problemas:
 **[`mi-lab/README.md`](mi-lab/README.md)**.
 
+El lab de hunting no usa `mi-lab/`: baja su propia telemetría de
+[OTRF Security-Datasets](https://github.com/OTRF/Security-Datasets). El E3 corre
+sobre un Home Banking hosteado, sin instalar nada.
+
 ---
 
 ## Qué hay en el repositorio
 
 | Carpeta | Qué es |
 |---|---|
-| **[`index.html`](index.html)** | **El programa. Empezá acá.** |
-| [`labs/`](labs/) | Las diecisiete guías, una por ejercicio |
+| [`labs/`](labs/) | Las guías, una por ejercicio |
 | [`mi-lab/`](mi-lab/) | Tu laboratorio: el portal y los dos honeypots |
-| [`material-extra.html`](material-extra.html) | Material extra: el caso, fichas y mapas de referencia |
-| `resources/` | Los archivos que esa página indexa |
-| `assets/` | Estilos y scripts de las guías |
-
----
-
-## Las guías son cuadernos, no PDFs
-
-Las tablas se completan en la página y se guardan solas en tu navegador.
-
-- **Exportar** → devuelve tu trabajo en Markdown, listo para pegar
-- **Importar** → recupera un respaldo `.json` en otra máquina
-- **Limpiar** → borra lo cargado en esa guía
-
-> **Al cerrar cada ejercicio, apretá Exportar y mandate el texto al chat del
-> grupo.** El trabajo se guarda en el navegador de *esa* máquina, y varios
-> ejercicios usan lo que produjo el anterior.
+| [`resources/`](resources/) | El caso, fichas y mapas de referencia |
 
 ---
 
@@ -79,8 +64,8 @@ buen wifi, bajar un paquete puede costar más que el ejercicio.
 
 | Herramienta | La usan | Para qué |
 |---|---|---|
-| `jq` | E1 · E6 · E7 · E13 | Leer los logs JSON del honeypot y del portal |
-| `curl` | E2 · E13 · E14 | Disparar tokens y probar servicios |
+| `jq` | E1 · E6 · E7 · E13 · Hunting | Leer los logs JSON del honeypot, del portal y la telemetría del hunting |
+| `curl` | E2 · E13 · E14 · Hunting | Disparar tokens, probar servicios, bajar los datasets |
 | `ssh` | E1 · E5 · E7 · E14 | Entrar al honeypot |
 | `nmap` | E5 · E14 | Fingerprint del honeypot, antes y después |
 | `aws` | E2 | Disparar el token de credenciales |
@@ -96,9 +81,8 @@ sudo apt install jq nmap awscli smbclient
 
 ### En Windows
 
-El curso corre entero en Windows, sin WSL. Los bloques de código de las guías
-traen una **pestaña Windows** con el equivalente en PowerShell: se aprieta una
-vez y las diecisiete guías se acomodan solas. Abrí **PowerShell**, no `cmd`.
+El curso corre entero en Windows, sin WSL. Cada guía trae los comandos con su
+equivalente en **PowerShell** — abrí PowerShell, no `cmd`.
 
 De la lista de arriba, en Windows:
 
@@ -108,7 +92,7 @@ De la lista de arriba, en Windows:
 | `curl` | ya viene, pero escribí **`curl.exe`**: `curl` a secas es alias de `Invoke-WebRequest` |
 | `nmap` | `winget install Insecure.Nmap` |
 | `aws` | `winget install Amazon.AWSCLI` |
-| `jq` | **opcional** — PowerShell lee JSON de fábrica con `ConvertFrom-Json`, y las pestañas de Windows están escritas así. Si lo querés igual: `winget install jqlang.jq` |
+| `jq` | **opcional** — PowerShell lee JSON de fábrica con `ConvertFrom-Json`, y las guías traen esa variante. Si lo querés igual: `winget install jqlang.jq` |
 | `smbclient` | no existe, y Windows no sabe hablar SMB a un puerto que no sea el 445 (que ya tiene tomado). El E4 usa `mi-lab/herramientas/smb-touch.py` |
 | `sqlcmd` | tampoco hace falta: el E4 usa `mi-lab/herramientas/tds-login.py` |
 
@@ -117,10 +101,6 @@ instalar `smbclient` ni `sqlcmd` en macOS o Linux, usalos también ahí.
 
 Dos detalles que muerden: donde en Linux va `python3`, en Windows el binario se
 llama **`python`**; y `dig` no existe — el E2 usa `Resolve-DnsName`.
-
-`sqlcmd` y `smbclient` son los más incómodos de instalar —en macOS el primero es
-directamente molesto y en Windows el segundo no existe—. Para los dos el
-repositorio trae un reemplazo que no necesita instalar nada, sólo Python 3:
 
 ```bash
 python3 mi-lab/herramientas/tds-login.py  localhost 1433 sa Password123
@@ -152,6 +132,4 @@ documentos del caso fueron construidos para este curso. Cualquier dominio, IP o
 identificador que aparezca está en rangos reservados para documentación
 (RFC 5737, RFC 2606) o es inventado.
 
-Las técnicas se enseñan para **defender infraestructura propia**. El ejercicio
-[W2](labs/w2-ficha-de-operacion.html) incluye el límite legal y ético explícito
-de lo que se puede y no se puede hacer.
+Las técnicas se enseñan para **defender infraestructura propia**.

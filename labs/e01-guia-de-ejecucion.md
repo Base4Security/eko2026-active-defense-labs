@@ -2,9 +2,7 @@
 
 **Primera parte · sobre el honeypot · 10 minutos · grupos de 2-3**
 
-Ficha interactiva: [`old/e01-laboratorio-y-delatores.html`](../old/e01-laboratorio-y-delatores.html).
-Ahí se carga la tabla y se exporta el entregable. Esta guía es el paso a paso
-para correrlo sin perder tiempo.
+Esta guía es el paso a paso para correr el ejercicio sin perder tiempo.
 
 ---
 
