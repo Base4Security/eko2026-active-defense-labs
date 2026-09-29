@@ -57,8 +57,8 @@ $B = 'https://raw.githubusercontent.com/OTRF/Security-Datasets/master/datasets/a
 iwr "$B/credential_access/host/psh_lsass_memory_dump_comsvcs.zip" -OutFile lsass.zip
 iwr "$B/lateral_movement/host/empire_psexec_dcerpc_tcp_svcctl.zip" -OutFile lateral.zip
 Expand-Archive lsass.zip . -Force; Expand-Archive lateral.zip . -Force
-Rename-Item psh_lsass_memory_dump_comsvcs_*.json lsass.json
-Rename-Item empire_psexec_dcerpc_tcp_svcctl_*.json lateral.json
+Get-ChildItem psh_lsass_memory_dump_comsvcs_*.json  | Rename-Item -NewName lsass.json
+Get-ChildItem empire_psexec_dcerpc_tcp_svcctl_*.json | Rename-Item -NewName lateral.json
 
 # cargá los dos (una línea por evento) y usalos el resto del lab
 $lsass   = Get-Content lsass.json   | ForEach-Object { $_ | ConvertFrom-Json }
