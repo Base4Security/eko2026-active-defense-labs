@@ -1,22 +1,26 @@
 # E3 · Cazá el volcado de LSASS y el salto lateral
 
-**Lab de hunting · sobre telemetría real · 10 minutos · grupos de 2-3**
+**Lab de hunting · sobre telemetría real · 6 minutos · grupos de 2-3**
 
 Dos capturas de ataques reales, grabadas por el proyecto
 [OTRF Security-Datasets](https://github.com/OTRF/Security-Datasets) en un
-dominio de laboratorio (`theshire.local`). Tienen logs de Sysmon, Security y
-PowerShell, un evento JSON por línea. No hay que levantar nada: bajás los
-archivos y cazás con `jq`.
+dominio de laboratorio (`theshire.local`). Logs de Sysmon, Security y PowerShell,
+un evento JSON por línea. No hay que levantar nada.
+
+> **Cada bloque trae las dos formas: `jq` (macOS · Linux) y PowerShell
+> (Windows).** Usá la de tu máquina. Los datos son Windows: PowerShell es tan
+> natural como `jq` acá.
 
 ---
 
 ## Objetivo
 
-Partir de una **hipótesis**, encontrar la evidencia que la confirma o la tira,
-y reconstruir **qué pasó, en qué orden, en qué máquina y con qué cuenta**.
+Partir de una **hipótesis**, encontrar la evidencia, y reconstruir **qué pasó,
+en qué máquina y con qué cuenta**. Al final, escribir en una línea por caso la
+detección que lo habría atrapado.
 
-Al final tenés que poder escribir, en una línea por caso, la detección que lo
-habría atrapado.
+> **Los tiempos engañan:** Sysmon usa `UtcTime` y Security usa `TimeCreated`, en
+> zonas distintas. Fijate cuántas horas los separan antes de armar una línea de tiempo.
 
 ---
 
@@ -24,217 +28,124 @@ habría atrapado.
 
 | Min | Paso | Qué tiene que quedar |
 |---|---|---|
-| 0-1 | 1 · Bajá la evidencia | Los dos JSON en `evidencia/` |
-| 1-2 | 2 · Mirá qué hay | Qué fuentes y qué eventos tiene cada archivo |
-| 2-5 | **3 · Cazá el volcado de LSASS** | Quién, cómo y dónde quedó el volcado |
-| 5-9 | **4 · Cazá el salto lateral** | De qué máquina a cuál, con qué cuenta, y qué corrió |
-| 9-10 | 5 · Cerrá | Línea de tiempo y una detección por caso |
+| 0-1 | 1 · Bajá y mirá | Los dos JSON, y qué eventos trae cada uno |
+| 1-3 | **2 · Cazá el volcado de LSASS** | Quién, cómo y dónde quedó el volcado |
+| 3-5 | **3 · Cazá el salto lateral** | De qué máquina a cuál, con qué cuenta |
+| 5-6 | 4 · Cerrá | Línea de tiempo y una detección por caso |
 
 ---
 
-## Antes de empezar
-
-- `curl`, `unzip` y **`jq`**, los mismos del E1.
-- En Windows, PowerShell alcanza: al final hay equivalentes con `ConvertFrom-Json`.
-- **Los tiempos:** los eventos de Sysmon traen `UtcTime` y los de Security
-  traen `TimeCreated`, que **no están en la misma zona horaria**. Antes de
-  ordenar una línea de tiempo, fijate cuántas horas los separan.
-
----
-
-## 1 · Bajá la evidencia · 0-5 min
+## 1 · Bajá y mirá · 0-1 min
 
 ```bash
 mkdir -p evidencia && cd evidencia
 B=https://raw.githubusercontent.com/OTRF/Security-Datasets/master/datasets/atomic/windows
-
 curl -sLO $B/credential_access/host/psh_lsass_memory_dump_comsvcs.zip
 curl -sLO $B/lateral_movement/host/empire_psexec_dcerpc_tcp_svcctl.zip
-
-unzip -o psh_lsass_memory_dump_comsvcs.zip
-unzip -o empire_psexec_dcerpc_tcp_svcctl.zip
-
+unzip -o psh_lsass_memory_dump_comsvcs.zip && unzip -o empire_psexec_dcerpc_tcp_svcctl.zip
 mv psh_lsass_memory_dump_comsvcs_*.json lsass.json
 mv empire_psexec_dcerpc_tcp_svcctl_*.json lateral.json
-wc -l lsass.json lateral.json
-```
 
-**Listo cuando** tenés `lsass.json` (184 líneas) y `lateral.json` (4348 líneas).
-
-Los comandos que siguen se corren desde `evidencia/`.
-
----
-
-## 2 · Mirá qué hay · 5-8 min
-
-Antes de buscar nada, sabé con qué contás:
-
-```bash
-# qué fuentes y qué eventos, de más a menos
+# qué fuentes y eventos, de más a menos
 jq -r '"\(.Channel)  \(.EventID)"' lsass.json | sort | uniq -c | sort -rn
-
-# qué máquinas aparecen
-jq -r '.Hostname' lateral.json | sort | uniq -c
 ```
 
-Anotá tres cosas:
-1. ¿Qué eventos de **Sysmon** hay? Buscá qué significan el 1, el 3, el 10 y el 11.
-2. ¿Qué eventos de **Security** hay?
-3. ¿Cuántas máquinas aparecen en `lateral.json`, y cuál parece el controlador de dominio?
+```powershell
+# Windows · PowerShell
+mkdir evidencia; cd evidencia
+$B = 'https://raw.githubusercontent.com/OTRF/Security-Datasets/master/datasets/atomic/windows'
+iwr "$B/credential_access/host/psh_lsass_memory_dump_comsvcs.zip" -OutFile lsass.zip
+iwr "$B/lateral_movement/host/empire_psexec_dcerpc_tcp_svcctl.zip" -OutFile lateral.zip
+Expand-Archive lsass.zip . -Force; Expand-Archive lateral.zip . -Force
+Rename-Item psh_lsass_memory_dump_comsvcs_*.json lsass.json
+Rename-Item empire_psexec_dcerpc_tcp_svcctl_*.json lateral.json
 
-> Si una técnica deja rastro en un evento que no estás recolectando, esa técnica
-> es invisible para vos. Esta pregunta es la mitad del hunting.
+# cargá los dos (una línea por evento) y usalos el resto del lab
+$lsass   = Get-Content lsass.json   | ForEach-Object { $_ | ConvertFrom-Json }
+$lateral = Get-Content lateral.json | ForEach-Object { $_ | ConvertFrom-Json }
+$lsass | Group-Object Channel,EventID | Sort-Object Count -Descending | Select Count,Name
+```
+
+**Mirá qué tenés antes de cazar.** Si una técnica deja rastro en un evento que no
+recolectás, es invisible para vos — esa pregunta es la mitad del hunting.
 
 ---
 
-## 3 · Cazá el volcado de LSASS · 8-18 min
+## 2 · Cazá el volcado de LSASS · 1-3 min
 
 **Hipótesis:** *alguien leyó la memoria de `lsass.exe` para sacar credenciales.*
-
-Para leer la memoria de un proceso primero hay que abrirlo. Sysmon registra eso
-en el evento **10 (ProcessAccess)**.
-
-```bash
-# ¿quién abrió lsass, y con qué permisos?
-jq -c 'select(.EventID==10 and (.TargetImage|test("lsass.exe$";"i")))
-       | {SourceImage, GrantedAccess}' lsass.json
-```
-
-Si la hipótesis se sostiene, seguí el hilo:
+Para leer la memoria de un proceso primero hay que abrirlo: Sysmon lo registra en
+el evento **10 (ProcessAccess)**.
 
 ```bash
-# ¿con qué línea de comandos se lanzó?
-jq -r 'select(.EventID==1) | .CommandLine' lsass.json
-
-# ¿quién fue el padre, con qué usuario y con qué integridad?
-jq -c 'select(.EventID==1) | {Image, ParentImage, User, IntegrityLevel}' lsass.json
-
-# ¿quedó algo escrito en disco?
+# ¿quién abrió lsass, y con qué permiso?
+jq -c 'select(.EventID==10 and (.TargetImage|test("lsass.exe$";"i"))) | {SourceImage, GrantedAccess}' lsass.json
+# ¿con qué línea de comandos, quién es el padre y qué quedó en disco?
+jq -c 'select(.EventID==1)  | {Image, ParentImage, User, IntegrityLevel, CommandLine}' lsass.json
 jq -r 'select(.EventID==11) | .TargetFilename' lsass.json
 ```
 
-**Contestá:**
-1. ¿Qué proceso abrió `lsass.exe`? ¿Es un binario raro, o uno de Windows?
-2. ¿Qué DLL y qué función usó? ¿Qué significa el número que aparece en la
-   línea de comandos?
-3. ¿Qué permiso pidió (`GrantedAccess`)? ¿Por qué ese valor en particular es una alerta?
-4. ¿Dónde quedó el volcado, y con qué nombre?
-5. **La trampa:** hay un evento `1102` al principio del archivo. ¿Qué es? Antes
-   de sumarlo a la historia, fijate cuándo pasó respecto del resto.
+```powershell
+# Windows · PowerShell
+$lsass | ? { $_.EventID -eq 10 -and $_.TargetImage -match 'lsass\.exe$' } | Select SourceImage, GrantedAccess
+$lsass | ? EventID -eq 1  | Select Image, ParentImage, User, IntegrityLevel, CommandLine
+$lsass | ? EventID -eq 11 | Select -Expand TargetFilename
+```
+
+**Contestá:** ¿qué proceso abrió `lsass` (¿binario raro o de Windows?), qué DLL y
+función usó, qué permiso pidió (`GrantedAccess`) y dónde quedó el volcado.
+**La trampa:** hay un `1102` (borrado del log) al principio — fijate *cuándo* pasó
+respecto del volcado antes de atribuírselo al atacante.
 
 ---
 
-## 4 · Cazá el salto lateral · 18-28 min
+## 3 · Cazá el salto lateral · 3-5 min
 
-**Hipótesis:** *alguien creó un servicio en una máquina remota para ejecutar código en ella.*
-
-Un servicio nuevo deja el evento **7045** en System y el **4697** en Security.
-
-```bash
-# ¿se instaló algún servicio?
-jq -c 'select(.EventID==7045)
-       | {Hostname, ServiceName, ImagePath: .ImagePath[0:80]}' lateral.json
-```
-
-Encontraste la máquina de destino. Ahora averiguá de dónde vino:
+**Hipótesis:** *crearon un servicio en una máquina remota para ejecutar código.*
+Un servicio nuevo deja el evento **7045** en System.
 
 ```bash
-# ¿quién inició sesión por red en esa máquina, y desde qué IP?
-jq -c 'select(.EventID==4624 and .LogonType=="3"
-              and .Hostname=="WORKSTATION6.theshire.local")
-       | {TargetUserName, IpAddress, AuthenticationPackageName}' lateral.json
-
-# ¿qué proceso de la máquina de origen habló con el destino?
-jq -c 'select(.EventID==3 and .DestinationIp=="172.18.39.6" and .Initiated=="true")
-       | {Hostname, Image, DestinationIp, DestinationPort}' lateral.json
+# ¿qué servicio se instaló, y dónde?
+jq -c 'select(.EventID==7045) | {Hostname, ServiceName, ImagePath: .ImagePath[0:80]}' lateral.json
+# ¿quién entró por red a esa máquina, y desde qué IP?
+jq -c 'select(.EventID==4624 and .LogonType=="3" and .Hostname=="WORKSTATION6.theshire.local") | {TargetUserName, IpAddress}' lateral.json
+# ¿qué lanzó services.exe, y con qué usuario?
+jq -c 'select(.EventID==1 and .ParentImage=="C:\\Windows\\System32\\services.exe") | {Hostname, Image, User}' lateral.json
 ```
 
-Y qué pasó en el destino después:
-
-```bash
-# ¿qué lanzó services.exe?
-jq -c 'select(.EventID==1 and .ParentImage=="C:\\Windows\\System32\\services.exe")
-       | {Hostname, UtcTime, Image, User}' lateral.json
-
-# ¿el proceso nuevo salió a algún lado?
-jq -c 'select(.EventID==3 and .Hostname=="WORKSTATION6.theshire.local"
-              and .Initiated=="true" and (.Image|test("powershell";"i")))
-       | {Image, DestinationIp, DestinationPort}' lateral.json
+```powershell
+# Windows · PowerShell
+$lateral | ? EventID -eq 7045 | Select Hostname, ServiceName, ImagePath
+$lateral | ? { $_.EventID -eq 4624 -and $_.LogonType -eq '3' -and $_.Hostname -eq 'WORKSTATION6.theshire.local' } | Select TargetUserName, IpAddress
+$lateral | ? { $_.EventID -eq 1 -and $_.ParentImage -eq 'C:\Windows\System32\services.exe' } | Select Hostname, Image, User
 ```
 
-**Contestá:**
-1. ¿Cómo se llama el servicio? ¿Suena legítimo? ¿Qué ejecuta en realidad?
-2. ¿Desde qué máquina y con qué cuenta llegó el adversario?
-3. ¿Por qué puerto habló primero la máquina de origen, y qué servicio de
-   Windows atiende ahí?
-4. ¿Con qué usuario corrió el código en el destino?
-5. ¿A qué IP y puerto salió el proceso nuevo? ¿Qué es probablemente esa IP?
-
-### Si te sobra tiempo: ¿qué decía el comando codificado?
-
-```bash
-jq -r 'select(.EventID==7045) | .ImagePath | split(" ") | last' lateral.json \
-  | base64 -d | iconv -f UTF-16LE -t UTF-8 | head -c 400; echo
-```
-
-¿Qué es lo primero que intenta hacer el script? ¿Por qué un adversario haría
-eso antes que cualquier otra cosa?
+**Contestá:** cómo se llama el servicio y qué ejecuta en realidad, desde qué
+máquina y con qué cuenta llegó, y con qué usuario corrió el código en el destino.
 
 ---
 
-## 5 · Cerrá · 28-30 min
+## 4 · Cerrá · 5-6 min
 
-**Línea de tiempo.** Ordená lo que encontraste en cada caso, con la hora y la
-máquina. Aclará en qué zona horaria está cada hora.
+Ordená los dos casos en una línea de tiempo (aclarando la zona de cada hora) y
+escribí una detección por caso, en palabras:
 
-**Una detección por caso.** En una línea, en palabras, sin sintaxis de ninguna
-herramienta:
-
-| Caso | La detección |
-|---|---|
-| LSASS | *Alertar cuando…* |
-| Lateral | *Alertar cuando…* |
-
-Después preguntate lo mismo que en el E3, pero al revés: **¿qué proceso
-legítimo dispararía tu detección el martes?**
+| Caso | La detección | ¿Qué proceso legítimo la dispararía el martes? |
+|---|---|---|
+| LSASS | *Alertar cuando…* | |
+| Lateral | *Alertar cuando…* | |
 
 ---
 
 ## Entregable
 
-- Las respuestas de los pasos 3 y 4.
-- La línea de tiempo de cada caso.
+- La línea de tiempo de cada caso, con la zona horaria.
 - Las dos detecciones, cada una con su posible falso positivo.
-
----
-
-## En Windows
-
-PowerShell lee JSON sin `jq`. El patrón es siempre el mismo:
-
-```powershell
-$lsass   = Get-Content evidencia\lsass.json   | ConvertFrom-Json
-$lateral = Get-Content evidencia\lateral.json | ConvertFrom-Json
-
-# qué hay
-$lsass | Group-Object Channel, EventID | Sort-Object Count -Descending | Select-Object Count, Name
-
-# quién abrió lsass
-$lsass | Where-Object { $_.EventID -eq 10 -and $_.TargetImage -match 'lsass.exe$' } |
-  Select-Object SourceImage, GrantedAccess
-
-# servicios nuevos
-$lateral | Where-Object EventID -eq 7045 | Select-Object Hostname, ServiceName, ImagePath
-```
-
-Para bajar la evidencia: `Invoke-WebRequest -Uri <url> -OutFile <archivo>` y
-`Expand-Archive <archivo> -DestinationPath .`.
 
 ---
 
 ## Créditos
 
-Datasets: [OTRF Security-Datasets](https://github.com/OTRF/Security-Datasets),
-de Roberto y José Luis Rodríguez. Los archivos:
-`datasets/atomic/windows/credential_access/host/psh_lsass_memory_dump_comsvcs.zip`
-y `datasets/atomic/windows/lateral_movement/host/empire_psexec_dcerpc_tcp_svcctl.zip`.
+Datasets: [OTRF Security-Datasets](https://github.com/OTRF/Security-Datasets). Archivos:
+`credential_access/host/psh_lsass_memory_dump_comsvcs.zip` y
+`lateral_movement/host/empire_psexec_dcerpc_tcp_svcctl.zip`.
