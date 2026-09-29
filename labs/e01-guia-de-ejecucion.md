@@ -148,8 +148,8 @@ OCI runtime exec failed: exec: "sh": executable file not found in $PATH
 ```
 
 No es un error tuyo. El JSON llega al host por el bind mount de
-`docker-compose.yml`, y por eso **sobrevive a un `docker compose down`**. El E7
-necesita ese archivo.
+`docker-compose.yml`, y por eso **sobrevive a un `docker compose down`**: te queda
+como evidencia para cazar sobre tus propios logs más adelante.
 
 > **Si te dan 4 o 5 eventos**, estás mirando `docker compose logs` y no el JSON.
 > Andá a `cowrie/log/cowrie.json`.
@@ -207,8 +207,8 @@ Una fila por delator en la ficha, con tres columnas:
 |---|---|---|
 | Qué observaste | El comando exacto y su salida | Una acción que se pueda **ejecutar** |
 
-La tercera columna es la que vas a **correr en el E5**, así que tiene que ser
-concreta:
+La tercera columna es la que vas a **ejecutar al endurecer el honeypot**, así que
+tiene que ser concreta:
 
 | ❌ No sirve | ✅ Sirve |
 |---|---|
@@ -216,11 +216,11 @@ concreta:
 | «Mejorar el realismo» | Qué archivo, qué línea y qué valor |
 | «Arreglar el comando X» | «Sacarlo del filesystem falso» o «parchear el comando emulado» |
 
-Una corrección que no se puede ejecutar es una fila que en el E5 no sirve.
+Una corrección que no se puede ejecutar no sirve.
 
 > **`cowrie/etc/cowrie.cfg` ya existe y no arregla nada.** Solo fija cómo se
-> escribe el log (`logtype = plain`). No lo borres: en el E5 escribís tus
-> correcciones ahí abajo.
+> escribe el log (`logtype = plain`). No lo borres: cuando endurezcas el
+> honeypot escribís tus correcciones ahí abajo.
 
 ---
 
@@ -228,22 +228,16 @@ Una corrección que no se puede ejecutar es una fila que en el E5 no sirve.
 
 1. Revisá el **control de avance** de la ficha: seis casillas marcadas.
 2. Apretá **Exportar** y mandá el Markdown al chat del grupo. El trabajo se
-   guarda en el navegador de *esa* máquina, y el E5 arranca con esa lista.
+   guarda en el navegador de *esa* máquina.
 3. **No bajes el laboratorio.** Si necesitás pausarlo, usá `docker compose stop`.
 
 ---
 
-## Entregable → E5 y E14
+## Entregable
 
 - La **lista de delatores** (mínimo cuatro), cada uno con el comando que lo
   revela y su corrección concreta.
 - El **número de eventos** que produjo tu sesión.
-
-```
-E1 lista de delatores ──► E5  los arreglás y medís el antes y el después
-E1 cowrie.json        ──► E7  cazás sobre tus propios logs
-E5 honeypot endurecido ─► E14 otro grupo intenta quemarlo
-```
 
 ---
 

@@ -1,13 +1,13 @@
-# E4 · Cazá con un agente · Claude Code o Cursor
+# E5 · Cazá con un agente · Claude Code o Cursor
 
 **Lab de hunting · sobre telemetría real · 6 minutos · grupos de 2-3**
 
-La misma telemetría del E3, pero ahora el que escribe las consultas es un
+La misma telemetría del E4, pero ahora el que escribe las consultas es un
 **agente de IA** (Claude Code o Cursor) y vos lo conducís. El ejercicio no es
 «que la IA encuentre el ataque»: es aprender a **dirigirla por hipótesis y a
 verificar lo que afirma**, porque un agente rápido y convincente también inventa.
 
-> Hacé primero el [E3](e03-hunting-lsass-y-lateral.md) a mano. Saber cómo se ve
+> Hacé primero el [E4](e04-hunting-lsass-y-lateral.md) a mano. Saber cómo se ve
 > la evidencia cruda es lo que te deja detectar cuándo el agente se la inventa.
 
 ---

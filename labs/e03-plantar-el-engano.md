@@ -1,4 +1,4 @@
-# E2 · Plantá el engaño en el Home Banking
+# E3 · Plantá el engaño en el Home Banking
 
 **Sobre un sistema real · 10 minutos · grupos de 2-3**
 

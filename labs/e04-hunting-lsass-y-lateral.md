@@ -1,4 +1,4 @@
-# E3 · Cazá el volcado de LSASS y el salto lateral
+# E4 · Cazá el volcado de LSASS y el salto lateral
 
 **Lab de hunting · sobre telemetría real · 6 minutos · grupos de 2-3**
 
