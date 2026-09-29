@@ -1,6 +1,6 @@
 # E4 · Guía descriptiva: volcado de LSASS y movimiento lateral con PsExec
 
-> Complemento del [E4 · Cazá el volcado de LSASS y el salto lateral](e04-hunting-lsass-y-lateral.md).
+> Complemento del [E4 · Cazá el volcado de LSASS y el salto lateral](e04-hunting-lsass-psexec.md).
 > El E4 es la versión de teclado, para hacer contra reloj; esta guía es la
 > versión explicada, comando por comando, para leer con calma o repasar después.
 

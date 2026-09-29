@@ -7,7 +7,7 @@ La misma telemetría del E4, pero ahora el que escribe las consultas es un
 «que la IA encuentre el ataque»: es aprender a **dirigirla por hipótesis y a
 verificar lo que afirma**, porque un agente rápido y convincente también inventa.
 
-> Hacé primero el [E4](e04-hunting-lsass-y-lateral.md) a mano. Saber cómo se ve
+> Hacé primero el [E4](e04-hunting-lsass-psexec.md) a mano. Saber cómo se ve
 > la evidencia cruda es lo que te deja detectar cuándo el agente se la inventa.
 
 ---

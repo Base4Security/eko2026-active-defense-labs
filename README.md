@@ -15,15 +15,16 @@ Se leen en cualquier visor de Markdown o directo en GitHub.
 | Guía | Qué es | Dura |
 |---|---|---|
 | [`labs/e01-guia-de-ejecucion.md`](labs/e01-guia-de-ejecucion.md) | E1 · Armá tu laboratorio y rompelo | 10 min |
+| [`labs/e02-cinco-tokens.md`](labs/e02-cinco-tokens.md) | E2 · Cinco tokens, cinco disparos | 10 min |
 | [`labs/e03-plantar-el-engano.md`](labs/e03-plantar-el-engano.md) | E3 · Plantá el engaño en el Home Banking | 10 min |
-| [`labs/e04-hunting-lsass-y-lateral.md`](labs/e04-hunting-lsass-y-lateral.md) | E4 · Cazá el volcado de LSASS y el salto lateral | 6 min |
+| [`labs/e04-hunting-lsass-psexec.md`](labs/e04-hunting-lsass-psexec.md) | E4 · Cazá el volcado de LSASS y el salto lateral | 6 min |
 | [`labs/e05-hunting-con-agente.md`](labs/e05-hunting-con-agente.md) | E5 · Cazá con un agente (Claude Code / Cursor) | 6 min |
 
-El **E4** trae además una [guía descriptiva paso a paso](labs/e04-guia-descriptiva-lsass-psexec.md)
+El **E4** trae además una [guía descriptiva paso a paso](labs/e04-hunting-lsass-psexec-guia-descriptiva.md)
 que explica cada comando y cada evento.
 
 Los labs de hunting (E4 · E5) traen cada comando en `jq` (macOS · Linux) y en
-PowerShell (Windows). El **E2** queda reservado para el ejercicio de tokens.
+PowerShell (Windows). El **E2** necesita internet y una casilla de correo.
 
 ```bash
 git clone https://github.com/Base4Security/eko2026-active-defense-labs
