@@ -1,6 +1,6 @@
-# Hunting · Cazá el volcado de LSASS y el salto lateral
+# E3 · Cazá el volcado de LSASS y el salto lateral
 
-**Lab autónomo · sobre telemetría real · 30 minutos · grupos de 2-3**
+**Lab de hunting · sobre telemetría real · 10 minutos · grupos de 2-3**
 
 Dos capturas de ataques reales, grabadas por el proyecto
 [OTRF Security-Datasets](https://github.com/OTRF/Security-Datasets) en un
@@ -24,11 +24,11 @@ habría atrapado.
 
 | Min | Paso | Qué tiene que quedar |
 |---|---|---|
-| 0-5 | 1 · Bajá la evidencia | Los dos JSON en `evidencia/` |
-| 5-8 | 2 · Mirá qué hay | Qué fuentes y qué eventos tiene cada archivo |
-| 8-18 | **3 · Cazá el volcado de LSASS** | Quién, cómo y dónde quedó el volcado |
-| 18-28 | **4 · Cazá el salto lateral** | De qué máquina a cuál, con qué cuenta, y qué corrió |
-| 28-30 | 5 · Cerrá | Línea de tiempo y una detección por caso |
+| 0-1 | 1 · Bajá la evidencia | Los dos JSON en `evidencia/` |
+| 1-2 | 2 · Mirá qué hay | Qué fuentes y qué eventos tiene cada archivo |
+| 2-5 | **3 · Cazá el volcado de LSASS** | Quién, cómo y dónde quedó el volcado |
+| 5-9 | **4 · Cazá el salto lateral** | De qué máquina a cuál, con qué cuenta, y qué corrió |
+| 9-10 | 5 · Cerrá | Línea de tiempo y una detección por caso |
 
 ---
 

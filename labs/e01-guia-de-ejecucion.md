@@ -10,7 +10,7 @@ Esta guía es el paso a paso para correr el ejercicio sin perder tiempo.
 
 | Min | Paso | Qué tiene que quedar |
 |---|---|---|
-| 0-2 | 1 · Levantar el laboratorio | Los tres servicios en `running` |
+| 0-2 | 1 · Levantar el laboratorio | `cowrie` y `opencanary` en `running` |
 | 2-4 | 2 · Entrar como adversario | Una sesión SSH con los comandos de enumeración |
 | 4-5 | 3 · Mirar lo que produjo | El número de eventos de tu sesión |
 | 5-9 | **4 · Rompelo** | Al menos cuatro delatores, cada uno con su corrección |

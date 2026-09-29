@@ -1,6 +1,6 @@
-# Hunting con un agente · Cazá con Claude Code o Cursor
+# E4 · Cazá con un agente · Claude Code o Cursor
 
-**Lab autónomo · sobre telemetría real · 35 minutos · grupos de 2-3**
+**Lab de hunting · sobre telemetría real · 10 minutos · grupos de 2-3**
 
 La misma telemetría del lab de hunting a mano, pero ahora el que escribe las
 consultas es un **agente de IA** (Claude Code o Cursor) y vos lo conducís. El
@@ -9,7 +9,7 @@ hipótesis y a verificar lo que afirma**, porque un agente rápido y convincente
 también inventa.
 
 > Si nunca cazaste sobre estos datos, hacé primero
-> [`hunting-lsass-y-lateral.md`](hunting-lsass-y-lateral.md) a mano. Saber cómo
+> el [E3](e03-hunting-lsass-y-lateral.md) a mano. Saber cómo
 > se ve la evidencia cruda es lo que te deja darte cuenta de cuándo el agente
 > se la inventa.
 
@@ -27,12 +27,12 @@ hasta que la podés reproducir vos contra el evento crudo.**
 
 | Min | Paso | Qué tiene que quedar |
 |---|---|---|
-| 0-5 | 1 · Preparar la carpeta | Evidencia + reglas del agente |
-| 5-8 | 2 · Abrir el agente | Claude Code o Cursor sobre esa carpeta |
-| 8-13 | 3 · Que mapee los datos | Fuentes, eventos y máquinas, con cita |
-| 13-22 | **4 · Cazar por hipótesis** | Los dos ataques, cada afirmación con su evento |
-| 22-30 | **5 · Verificar y quebrar** | Una afirmación reproducida y una tumbada |
-| 30-35 | 6 · Cerrar | Dos detecciones y qué aportó (y qué arruinó) el agente |
+| 0-1 | 1 · Preparar la carpeta | Evidencia + reglas del agente |
+| 1-2 | 2 · Abrir el agente | Claude Code o Cursor sobre esa carpeta |
+| 2-3 | 3 · Que mapee los datos | Fuentes, eventos y máquinas, con cita |
+| 3-6 | **4 · Cazar por hipótesis** | Los dos ataques, cada afirmación con su evento |
+| 6-9 | **5 · Verificar y quebrar** | Una afirmación reproducida y una tumbada |
+| 9-10 | 6 · Cerrar | Dos detecciones y qué aportó (y qué arruinó) el agente |
 
 ---
 

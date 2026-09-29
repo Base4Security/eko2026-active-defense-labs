@@ -12,11 +12,14 @@ sistema real y cazás sobre telemetría real.
 Cada ejercicio es una guía en Markdown, en la carpeta **[`labs/`](labs/)**.
 Se leen en cualquier visor de Markdown o directo en GitHub.
 
+Cada guía dura **10 minutos**.
+
 | Guía | Qué es |
 |---|---|
 | [`labs/e01-guia-de-ejecucion.md`](labs/e01-guia-de-ejecucion.md) | E1 · Armá tu laboratorio y rompelo |
-| [`labs/e03-plantar-en-el-portal.md`](labs/e03-plantar-en-el-portal.md) | E3 · Plantá el engaño en el Home Banking |
-| [`labs/hunting-lsass-y-lateral.md`](labs/hunting-lsass-y-lateral.md) | Hunting · Cazá el volcado de LSASS y el salto lateral |
+| [`labs/e02-plantar-el-engano.md`](labs/e02-plantar-el-engano.md) | E2 · Plantá el engaño en el Home Banking |
+| [`labs/e03-hunting-lsass-y-lateral.md`](labs/e03-hunting-lsass-y-lateral.md) | E3 · Cazá el volcado de LSASS y el salto lateral |
+| [`labs/e04-hunting-con-agente.md`](labs/e04-hunting-con-agente.md) | E4 · Cazá con un agente (Claude Code / Cursor) |
 
 ```bash
 git clone https://github.com/Base4Security/eko2026-active-defense-labs
