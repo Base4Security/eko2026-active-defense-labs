@@ -47,7 +47,7 @@ docker compose up -d --build
 docker compose ps
 ```
 
-**Listo cuando** `portal`, `cowrie` y `opencanary` aparecen en `running`.
+**Listo cuando** `cowrie` y `opencanary` aparecen en `running`.
 
 Si no tenés internet: `docker load -i b4-lab-kit.tar`. El `.tar` se descarga de
 las [releases del repositorio](https://github.com/Base4Security/eko2026-active-defense-labs/releases).

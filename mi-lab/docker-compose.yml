@@ -1,40 +1,17 @@
 # ════════════════════════════════════════════════════════════════════════
 # Laboratorio · Active Cyber Defense · Ekoparty 2026
 #
-# Tres servicios, dos formas distintas de engañar:
+# Dos honeypots: sistemas FALSOS enteros. Nadie legítimo tiene motivo para
+# llegar, así que detectan a cualquiera que los toque.
 #
-#   portal      un sistema REAL. Tiene datos, usuarios y documentos; el
-#               engaño es sólo lo que el alumno le agrega encima.
-#
-#   cowrie      sistemas FALSOS enteros. Nadie legítimo tiene motivo para
-#   opencanary  llegar, así que detectan a cualquiera que los toque.
-#
-# Los ejercicios usan las dos. La diferencia entre ellas es la mitad de las
-# decisiones de diseño del curso.
+#   cowrie      honeypot SSH de interacción media
+#   opencanary  SMB, un portal HTTP de login y un MSSQL
 #
 #   docker compose up -d --build
 #   docker compose ps
 # ════════════════════════════════════════════════════════════════════════
 
 services:
-
-  # ─── Sistema real · el engaño va adentro ─────────────────────────────
-  portal:
-    build: ./portal
-    container_name: b4-portal
-    restart: unless-stopped
-    ports:
-      - "8080:8080"
-    volumes:
-      # Las seis superficies plantables, montadas desde el disco.
-      # Editás un archivo acá afuera y el portal lo ve en la próxima
-      # recarga del navegador: no hace falta reiniciar nada.
-      - ./portal/config:/portal/config
-      - ./portal/data:/portal/data
-      - ./portal/archivos:/portal/archivos
-      - ./portal/static:/portal/static
-      - ./portal/logs:/portal/logs
-    networks: [lab]
 
   # ─── Sistema falso entero · honeypot SSH ─────────────────────────────
   # Interacción media: el adversario obtiene un shell falso y cada comando
