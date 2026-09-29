@@ -46,8 +46,9 @@ unzip -o psh_lsass_memory_dump_comsvcs.zip && unzip -o empire_psexec_dcerpc_tcp_
 mv psh_lsass_memory_dump_comsvcs_*.json lsass.json
 mv empire_psexec_dcerpc_tcp_svcctl_*.json lateral.json
 
-# qué fuentes y eventos, de más a menos
-jq -r '"\(.Channel)  \(.EventID)"' lsass.json | sort | uniq -c | sort -rn
+# qué fuentes y eventos trae cada archivo, de más a menos
+jq -r '"\(.Channel)  \(.EventID)"' lsass.json   | sort | uniq -c | sort -rn
+jq -r '"\(.Channel)  \(.EventID)"' lateral.json | sort | uniq -c | sort -rn
 ```
 
 ```powershell
@@ -63,7 +64,8 @@ Get-ChildItem empire_psexec_dcerpc_tcp_svcctl_*.json | Rename-Item -NewName late
 # cargá los dos (una línea por evento) y usalos el resto del lab
 $lsass   = Get-Content lsass.json   | ForEach-Object { $_ | ConvertFrom-Json }
 $lateral = Get-Content lateral.json | ForEach-Object { $_ | ConvertFrom-Json }
-$lsass | Group-Object Channel,EventID | Sort-Object Count -Descending | Select Count,Name
+$lsass   | Group-Object Channel,EventID | Sort-Object Count -Descending | Select Count,Name
+$lateral | Group-Object Channel,EventID | Sort-Object Count -Descending | Select Count,Name
 ```
 
 **Mirá qué tenés antes de cazar.** Si una técnica deja rastro en un evento que no
