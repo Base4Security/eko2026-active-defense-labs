@@ -1,3 +1,0 @@
-{"time": "2026-09-14T19:30:28.835+00:00", "remote_addr": "192.168.65.1", "method": "GET", "path": "/", "status": 200, "usuario": "-", "user_agent": "curl/8.7.1", "bytes": 1290}
-{"time": "2026-09-14T19:49:43.923+00:00", "remote_addr": "192.168.65.1", "method": "GET", "path": "/", "status": 200, "usuario": "-", "user_agent": "curl/8.7.1", "bytes": 1290}
-{"time": "2026-09-18T18:13:12.237+00:00", "remote_addr": "192.168.65.1", "method": "GET", "path": "/", "status": 200, "usuario": "-", "user_agent": "curl/8.7.1", "bytes": 1290}
