@@ -1,4 +1,4 @@
-# E4 · Cazá el volcado de LSASS y el salto lateral
+# E4 · Cazá el volcado de LSASS y el movimiento lateral
 
 **Lab de hunting · sobre telemetría real · 6 minutos · grupos de 2-3**
 
@@ -30,7 +30,7 @@ detección que lo habría atrapado.
 |---|---|---|
 | 0-1 | 1 · Bajá y mirá | Los dos JSON, y qué eventos trae cada uno |
 | 1-3 | **2 · Cazá el volcado de LSASS** | Quién, cómo y dónde quedó el volcado |
-| 3-5 | **3 · Cazá el salto lateral** | De qué máquina a cuál, con qué cuenta |
+| 3-5 | **3 · Cazá el movimiento lateral** | De qué máquina a cuál, con qué cuenta |
 | 5-6 | 4 · Cerrá | Línea de tiempo y una detección por caso |
 
 ---
@@ -80,47 +80,55 @@ Para leer la memoria de un proceso primero hay que abrirlo: Sysmon lo registra e
 el evento **10 (ProcessAccess)**.
 
 ```bash
-# ¿quién abrió lsass, y con qué permiso?
-jq -c 'select(.EventID==10 and (.TargetImage|test("lsass.exe$";"i"))) | {SourceImage, GrantedAccess}' lsass.json
-# ¿con qué línea de comandos, quién es el padre y qué quedó en disco?
-jq -c 'select(.EventID==1)  | {Image, ParentImage, User, IntegrityLevel, CommandLine}' lsass.json
-jq -r 'select(.EventID==11) | .TargetFilename' lsass.json
+# ¿quién abrió lsass, con qué permiso y cuándo?
+jq -c 'select(.EventID==10 and (.TargetImage|test("lsass.exe$";"i"))) | {UtcTime, SourceImage, GrantedAccess}' lsass.json
+# ¿con qué línea de comandos, quién es el padre, qué quedó en disco y cuándo?
+jq -c 'select(.EventID==1)  | {UtcTime, Image, ParentImage, User, IntegrityLevel, CommandLine}' lsass.json
+jq -c 'select(.EventID==11) | {UtcTime, TargetFilename}' lsass.json
+# ¿y el 1102 (borrado del log)? Es del canal Security: trae TimeCreated, no UtcTime
+jq -c 'select(.EventID==1102) | {TimeCreated}' lsass.json
 ```
 
 ```powershell
 # Windows · PowerShell
-$lsass | ? { $_.EventID -eq 10 -and $_.TargetImage -match 'lsass\.exe$' } | Select SourceImage, GrantedAccess
-$lsass | ? EventID -eq 1  | Select Image, ParentImage, User, IntegrityLevel, CommandLine
-$lsass | ? EventID -eq 11 | Select -Expand TargetFilename
+$lsass | ? { $_.EventID -eq 10 -and $_.TargetImage -match 'lsass\.exe$' } | Select UtcTime, SourceImage, GrantedAccess
+$lsass | ? EventID -eq 1  | Select UtcTime, Image, ParentImage, User, IntegrityLevel, CommandLine
+$lsass | ? EventID -eq 11 | Select UtcTime, TargetFilename
+# ¿y el 1102 (borrado del log)? Es del canal Security: trae TimeCreated, no UtcTime
+$lsass | ? EventID -eq 1102 | Select TimeCreated
 ```
 
 **Contestá:** ¿qué proceso abrió `lsass` (¿binario raro o de Windows?), qué DLL y
 función usó, qué permiso pidió (`GrantedAccess`) y dónde quedó el volcado.
-**La trampa:** hay un `1102` (borrado del log) al principio — fijate *cuándo* pasó
-respecto del volcado antes de atribuírselo al atacante.
+**Ojo:** hay un `1102` (borrado del log) al principio — compará su `TimeCreated`
+contra el `UtcTime` del volcado antes de atribuírselo al atacante.
 
 ---
 
-## 3 · Cazá el salto lateral · 3-5 min
+## 3 · Cazá el movimiento lateral · 3-5 min
 
 **Hipótesis:** *crearon un servicio en una máquina remota para ejecutar código.*
 Un servicio nuevo deja el evento **7045** en System.
 
 ```bash
-# ¿qué servicio se instaló, y dónde?
-jq -c 'select(.EventID==7045) | {Hostname, ServiceName, ImagePath: .ImagePath[0:80]}' lateral.json
-# ¿quién entró por red a esa máquina, y desde qué IP?
-jq -c 'select(.EventID==4624 and .LogonType=="3" and .Hostname=="WORKSTATION6.theshire.local") | {TargetUserName, IpAddress}' lateral.json
-# ¿qué lanzó services.exe, y con qué usuario?
-jq -c 'select(.EventID==1 and .ParentImage=="C:\\Windows\\System32\\services.exe") | {Hostname, Image, User}' lateral.json
+# ¿qué servicio se instaló, dónde y cuándo?
+jq -c 'select(.EventID==7045) | {TimeCreated, Hostname, ServiceName, ImagePath: .ImagePath[0:80]}' lateral.json
+# ¿quién entró por red a esa máquina, desde qué IP y cuándo?
+jq -c 'select(.EventID==4624 and .LogonType=="3" and .Hostname=="WORKSTATION6.theshire.local") | {TimeCreated, TargetUserName, IpAddress}' lateral.json
+# ¿qué lanzó services.exe, con qué usuario y cuándo?
+jq -c 'select(.EventID==1 and .ParentImage=="C:\\Windows\\System32\\services.exe") | {UtcTime, Hostname, Image, User}' lateral.json
 ```
 
 ```powershell
 # Windows · PowerShell
-$lateral | ? EventID -eq 7045 | Select Hostname, ServiceName, ImagePath
-$lateral | ? { $_.EventID -eq 4624 -and $_.LogonType -eq '3' -and $_.Hostname -eq 'WORKSTATION6.theshire.local' } | Select TargetUserName, IpAddress
-$lateral | ? { $_.EventID -eq 1 -and $_.ParentImage -eq 'C:\Windows\System32\services.exe' } | Select Hostname, Image, User
+$lateral | ? EventID -eq 7045 | Select TimeCreated, Hostname, ServiceName, ImagePath
+$lateral | ? { $_.EventID -eq 4624 -and $_.LogonType -eq '3' -and $_.Hostname -eq 'WORKSTATION6.theshire.local' } | Select TimeCreated, TargetUserName, IpAddress
+$lateral | ? { $_.EventID -eq 1 -and $_.ParentImage -eq 'C:\Windows\System32\services.exe' } | Select UtcTime, Hostname, Image, User
 ```
+
+> **Los campos de tiempo no son iguales.** `7045` y `4624` son del canal
+> Security/System (`TimeCreated`); el `EventID 1` es de Sysmon (`UtcTime`). Son
+> el mismo dato, en formato y huso distintos — igual que en el paso 2.
 
 **Contestá:** cómo se llama el servicio y qué ejecuta en realidad, desde qué
 máquina y con qué cuenta llegó, y con qué usuario corrió el código en el destino.

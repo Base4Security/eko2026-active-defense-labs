@@ -27,7 +27,7 @@ contra el evento crudo.**
 | 0-1 | 1 · Preparar la carpeta | Evidencia + reglas del agente |
 | 1-2 | 2 · Abrir el agente y que mapee | Fuentes, eventos y máquinas, con cita |
 | 2-4 | **3 · Cazar por hipótesis** | Los dos ataques, cada afirmación con su evento |
-| 4-6 | **4 · Verificar, quebrar y cerrar** | Una afirmación reproducida y una tumbada |
+| 4-6 | **4 · Verificar, tumbar y cerrar** | Una afirmación reproducida y una tumbada |
 
 ---
 
@@ -140,7 +140,7 @@ Anotá cada afirmación en una columna «lo que dice el agente» — sin creerle
 
 ---
 
-## 4 · Verificá, quebrá y cerrá · 4-6 min
+## 4 · Verificá, tumbá y cerrá · 4-6 min
 
 **a) Reproducí una.** La afirmación más fuerte —el permiso con que abrió lsass, o
 la cuenta del login remoto— correla vos:
@@ -154,7 +154,7 @@ jq -c 'select(.EventID==10 and (.TargetImage|test("lsass.exe$";"i"))) | {SourceI
 $lsass | ? { $_.EventID -eq 10 -and $_.TargetImage -match 'lsass\.exe$' } | Select SourceImage, GrantedAccess
 ```
 
-**b) Tratá de quebrar una.** Tendele la trampa:
+**b) Tratá de tumbar una.** Ponele esta prueba:
 
 ```
 En lsass.json hay un EventID 1102 (borrado del log). ¿Fue el mismo adversario

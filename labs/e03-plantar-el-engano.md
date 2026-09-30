@@ -40,8 +40,8 @@ podría vivir una pieza de engaño.
 - **Administrador** (`/t/<sucursal>/admin`) — clientes, transacciones, usuarios y,
   sobre todo, **Opciones avanzadas**: las palancas para armar tu escenario. Cada
   una cambia el comportamiento del servidor al instante y solo en tu sucursal.
-- **Adversario** — herramientas de desarrollador: el código fuente, el bundle JS
-  y las requests a la API. ¿Qué rutas aparecen que la interfaz no muestra?
+- **Adversario** — herramientas de desarrollador: el bundle JS y las requests a
+  la API. ¿Qué rutas aparecen que la interfaz no muestra?
 
 > Un buen lugar para el engaño es uno que **un adversario enumerando no puede
 > evitar** y **un usuario trabajando no tiene motivo para tocar**.

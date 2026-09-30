@@ -1,6 +1,6 @@
 # E4 · Guía descriptiva: volcado de LSASS y movimiento lateral con PsExec
 
-> Complemento del [E4 · Cazá el volcado de LSASS y el salto lateral](e04-hunting-lsass-psexec.md).
+> Complemento del [E4 · Cazá el volcado de LSASS y el movimiento lateral](e04-hunting-lsass-psexec.md).
 > El E4 es la versión de teclado, para hacer contra reloj; esta guía es la
 > versión explicada, comando por comando, para leer con calma o repasar después.
 
@@ -63,7 +63,7 @@ El evento más numeroso es el **Sysmon 10 (ProcessAccess)**, con 68 apariciones.
 ## Paso 4 — ¿Quién accedió a la memoria de LSASS?
 
 ```powershell
-$lsass | ? { $_.EventID -eq 10 -and $_.TargetImage -match 'lsass\.exe$' } | Select SourceImage, GrantedAccess
+$lsass | ? { $_.EventID -eq 10 -and $_.TargetImage -match 'lsass\.exe$' } | Select UtcTime, SourceImage, GrantedAccess
 ```
 
 `lsass.exe` es el proceso que guarda en memoria hashes, tickets Kerberos y a veces credenciales en texto claro de los usuarios logueados. Leer su memoria es el objetivo clásico de herramientas como Mimikatz.
@@ -82,7 +82,7 @@ El campo `GrantedAccess` es una máscara de permisos:
 ## Paso 5 — ¿Qué comando lanzó ese rundll32?
 
 ```powershell
-$lsass | ? EventID -eq 1 | Select Image, ParentImage, User, IntegrityLevel, CommandLine
+$lsass | ? EventID -eq 1 | Select UtcTime, Image, ParentImage, User, IntegrityLevel, CommandLine
 ```
 
 El único evento de creación de proceso nos da la foto completa:
@@ -102,7 +102,7 @@ Leamos la línea de comandos: `comsvcs.dll` es una DLL legítima de Windows que 
 ## Paso 6 — ¿Quedó algo escrito en disco?
 
 ```powershell
-$lsass | ? EventID -eq 11 | Select -Expand TargetFilename
+$lsass | ? EventID -eq 11 | Select UtcTime, TargetFilename
 ```
 
 Dos archivos creados:
@@ -117,7 +117,7 @@ Dos archivos creados:
 ## Paso 7 — Escenario 2: un servicio nuevo en WORKSTATION6
 
 ```powershell
-$lateral | ? EventID -eq 7045 | Select Hostname, ServiceName, ImagePath
+$lateral | ? EventID -eq 7045 | Select TimeCreated, Hostname, ServiceName, ImagePath
 ```
 
 El evento **7045** (canal System) indica que **se instaló un servicio**. Esta es la huella central de PsExec y sus imitaciones: para ejecutar algo en otra máquina, crean un servicio remoto y lo arrancan.
@@ -144,7 +144,7 @@ El comienzo se decodifica como `If($PSVErSiOnTablE.PSVERsI...`. Las mayúsculas 
 ## Paso 8 — ¿Quién se conectó y desde dónde?
 
 ```powershell
-$lateral | ? { $_.EventID -eq 4624 -and $_.LogonType -eq '3' -and $_.Hostname -eq 'WORKSTATION6.theshire.local' } | Select TargetUserName, IpAddress
+$lateral | ? { $_.EventID -eq 4624 -and $_.LogonType -eq '3' -and $_.Hostname -eq 'WORKSTATION6.theshire.local' } | Select TimeCreated, TargetUserName, IpAddress
 ```
 
 El 4624 es un inicio de sesión exitoso y el **LogonType 3** es un inicio de sesión **por red**, que es exactamente lo que genera PsExec al conectarse al recurso `ADMIN$`/`IPC$` de la víctima.
@@ -158,7 +158,7 @@ Resultado: el usuario **`pgustavo`** se autenticó en WORKSTATION6 desde **172.1
 ## Paso 9 — ¿Qué ejecutó el servicio?
 
 ```powershell
-$lateral | ? { $_.EventID -eq 1 -and $_.ParentImage -eq 'C:\Windows\System32\services.exe' } | Select Hostname, Image, User
+$lateral | ? { $_.EventID -eq 1 -and $_.ParentImage -eq 'C:\Windows\System32\services.exe' } | Select UtcTime, Hostname, Image, User
 ```
 
 `services.exe` es el Service Control Manager: todo servicio que arranca es hijo suyo. Acá vemos que lanzó **`cmd.exe` como `NT AUTHORITY\SYSTEM`**, que coincide con el `ImagePath` del paso 7.
@@ -207,5 +207,5 @@ Conviene hacerlo al principio, como en el paso 3. Tres observaciones:
 
 1. Filtrar los eventos 5145 y encontrar el `RelativeTargetName` que muestre el pipe `svcctl`.
 2. Buscar el evento 4104 y comparar su contenido con el Base64 decodificado del paso 7.
-3. Ordenar por hora (`EventTime` o `@timestamp`) todos los eventos de los pasos 7 a 9 y armar una línea de tiempo.
+3. Ordenar por hora (`UtcTime` para Sysmon, `TimeCreated` para Security/System) todos los eventos de los pasos 7 a 9 y armar una línea de tiempo.
 4. Escribir en pseudocódigo una regla de detección para cada escenario y discutir qué falsos positivos podría tener.
