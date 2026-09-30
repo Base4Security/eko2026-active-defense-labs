@@ -1,0 +1,103 @@
+/* SIGCON · hoja de estilos
+   Sistema de Gestión de Conciliaciones — Infraestructura EkoFinance
+   Build 1.8.3. No modificar sin ticket. */
+
+html{color-scheme:light}
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#dfe4e9;
+  color:#1f262c;
+  font:13px/1.45 "Segoe UI",Tahoma,Arial,sans-serif;
+}
+
+.encabezado{
+  background:#1b3a5c;
+  border-bottom:3px solid #14293f;
+  color:#fff;
+  padding:9px 18px;
+}
+.encabezado .sigla{font-size:17px;font-weight:700;letter-spacing:.5px}
+.encabezado .largo{font-size:11.5px;color:#b9cde0;margin-top:1px}
+
+.caja{
+  width:352px;
+  margin:54px auto 0;
+  background:#fff;
+  border:1px solid #9fb0bf;
+  border-top:none;
+}
+.caja .titulo{
+  background:#eef2f6;
+  border-bottom:1px solid #c3ced8;
+  padding:7px 16px;
+  font-size:12px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  color:#41525f;
+}
+.caja .cuerpo{padding:18px 16px 16px}
+
+.aviso{
+  background:#fdf6e3;
+  border-left:3px solid #b8892a;
+  color:#6b5212;
+  padding:8px 10px;
+  font-size:11.5px;
+  line-height:1.45;
+  margin:0 0 16px;
+}
+.fallo{
+  background:#fbe9e9;
+  border-left:3px solid #a32424;
+  color:#7a1d1d;
+  padding:8px 10px;
+  font-size:12px;
+  margin:0 0 16px;
+}
+
+dl{margin:0}
+dt{font-size:11.5px;color:#5c6771;margin-bottom:4px}
+dd{margin:0 0 13px}
+input[type=text],input[type=password]{
+  width:100%;
+  padding:5px 7px;
+  border:1px solid #8fa1b1;
+  border-top-color:#6d8091;
+  background:#fff;
+  font:13px "Segoe UI",Tahoma,Arial,sans-serif;
+  color:#1f262c;
+}
+input[type=text]:focus,input[type=password]:focus{
+  outline:1px solid #2d5c8a;
+  outline-offset:-2px;
+}
+input[type=submit]{
+  padding:5px 20px;
+  background:#e8edf2;
+  border:1px solid #8fa1b1;
+  border-bottom-color:#6d8091;
+  font:12px "Segoe UI",Tahoma,Arial,sans-serif;
+  font-weight:600;
+  color:#24303a;
+  cursor:pointer;
+}
+input[type=submit]:hover{background:#dde5ec}
+
+.pie{
+  border-top:1px solid #dde3e9;
+  margin-top:16px;
+  padding-top:11px;
+  font-size:11px;
+  color:#76818b;
+  line-height:1.5;
+}
+.version{
+  width:352px;
+  margin:9px auto 40px;
+  font-size:10.5px;
+  color:#7d8892;
+  text-align:right;
+}

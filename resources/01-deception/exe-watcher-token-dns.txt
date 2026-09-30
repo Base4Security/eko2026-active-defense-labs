@@ -1,0 +1,8 @@
+; command that will be watched for: 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\calc.exe]
+"GlobalFlag"=dword:00000200
+
+; Unique token that will be fired when this command is executed
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\calc.exe]
+"ReportingMode"=dword:00000001
+"MonitorProcess"="cmd.exe /c start /min powershell.exe -windowstyle hidden -command \"$($u=$(\\\"u$env:username\\\" -replace('[^a-zA-Z0-9\\-]+', ''))[0..63] -join '';$c=$(\\\"c$env:computername\\\" -replace('[^a-zA-Z0-9\\-]+', ''))[0..63] -join '';Resolve-DnsName -Name \\\"$c.UN.$u.CMD.$MAGIC.ekofinance.com\\\")\""
