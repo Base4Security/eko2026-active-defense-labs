@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EkoBank · Migración de sucursales</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #f3f5f8; color: #1c2430; }
+    header { background: #0b3a6a; color: #fff; padding: 16px 28px; }
+    header span { opacity: .7; margin-left: 12px; font-size: .85rem; }
+    main { max-width: 720px; margin: 32px auto; background: #fff; padding: 28px; border: 1px solid #dbe3ec; }
+    h1 { font-size: 1.2rem; margin-top: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #e6edf4; }
+    th { background: #eef3f8; font-weight: 600; }
+    .tag { background: #fff3cd; color: #7a5b00; font-size: .75rem; padding: 2px 8px; }
+    a.file { display: inline-block; margin-top: 18px; color: #0b3a6a; }
+    footer { color: #6a7786; font-size: .8rem; margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <!-- extracto pre-prod: no circular. dump completo en /backup.html -->
+  <header>EkoBank Core <span>cambio de sucursal · ventana 02:00–05:00</span></header>
+  <main>
+    <h1>Migración de clientes — lote 14</h1>
+    <p>Planilla de alta CBU / alias para el pase a producción. <span class="tag">no circular</span></p>
+    <table>
+      <thead>
+        <tr><th>Sucursal origen</th><th>Registros</th><th>Estado</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Casa central</td><td>12.441</td><td>pendiente recálculo</td></tr>
+        <tr><td>Pilar</td><td>3.208</td><td>validando CBU</td></tr>
+        <tr><td>Lab (pre-prod)</td><td>18</td><td>datos de prueba</td></tr>
+      </tbody>
+    </table>
+    <a class="file" href="https://files.ekobank.net/ops/clientes_cbu_alta.xlsx">⬇ clientes_cbu_alta.xlsx</a>
+    <footer>OPS-441 · generado por nightly-reconcile · no versionar</footer>
+  </main>
+</body>
+</html>

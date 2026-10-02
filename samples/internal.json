@@ -1,0 +1,40 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "EkoBank Internal API",
+    "version": "2.4.1-stg",
+    "description": "No exponer. Usado por nightly-reconcile y el backoffice deprecado."
+  },
+  "servers": [
+    {
+      "url": "https://api-internal.stg.ekobank.net/v2",
+      "description": "stg · internal"
+    }
+  ],
+  "paths": {
+    "/admin/impersonate": {
+      "post": {
+        "summary": "Impersonar cliente (mesa)",
+        "parameters": [
+          { "name": "X-Debug-Token", "in": "header", "schema": { "type": "string" } }
+        ]
+      }
+    },
+    "/batch/transfer": {
+      "post": {
+        "summary": "Transferencias lote CBU",
+        "description": "Requiere AWS key de settlements. Ver /apikey.json"
+      }
+    },
+    "/ops/env": {
+      "get": {
+        "summary": "Dump de entorno stg",
+        "description": "alias de /env.txt"
+      }
+    }
+  },
+  "x-debug": {
+    "db": "postgres://ops:Ops!Stg441_mig@db-stg-01.ops.ekobank.net:5432/ekobank_stg",
+    "aws_access_key_id": "AKIAIOSFODNN7EXAMPLE"
+  }
+}

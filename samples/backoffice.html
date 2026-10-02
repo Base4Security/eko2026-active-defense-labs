@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EkoBank · Backoffice (deprecado)</title>
+  <style>
+    :root { --navy:#0b3a6a; --line:#d7e2ee; --bg:#f4f7fb; --muted:#5b6b7c; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Georgia, "Times New Roman", serif; background: var(--bg); color: #1a2430; }
+    header { background: var(--navy); color: #fff; padding: 14px 28px; display: flex; justify-content: space-between; align-items: baseline; }
+    header small { opacity: .75; font-family: system-ui, sans-serif; letter-spacing: .04em; }
+    main { max-width: 420px; margin: 48px auto; background: #fff; border: 1px solid var(--line); padding: 28px 32px; }
+    h1 { font-size: 1.25rem; margin: 0 0 6px; }
+    p.note { color: var(--muted); font-size: .9rem; margin: 0 0 22px; }
+    label { display: block; font-size: .8rem; margin: 12px 0 4px; font-family: system-ui, sans-serif; }
+    input { width: 100%; padding: 8px 10px; border: 1px solid var(--line); font-size: 1rem; }
+    button { margin-top: 18px; width: 100%; background: var(--navy); color: #fff; border: 0; padding: 10px; cursor: pointer; }
+    .warn { margin-top: 18px; font-size: .78rem; color: #8a5a12; background: #fff6e5; padding: 8px 10px; }
+  </style>
+</head>
+<body>
+  <!-- hotfix mesa 2024-11: si el SSO de AD falla usar ops_mig / ver nota en /migracion.html -->
+  <!-- no indexar: backoffice v2 vive en /reset.html -->
+  <header>
+    <strong>EkoBank</strong>
+    <small>Backoffice interno · deprecado</small>
+  </header>
+  <main>
+    <h1>Acceso operadores</h1>
+    <p class="note">Panel anterior a la migración. No usar desde sucursal.</p>
+    <form action="https://sso.ekobank.net/adfs/ls/" method="get">
+      <label>Usuario</label>
+      <input name="user" autocomplete="off" placeholder="usuario de red">
+      <label>Clave</label>
+      <input name="password" type="password" autocomplete="off">
+      <button type="submit">Ingresar</button>
+    </form>
+    <p class="warn">Este nodo se apaga el 30/11. Credenciales de emergencia en el ticket OPS-441.</p>
+  </main>
+  <img src="/pixel.gif" width="1" height="1" alt="" style="position:absolute;left:-9999px">
+</body>
+</html>

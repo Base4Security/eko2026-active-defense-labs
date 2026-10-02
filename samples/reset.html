@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EkoBank · Desbloqueo de operador</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #eef2f6; color: #1c2430; }
+    header { background: #0b3a6a; color: #fff; padding: 14px 28px; }
+    main { max-width: 480px; margin: 36px auto; background: #fff; padding: 28px; border: 1px solid #d5dee8; }
+    h1 { font-size: 1.15rem; margin: 0 0 8px; }
+    p { color: #5c6b7a; font-size: .9rem; }
+    label { display: block; margin: 14px 0 4px; font-size: .8rem; }
+    input, select { width: 100%; padding: 8px; border: 1px solid #d5dee8; }
+    button { margin-top: 16px; background: #0b3a6a; color: #fff; border: 0; padding: 10px 16px; width: 100%; cursor: pointer; }
+    .sop { margin-top: 22px; padding-top: 16px; border-top: 1px solid #e6edf4; font-size: .85rem; }
+    .qr { margin-top: 12px; font-size: .8rem; color: #5c6b7a; }
+  </style>
+</head>
+<body>
+  <!-- mesa de ayuda: no exponer a internet. SOP tokenizado. -->
+  <header>EkoBank · Mesa de ayuda</header>
+  <main>
+    <h1>Desbloqueo de usuario corporativo</h1>
+    <p>Herramienta de guardia. Requiere ticket OPS abierto.</p>
+    <form action="https://mesa.ekobank.net/unlock" method="get">
+      <label>Usuario de red</label>
+      <input name="samaccount" placeholder="ops_mig">
+      <label>Sucursal</label>
+      <select name="branch">
+        <option>Casa central</option>
+        <option>Pilar</option>
+        <option>Lab / pre-prod</option>
+      </select>
+      <button type="submit">Generar clave temporal</button>
+    </form>
+    <div class="sop">
+      Procedimiento: <a href="https://files.ekobank.net/ops/SOP-reset-clave-operador.docx">SOP-reset-clave-operador.docx</a>
+      <p class="qr">Guardia en celular: escaneá el QR del SOP o abrí <a href="https://ekobank.net/guardia/unlock?t=7f3a9c2e">https://ekobank.net/guardia/unlock?t=7f3a9c2e</a>.</p>
+    </div>
+  </main>
+</body>
+</html>

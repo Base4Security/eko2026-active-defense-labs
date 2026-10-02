@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EkoBank · Cambio programado Core Bancario</title>
+  <style>
+    body { margin: 0; font-family: Georgia, serif; background: #f7f4ee; color: #2a241c; }
+    .bar { background: #7a1f1f; color: #fff; text-align: center; padding: 8px; font-family: system-ui, sans-serif; font-size: .85rem; }
+    header { padding: 28px 28px 0; }
+    header strong { color: #0b3a6a; }
+    main { max-width: 640px; margin: 0 auto; padding: 12px 28px 48px; }
+    h1 { font-size: 1.4rem; }
+    dl { background: #fff; border: 1px solid #e4dccf; padding: 16px 20px; }
+    dt { font-family: system-ui, sans-serif; font-size: .75rem; color: #7a6f60; text-transform: uppercase; margin-top: 10px; }
+    dd { margin: 2px 0 0; }
+    code { font-size: .95rem; background: #f0ebe3; padding: 2px 6px; }
+    a { color: #0b3a6a; }
+  </style>
+</head>
+<body>
+  <!-- ventana de change: VPN del vendor. usuario sucursal no tiene que resolver este host. -->
+  <div class="bar">Mantenimiento programado · Core Bancario · 02:00–05:00 ART</div>
+  <header><strong>EkoBank</strong> · Operaciones</header>
+  <main>
+    <h1>Cambio de sucursal — acceso del proveedor</h1>
+    <p>Durante la ventana, el Home Banking de clientes permanece arriba. El core se opera por la VPN del vendor.</p>
+    <dl>
+      <dt>VPN</dt>
+      <dd><code>vpn-ncr-cutover.vendor.ekobank.net</code></dd>
+      <dt>Usuario de vendor</dt>
+      <dd>ncr_cutover / ver manual</dd>
+      <dt>Manual de acceso</dt>
+      <dd><a href="https://files.ekobank.net/ops/manual-acceso-vendor-cambio.docx">manual-acceso-vendor-cambio.docx</a></dd>
+      <dt>Mesa</dt>
+      <dd>OPS-441 · no informar a sucursal</dd>
+    </dl>
+    <p>Si el túnel no levanta, no uses el backoffice deprecado (<a href="/backoffice.html">/backoffice.html</a>): esperá a que DNS resuelva el host de VPN.</p>
+  </main>
+  <img src="/pixel.gif" width="1" height="1" alt="">
+</body>
+</html>

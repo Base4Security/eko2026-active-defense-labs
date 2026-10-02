@@ -1,0 +1,1 @@
+https://phpmyadmin.stg.ekobank.net/index.php?server=1

@@ -1,0 +1,15 @@
+Error: nightly-reconcile failed
+    at reconcileBatch (/opt/ekobank/jobs/reconcile.js:214:11)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+SequelizeConnectionError: password authentication failed for user "ops"
+    at Connection.parseE (/opt/ekobank/node_modules/pg/lib/connection.js:389:17)
+
+config loaded from /etc/ekobank/stg.env
+  DATABASE_URL=postgres://ops:Ops!Stg441_mig@db-stg-01.ops.ekobank.net:5432/ekobank_stg
+  AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+  AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+  INTERNAL_API=http://api-internal.stg.ekobank.net:8080/v2
+
+hint: dump last 18 rows to /backup.html if the job retries > 3
+ticket: OPS-441
