@@ -73,19 +73,16 @@ buen wifi, bajar un paquete puede costar más que el ejercicio.
 
 | Herramienta | La usan | Para qué |
 |---|---|---|
-| `jq` | E1 · E6 · E7 · E13 · Hunting | Leer los logs JSON del honeypot, del portal y la telemetría del hunting |
-| `curl` | E2 · E13 · E14 · Hunting | Disparar tokens, probar servicios, bajar los datasets |
-| `ssh` | E1 · E5 · E7 · E14 | Entrar al honeypot |
-| `nmap` | E5 · E14 | Fingerprint del honeypot, antes y después |
+| `ssh` | E1 | Entrar al honeypot |
+| `jq` | E1 · E4 · E5 | Leer los logs JSON del honeypot y la telemetría del hunting |
+| `curl` | E2 · E4 · E5 | Disparar tokens y bajar los datasets |
 | `aws` | E2 | Disparar el token de credenciales |
-| `smbclient` | E4 | Tocar el SMB falso |
-| `sqlcmd` | E4 | Tocar el MSSQL falso — **o cualquier otro cliente** |
 
 ```bash
 # macOS
-brew install jq nmap awscli samba
+brew install jq awscli
 # Debian / Ubuntu
-sudo apt install jq nmap awscli smbclient
+sudo apt install jq awscli
 ```
 
 ### En Windows
@@ -99,31 +96,10 @@ De la lista de arriba, en Windows:
 |---|---|
 | `ssh` | ya viene, desde Windows 10 1809 — no hace falta PuTTY |
 | `curl` | ya viene, pero escribí **`curl.exe`**: `curl` a secas es alias de `Invoke-WebRequest` |
-| `nmap` | `winget install Insecure.Nmap` |
 | `aws` | `winget install Amazon.AWSCLI` |
-| `jq` | **opcional** — PowerShell lee JSON de fábrica con `ConvertFrom-Json`, y las guías traen esa variante. Si lo querés igual: `winget install jqlang.jq` |
-| `smbclient` | no existe, y Windows no sabe hablar SMB a un puerto que no sea el 445 (que ya tiene tomado). El E4 usa `mi-lab/herramientas/smb-touch.py` |
-| `sqlcmd` | tampoco hace falta: el E4 usa `mi-lab/herramientas/tds-login.py` |
+| `jq` | **opcional** — PowerShell lee JSON de fábrica con `ConvertFrom-Json`, y los labs de hunting traen esa variante. Si lo querés igual: `winget install jqlang.jq` |
 
-Los dos scripts son stdlib pura y sirven en cualquier plataforma: si no querés
-instalar `smbclient` ni `sqlcmd` en macOS o Linux, usalos también ahí.
-
-Dos detalles que muerden: donde en Linux va `python3`, en Windows el binario se
-llama **`python`**; y `dig` no existe — el E2 usa `Resolve-DnsName`.
-
-```bash
-python3 mi-lab/herramientas/tds-login.py  localhost 1433 sa Password123
-python3 mi-lab/herramientas/smb-touch.py  localhost 1445 svc_backup Verano2026
-#  en Windows el binario se llama python, y las barras van al revés
-```
-
-Cada uno hace el handshake mínimo que el honeypot necesita para registrar el
-toque: PRELOGIN + LOGIN7 en el MSSQL, y NEGOTIATE + SESSION_SETUP +
-TREE_CONNECT en el SMB. **Un `curl` o un `nc` al 1433 o al 1445 no alcanzan**:
-el honeypot sólo registra cuando hay sesión negociada, así que un TCP connect
-pelado no deja rastro — aunque el puerto *parezca* abierto, porque quien acepta
-la conexión es el redirector de Docker y no el servicio. Vale la pena probarlo
-y verlo, es media respuesta del E4.
+Un detalle que muerde: `dig` no existe en Windows — el E2 usa `Resolve-DnsName`.
 
 Además del teclado, el **E2** pide dos cosas que no son software:
 

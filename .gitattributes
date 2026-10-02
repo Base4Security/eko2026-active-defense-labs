@@ -1,7 +1,6 @@
 # Git for Windows checkoutea con CRLF por defecto (core.autocrlf=true). Varios
-# de estos archivos viajan adentro de los contenedores —configs que parsea
-# Samba, Cowrie y OpenCanary, y el app.py del portal—, así que acá se fuerza LF
-# sin importar la plataforma del alumno.
+# de estos archivos viajan adentro del contenedor —las configs que parsea
+# Cowrie—, así que acá se fuerza LF sin importar la plataforma del alumno.
 
 * text=auto eol=lf
 
