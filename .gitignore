@@ -15,8 +15,6 @@ mi-lab/cowrie/log/*
 mi-lab/cowrie/etc/*
 !mi-lab/cowrie/etc/.gitkeep
 !mi-lab/cowrie/etc/cowrie.cfg
-mi-lab/opencanary/logs/*
-!mi-lab/opencanary/logs/.gitkeep
 
 # Python
 __pycache__/

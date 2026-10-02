@@ -43,7 +43,7 @@ empezar: la primera construcción tarda dos o tres minutos.
 ```bash
 cd mi-lab
 docker compose up -d --build
-docker compose ps        # portal, cowrie y opencanary en "running"
+docker compose ps        # cowrie en "running"
 ```
 
 Puertos, credenciales y resolución de problemas:
